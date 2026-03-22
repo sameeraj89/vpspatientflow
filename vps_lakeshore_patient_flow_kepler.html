@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPS Lakeshore — Patient Origin Flow Map</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root{
+  /* VPS Lakeshore brand palette */
+  --vps-teal: #009B8D;
+  --vps-teal-light: #00BFA6;
+  --vps-teal-dark: #007A6E;
+  --vps-navy: #0A1628;
+  --vps-navy-mid: #0F1F38;
+  --vps-navy-light: #162A4A;
+  --vps-white: #F0F4F8;
+  --vps-gray: #8899AA;
+  --vps-gray-dim: #5A6B7C;
+  --vps-gold: #E8A838;
+  --vps-coral: #E85D5D;
+  --vps-blue: #4A9FE8;
+  --vps-border: #1C3050;
+  --vps-surface: rgba(15,31,56,.92);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--vps-navy);color:var(--vps-white);overflow:hidden;height:100vh}
+
+/* ─── Canvas ─── */
+#mapCanvas{position:absolute;inset:0;cursor:grab}
+#mapCanvas:active{cursor:grabbing}
+
+/* ─── Header ─── */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 20px 18px;
+  background:linear-gradient(180deg,rgba(10,22,40,.97) 0%,rgba(10,22,40,.8) 75%,transparent);pointer-events:none}
+.hdr>*{pointer-events:auto}
+.hdr-main{display:flex;align-items:center;gap:12px}
+.hdr .logo{width:36px;height:36px;border-radius:8px;background:var(--vps-teal);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#fff;flex-shrink:0}
+.hdr h1{font-size:20px;font-weight:600;letter-spacing:-.3px;color:var(--vps-white)}
+.hdr h1 span{color:var(--vps-teal-light);font-weight:700}
+.hdr .sub{font-size:12px;color:var(--vps-gray);margin-top:2px;font-weight:300}
+.tags{display:flex;gap:5px;margin-top:6px;flex-wrap:wrap}
+.tag{font-family:'JetBrains Mono',monospace;font-size:8px;padding:2px 7px;border-radius:3px;background:var(--vps-navy-light);border:1px solid var(--vps-border);color:var(--vps-gray-dim);letter-spacing:.3px;text-transform:uppercase}
+
+/* ─── Left Panel ─── */
+.panel-l{position:fixed;top:100px;left:14px;z-index:90;width:290px;max-height:calc(100vh - 116px);
+  background:var(--vps-surface);backdrop-filter:blur(20px);border:1px solid var(--vps-border);border-radius:10px;
+  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--vps-border) transparent}
+.panel-l::-webkit-scrollbar{width:3px}
+.panel-l::-webkit-scrollbar-thumb{background:var(--vps-border);border-radius:3px}
+
+.sec{padding:14px;border-bottom:1px solid var(--vps-border)}
+.sec:last-child{border-bottom:none}
+.sec-t{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--vps-gray-dim);margin-bottom:8px}
+
+/* Hospital btns */
+.hb{display:flex;align-items:center;gap:7px;width:100%;padding:7px 9px;border:1px solid var(--vps-border);border-radius:6px;
+  background:transparent;color:var(--vps-gray);cursor:pointer;font-family:inherit;font-size:11px;text-align:left;margin-bottom:4px;transition:all .12s}
+.hb:hover{border-color:var(--vps-teal-dark);background:rgba(0,155,141,.06);color:var(--vps-white)}
+.hb.on{border-color:var(--vps-teal);background:rgba(0,155,141,.12);color:var(--vps-teal-light);font-weight:500}
+.hb .d{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.hb .b{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--vps-gray-dim);margin-left:auto}
+
+/* Toggles */
+.tgl{display:flex;align-items:center;gap:7px;margin-bottom:5px;font-size:11px;cursor:pointer;padding:3px 0}
+.tgl input{display:none}
+.tbox{width:14px;height:14px;border-radius:3px;border:1.5px solid var(--vps-border);display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
+.tbox::after{content:'✓';font-size:9px;opacity:0;color:var(--vps-navy);transition:opacity .08s}
+.tgl input:checked+.tbox{border-color:var(--vps-teal);background:var(--vps-teal)}
+.tgl input:checked+.tbox::after{opacity:1}
+
+/* Stats */
+.sg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.sb{background:var(--vps-navy-light);border:1px solid var(--vps-border);border-radius:6px;padding:8px;text-align:center}
+.sb .v{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:var(--vps-teal-light)}
+.sb .l{font-size:9px;color:var(--vps-gray-dim);margin-top:1px}
+
+/* Bars */
+.oi{margin-bottom:5px}
+.oh{display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px}
+.oh .n{color:var(--vps-gray)}
+.oh .p{font-family:'JetBrains Mono',monospace;color:var(--vps-gray-dim);font-size:9px}
+.ob{height:3px;background:var(--vps-navy-light);border-radius:2px;overflow:hidden}
+.of{height:100%;border-radius:2px;transition:width .4s ease}
+
+/* ─── Right Panel ─── */
+.panel-r{position:fixed;top:100px;right:14px;z-index:90;width:260px;max-height:calc(100vh - 116px);
+  background:var(--vps-surface);backdrop-filter:blur(20px);border:1px solid var(--vps-border);border-radius:10px;
+  overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--vps-border) transparent}
+.panel-r::-webkit-scrollbar{width:3px}
+.panel-r::-webkit-scrollbar-thumb{background:var(--vps-border);border-radius:3px}
+
+.lr{display:flex;align-items:center;gap:7px;margin-bottom:4px;font-size:10px;color:var(--vps-gray)}
+.ll{width:18px;height:3px;border-radius:2px;flex-shrink:0}
+
+.nb{font-size:9px;color:var(--vps-gray-dim);line-height:1.6;padding:8px;background:var(--vps-navy-light);border-radius:6px;border:1px solid var(--vps-border)}
+.nb b{color:var(--vps-gray);font-weight:500}
+
+/* Mobile */
+@media(max-width:900px){.panel-l,.panel-r{display:none}.hdr h1{font-size:15px}}
+</style>
+</head>
+<body>
+<canvas id="mapCanvas"></canvas>
+
+<div class="hdr">
+  <div class="hdr-main">
+    <div class="logo">VPS</div>
+    <div>
+      <h1><span>VPS Lakeshore</span> — Patient Origin Flow Map</h1>
+      <div class="sub">Where do patients travel from to reach Kochi's super-specialty hospitals?</div>
+    </div>
+  </div>
+  <div class="tags">
+    <span class="tag">VPS 27th Annual Report FY23</span>
+    <span class="tag">Grant Thornton Kerala MVT</span>
+    <span class="tag">Aster DM Data</span>
+    <span class="tag">KPMG MVT 2030</span>
+    <span class="tag">Kerala DHS Stats</span>
+  </div>
+</div>
+
+<div class="panel-l">
+  <div class="sec">
+    <div class="sec-t">Select Hospital</div>
+    <div id="hospBtns"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Layer Controls</div>
+    <label class="tgl"><input type="checkbox" data-lyr="local" checked><div class="tbox"></div> Local (Ernakulam)</label>
+    <label class="tgl"><input type="checkbox" data-lyr="kerala" checked><div class="tbox"></div> Kerala Districts</label>
+    <label class="tgl"><input type="checkbox" data-lyr="domestic" checked><div class="tbox"></div> Other Indian States</label>
+    <label class="tgl"><input type="checkbox" data-lyr="international" checked><div class="tbox"></div> International</label>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Key Figures</div>
+    <div class="sg" id="stats"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Top Origins by Volume</div>
+    <div id="bars"></div>
+  </div>
+</div>
+
+<div class="panel-r">
+  <div class="sec">
+    <div class="sec-t">Arc Legend</div>
+    <div class="lr"><div class="ll" style="background:var(--vps-teal-light)"></div> Local / Ernakulam</div>
+    <div class="lr"><div class="ll" style="background:var(--vps-blue)"></div> Kerala Districts</div>
+    <div class="lr"><div class="ll" style="background:var(--vps-gold)"></div> Other Indian States</div>
+    <div class="lr"><div class="ll" style="background:var(--vps-coral)"></div> International (Gulf / Global)</div>
+    <div class="lr" style="margin-top:6px"><div class="ll" style="background:var(--vps-gray-dim);height:1px"></div><span style="font-size:9px;color:var(--vps-gray-dim)">Arc width ∝ patient %</span></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">International Corridors</div>
+    <div id="intlBars"></div>
+  </div>
+  <div class="sec">
+    <div class="sec-t">Data & Methodology</div>
+    <div class="nb">
+      <b>VPS Lakeshore Annual Report FY23:</b> 3,43,876 OPD, 21,087 IPD, 20,047 foreign patients (up from 6,008 prior year). Revenue ₹424 Cr.<br><br>
+      <b>Grant Thornton Kerala MVT:</b> Bangladesh &amp; Afghanistan = 34% of India MVT arrivals. GCC+Africa+CIS = 30%. Kerala ≈ 5% of India market.<br><br>
+      <b>Aster Medcity:</b> 800 beds, JCI accredited. Referral hub for Persian Gulf. ~3M patients/year network-wide.<br><br>
+      <b>AIMS Kochi:</b> 1,300 beds, 600+ doctors, largest private facility in Kerala.<br><br>
+      <b>District splits:</b> Estimated from Kerala DHS bed data, distance-decay, and published catchment studies. No individual patient data used.<br><br>
+      <b>Yemen &amp; Iraq:</b> Middle East accounts for ~25% of India's int'l patient inflow (ET/ICRIER 2025). Yemen &amp; Iraq are significant conflict-driven MVT sources — patients seek cancer, cardiac &amp; transplant care. KIMSHEALTH Al-Shifa (Kerala) reports 10-15% revenue impact from Gulf disruptions.
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+
+const HOSPS=[
+  {id:'vps',name:'VPS Lakeshore',color:'#00BFA6',beds:470,lat:9.9312,lng:76.3176,
+   stats:{opd:'3,43,876',ipd:'21,087',intl:'20,047'}},
+  {id:'aster',name:'Aster Medcity',color:'#4A9FE8',beds:800,lat:9.9536,lng:76.2920,
+   stats:{opd:'~5,00,000',ipd:'~35,000',intl:'~25,000'}},
+  {id:'aims',name:'AIMS Kochi',color:'#B07CE8',beds:1300,lat:10.0375,lng:76.2918,
+   stats:{opd:'~8,00,000',ipd:'~55,000',intl:'~15,000'}},
+  {id:'rajagiri',name:'Rajagiri Hospital',color:'#E8A838',beds:550,lat:10.0770,lng:76.3535,
+   stats:{opd:'~3,00,000',ipd:'~18,000',intl:'~5,000'}},
+  {id:'lisie',name:'Lisie Hospital',color:'#E87838',beds:600,lat:9.9850,lng:76.2945,
+   stats:{opd:'~4,00,000',ipd:'~22,000',intl:'~3,000'}},
+  {id:'medical_trust',name:'Medical Trust',color:'#E85DA8',beds:450,lat:9.9700,lng:76.2860,
+   stats:{opd:'~2,50,000',ipd:'~15,000',intl:'~4,000'}},
+];
+
+const O=[
+  // LOCAL
+  {n:"Kochi City",lat:9.931,lng:76.267,t:"local",d:"Urban core & islands",vps:18,aster:16,aims:15,rajagiri:12,lisie:20,medical_trust:22},
+  {n:"Maradu/Nettoor",lat:9.940,lng:76.323,t:"local",d:"VPS immediate vicinity",vps:6,aster:2,aims:1,rajagiri:1,lisie:1,medical_trust:1},
+  {n:"Edappally",lat:10.025,lng:76.308,t:"local",d:"Metro-connected commercial hub",vps:3,aster:5,aims:6,rajagiri:4,lisie:5,medical_trust:4},
+  {n:"Tripunithura",lat:9.950,lng:76.348,t:"local",d:"Historical suburb",vps:4,aster:3,aims:2,rajagiri:3,lisie:3,medical_trust:3},
+  {n:"Aluva",lat:10.100,lng:76.357,t:"local",d:"Northern gateway, rail junction",vps:3,aster:3,aims:4,rajagiri:8,lisie:2,medical_trust:2},
+  {n:"Perumbavoor",lat:10.107,lng:76.474,t:"local",d:"Eastern Ernakulam, timber hub",vps:3,aster:2,aims:3,rajagiri:5,lisie:2,medical_trust:2},
+  {n:"Angamaly",lat:10.196,lng:76.386,t:"local",d:"Near Cochin Int'l Airport",vps:2,aster:2,aims:3,rajagiri:4,lisie:1,medical_trust:1},
+  {n:"Muvattupuzha",lat:9.980,lng:76.579,t:"local",d:"Eastern commercial centre",vps:2,aster:2,aims:2,rajagiri:3,lisie:2,medical_trust:2},
+  {n:"Kakkanad",lat:10.015,lng:76.344,t:"local",d:"IT hub, Infopark, SmartCity",vps:2,aster:3,aims:4,rajagiri:3,lisie:2,medical_trust:2},
+  {n:"Vypin/Cherai",lat:10.013,lng:76.186,t:"local",d:"Island communities",vps:1,aster:1,aims:1,rajagiri:.5,lisie:2,medical_trust:2},
+  // KERALA
+  {n:"Thrissur",lat:10.528,lng:76.214,t:"kerala",d:"Cultural capital, 80km N",vps:5,aster:5,aims:5,rajagiri:4,lisie:4,medical_trust:3},
+  {n:"Alappuzha",lat:9.498,lng:76.339,t:"kerala",d:"Backwaters district, 55km S",vps:4,aster:4,aims:3,rajagiri:2,lisie:4,medical_trust:4},
+  {n:"Kottayam",lat:9.592,lng:76.522,t:"kerala",d:"Rubber capital, 60km SE",vps:4,aster:3,aims:4,rajagiri:3,lisie:3,medical_trust:3},
+  {n:"Idukki",lat:9.849,lng:76.972,t:"kerala",d:"Highland, limited tertiary care",vps:3,aster:3,aims:4,rajagiri:3,lisie:2,medical_trust:2},
+  {n:"Pathanamthitta",lat:9.265,lng:76.787,t:"kerala",d:"Sabarimala district",vps:2,aster:2,aims:2,rajagiri:1.5,lisie:2,medical_trust:2},
+  {n:"Palakkad",lat:10.787,lng:76.655,t:"kerala",d:"TN gateway, 150km",vps:2,aster:2,aims:2,rajagiri:2,lisie:1.5,medical_trust:1},
+  {n:"Malappuram",lat:11.051,lng:76.071,t:"kerala",d:"Most populous, high Gulf diaspora",vps:2,aster:3,aims:2,rajagiri:1.5,lisie:1,medical_trust:1},
+  {n:"Kozhikode",lat:11.259,lng:75.780,t:"kerala",d:"VPS medical centre here",vps:2,aster:2,aims:1.5,rajagiri:1,lisie:1,medical_trust:.5},
+  {n:"Kollam",lat:8.893,lng:76.614,t:"kerala",d:"Southern Kerala, 160km",vps:1.5,aster:1.5,aims:1.5,rajagiri:1,lisie:1.5,medical_trust:1.5},
+  {n:"Trivandrum",lat:8.524,lng:76.937,t:"kerala",d:"State capital, own tertiaries",vps:1,aster:1,aims:1,rajagiri:.5,lisie:.5,medical_trust:.5},
+  {n:"Kannur",lat:11.875,lng:75.370,t:"kerala",d:"Far north Kerala",vps:.8,aster:1,aims:.8,rajagiri:.5,lisie:.5,medical_trust:.3},
+  {n:"Wayanad",lat:11.685,lng:76.132,t:"kerala",d:"Tribal highland district",vps:.5,aster:.8,aims:.6,rajagiri:.5,lisie:.3,medical_trust:.2},
+  {n:"Kasaragod",lat:12.500,lng:74.987,t:"kerala",d:"Northernmost, 400km",vps:.3,aster:.3,aims:.3,rajagiri:.2,lisie:.2,medical_trust:.1},
+  // DOMESTIC
+  {n:"Lakshadweep",lat:10.567,lng:72.637,t:"domestic",d:"No tertiary care, Kochi default referral",vps:2.5,aster:2.5,aims:3,rajagiri:1,lisie:1,medical_trust:.5},
+  {n:"TN (Coimbatore)",lat:10.997,lng:76.954,t:"domestic",d:"Palakkad Gap corridor",vps:2,aster:2,aims:3,rajagiri:2,lisie:1,medical_trust:1},
+  {n:"TN (Madurai)",lat:9.925,lng:78.120,t:"domestic",d:"Transplant referrals",vps:.8,aster:.5,aims:1,rajagiri:.3,lisie:.3,medical_trust:.2},
+  {n:"Karnataka (Mangalore)",lat:12.872,lng:74.843,t:"domestic",d:"Coastal Karnataka corridor",vps:1,aster:1,aims:1,rajagiri:.5,lisie:.5,medical_trust:.3},
+  {n:"Bengaluru",lat:12.972,lng:77.595,t:"domestic",d:"NRI families, IT corridor",vps:1,aster:1.5,aims:1.5,rajagiri:.5,lisie:.3,medical_trust:.2},
+  {n:"Mumbai",lat:19.076,lng:72.878,t:"domestic",d:"Keralite diaspora, corporate refs",vps:1,aster:1,aims:.8,rajagiri:.3,lisie:.2,medical_trust:.2},
+  {n:"Delhi NCR",lat:28.614,lng:77.209,t:"domestic",d:"CGHS beneficiaries",vps:.5,aster:.5,aims:.5,rajagiri:.2,lisie:.1,medical_trust:.1},
+  {n:"Andaman & Nicobar",lat:11.740,lng:92.659,t:"domestic",d:"Island medical evacuations",vps:.3,aster:.3,aims:.5,rajagiri:.1,lisie:.1,medical_trust:.1},
+  {n:"Hyderabad",lat:17.385,lng:78.487,t:"domestic",d:"Cross-referrals",vps:.3,aster:.3,aims:.3,rajagiri:.1,lisie:.1,medical_trust:.1},
+  {n:"NE India",lat:26.201,lng:92.938,t:"domestic",d:"Transplant & oncology referrals",vps:.3,aster:.2,aims:.3,rajagiri:.1,lisie:.1,medical_trust:.1},
+  // INTERNATIONAL
+  {n:"UAE (Dubai)",lat:25.205,lng:55.271,t:"international",d:"VPS parent HQ region",vps:3,aster:3,aims:1.5,rajagiri:.5,lisie:.3,medical_trust:.3},
+  {n:"UAE (Abu Dhabi)",lat:24.454,lng:54.377,t:"international",d:"VPS Healthcare HQ",vps:2,aster:1.5,aims:.8,rajagiri:.3,lisie:.2,medical_trust:.2},
+  {n:"Saudi (Riyadh)",lat:24.714,lng:46.675,t:"international",d:"Kerala expat community",vps:1.5,aster:2,aims:1,rajagiri:.3,lisie:.2,medical_trust:.2},
+  {n:"Saudi (Jeddah)",lat:21.543,lng:39.173,t:"international",d:"Western province workers",vps:.5,aster:.5,aims:.3,rajagiri:.1,lisie:.1,medical_trust:.1},
+  {n:"Qatar (Doha)",lat:25.285,lng:51.531,t:"international",d:"Aster DM presence",vps:1,aster:1.5,aims:.5,rajagiri:.2,lisie:.1,medical_trust:.1},
+  {n:"Kuwait",lat:29.376,lng:47.977,t:"international",d:"Established Malayali community",vps:.8,aster:.8,aims:.4,rajagiri:.1,lisie:.1,medical_trust:.1},
+  {n:"Oman (Muscat)",lat:23.588,lng:58.383,t:"international",d:"Historical Kerala trading ties",vps:.8,aster:.8,aims:.5,rajagiri:.2,lisie:.1,medical_trust:.1},
+  {n:"Bahrain",lat:26.067,lng:50.558,t:"international",d:"Confirmed via VPS testimonials",vps:.5,aster:.5,aims:.3,rajagiri:.1,lisie:0,medical_trust:0},
+  {n:"Maldives",lat:3.203,lng:73.221,t:"international",d:"Govt referral agreements",vps:.8,aster:.8,aims:1,rajagiri:.2,lisie:.2,medical_trust:.1},
+  {n:"Bangladesh",lat:23.810,lng:90.413,t:"international",d:"GT: #1 medical visa source",vps:.3,aster:.3,aims:.5,rajagiri:.1,lisie:.1,medical_trust:0},
+  {n:"Afghanistan",lat:34.555,lng:69.208,t:"international",d:"GT: #2 medical visa source",vps:.1,aster:.1,aims:.2,rajagiri:0,lisie:0,medical_trust:0},
+  {n:"Yemen (Sana'a)",lat:15.369,lng:44.191,t:"international",d:"Conflict-driven MVT; cancer, cardiac, transplant cases",vps:.8,aster:1,aims:.8,rajagiri:.2,lisie:.1,medical_trust:.1},
+  {n:"Yemen (Aden)",lat:12.788,lng:45.019,t:"international",d:"Southern Yemen; direct flights via Gulf hubs",vps:.4,aster:.5,aims:.4,rajagiri:.1,lisie:0,medical_trust:0},
+  {n:"Iraq (Baghdad)",lat:33.313,lng:44.366,t:"international",d:"Major medical visa source; oncology & cardiac",vps:.5,aster:.5,aims:.4,rajagiri:.1,lisie:0,medical_trust:0},
+  {n:"Iraq (Kurdistan/Erbil)",lat:36.191,lng:44.009,t:"international",d:"Kurdistan region medical travel corridor",vps:.3,aster:.3,aims:.3,rajagiri:0,lisie:0,medical_trust:0},
+  {n:"Iran (Tehran)",lat:35.689,lng:51.389,t:"international",d:"Conflict-disrupted air travel; cardiac & oncology",vps:.3,aster:.4,aims:.3,rajagiri:.1,lisie:0,medical_trust:0},
+  {n:"East Africa",lat:-1.292,lng:36.822,t:"international",d:"Kenya/Tanzania Aster ops",vps:.3,aster:.5,aims:.3,rajagiri:.1,lisie:0,medical_trust:0},
+  {n:"Nigeria",lat:6.524,lng:3.379,t:"international",d:"GT: top 5 medical visa India",vps:.1,aster:.2,aims:.2,rajagiri:0,lisie:0,medical_trust:0},
+  {n:"UK",lat:51.507,lng:-.128,t:"international",d:"NRI families",vps:.2,aster:.2,aims:.1,rajagiri:0,lisie:0,medical_trust:0},
+  {n:"Canada",lat:43.653,lng:-79.383,t:"international",d:"VPS testimonial-confirmed",vps:.2,aster:.1,aims:.1,rajagiri:0,lisie:0,medical_trust:0},
+  {n:"USA",lat:40.713,lng:-74.006,t:"international",d:"NRI transplant tourism",vps:.2,aster:.2,aims:.2,rajagiri:0,lisie:0,medical_trust:0},
+  {n:"Australia",lat:-33.869,lng:151.209,t:"international",d:"Aster testimonial-confirmed",vps:.1,aster:.2,aims:.1,rajagiri:0,lisie:0,medical_trust:0},
+];
+
+const COLORS={local:[0,191,166],kerala:[74,159,232],domestic:[232,168,56],international:[232,93,93]};
+const COLHEX={local:'#00BFA6',kerala:'#4A9FE8',domestic:'#E8A838',international:'#E85D5D'};
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+let sel='vps', lyrs={local:true,kerala:true,domestic:true,international:true};
+let mapX=0,mapY=0,zoom=1,dragging=false,dragSX=0,dragSY=0,dragMX=0,dragMY=0;
+
+// ═══════════════════════════════════════════════
+// CANVAS MAP
+// ═══════════════════════════════════════════════
+const cvs=document.getElementById('mapCanvas');
+const ctx=cvs.getContext('2d');
+let W,H,animTime=0,animId;
+
+function resize(){W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight}
+window.addEventListener('resize',()=>{resize();draw()});
+resize();
+
+// Mercator projection
+function proj(lat,lng){
+  const s=zoom*3.8;
+  const cx=76.3+mapX, cy=15+mapY;
+  const x=(lng-cx)*s+W/2;
+  const latR=lat*Math.PI/180;
+  const cyR=cy*Math.PI/180;
+  const y=(Math.log(Math.tan(Math.PI/4+cyR/2))-Math.log(Math.tan(Math.PI/4+latR/2)))*s*(180/Math.PI)+H/2;
+  return[x,y];
+}
+
+// Pan & zoom
+cvs.addEventListener('mousedown',e=>{dragging=true;dragSX=e.clientX;dragSY=e.clientY;dragMX=mapX;dragMY=mapY});
+window.addEventListener('mousemove',e=>{if(!dragging)return;mapX=dragMX+(e.clientX-dragSX)/(zoom*3.8);mapY=dragMY-(e.clientY-dragSY)/(zoom*3.8);draw()});
+window.addEventListener('mouseup',()=>{dragging=false});
+cvs.addEventListener('wheel',e=>{e.preventDefault();const d=e.deltaY>0?.92:1.08;zoom=Math.max(.3,Math.min(12,zoom*d));draw()},{passive:false});
+// Touch
+let lastTouchDist=0;
+cvs.addEventListener('touchstart',e=>{if(e.touches.length===1){dragging=true;dragSX=e.touches[0].clientX;dragSY=e.touches[0].clientY;dragMX=mapX;dragMY=mapY}if(e.touches.length===2){lastTouchDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY)}},{passive:true});
+cvs.addEventListener('touchmove',e=>{if(e.touches.length===1&&dragging){mapX=dragMX+(e.touches[0].clientX-dragSX)/(zoom*3.8);mapY=dragMY-(e.touches[0].clientY-dragSY)/(zoom*3.8);draw()}if(e.touches.length===2){const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);zoom=Math.max(.3,Math.min(12,zoom*(d/lastTouchDist)));lastTouchDist=d;draw()}},{passive:true});
+cvs.addEventListener('touchend',()=>{dragging=false});
+
+// India outline (approximate)
+const INDIA=[[8.07,77.55],[8.3,76.9],[9.5,76.3],[10.5,76.2],[11.7,75.5],[12.8,74.8],[14.5,74.3],[15.4,73.9],[17.5,73.1],[19,72.8],[20.7,72.6],[22.4,68.5],[23.7,68.1],[24.8,68.8],[25.5,70],[27.5,70.5],[28.5,71],[30,71.5],[32.5,74.5],[34.5,76.5],[35.5,77.5],[33,79],[30.5,79.5],[28.7,80.5],[27.5,84],[26.5,87.5],[25,89],[24.5,90.5],[22.5,90.5],[21.5,89],[21.7,87.5],[20.5,86.5],[19.5,85.5],[18.5,84],[16.5,82],[14.5,80],[13,80.2],[11.5,80],[10,79.8],[9,79.5],[8.3,78],[8.07,77.55]];
+const KERALA=[[8.3,76.9],[8.5,77],[9,77.1],[9.5,76.8],[10,76.5],[10.5,76.3],[10.8,76.2],[11.2,76],[11.5,75.8],[12,75.4],[12.2,75.2],[12,75],[11.5,75.5],[11,75.8],[10.5,76],[10,76.2],[9.5,76.3],[9,76.4],[8.5,76.6],[8.3,76.9]];
+const SRI_LANKA=[[9.8,80],[9.1,79.7],[7.8,79.9],[6.5,80.2],[6,80.7],[6.2,81.3],[7.5,81.8],[8.5,81.5],[9.5,80.8],[9.8,80]];
+const GULF_OUTLINE=[[25,51],[26.2,51.5],[27,51.5],[28,50.8],[29.5,48],[29.5,47.5],[28,46.5],[26,50],[25,51]];
+
+function drawOutline(pts,fill,stroke){
+  ctx.beginPath();
+  pts.forEach(([la,ln],i)=>{const[x,y]=proj(la,ln);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y)});
+  ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill()}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}
+}
+
+// Quadratic bezier arc
+function drawArc(x1,y1,x2,y2,color,width,alpha,progress){
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  const dx=x2-x1,dy=y2-y1;
+  const dist=Math.sqrt(dx*dx+dy*dy);
+  const curve=Math.min(dist*.35,120);
+  const cx=mx-dy/dist*curve, cy=my+dx/dist*curve;
+
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  ctx.strokeStyle=`rgb(${color[0]},${color[1]},${color[2]})`;
+  ctx.lineWidth=width;
+  ctx.lineCap='round';
+
+  // Animated draw
+  ctx.beginPath();
+  const steps=60;
+  const end=Math.floor(steps*progress);
+  for(let i=0;i<=end;i++){
+    const t=i/steps;
+    const px=(1-t)*(1-t)*x1+2*(1-t)*t*cx+t*t*x2;
+    const py=(1-t)*(1-t)*y1+2*(1-t)*t*cy+t*t*y2;
+    i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+  }
+  ctx.stroke();
+
+  // Glow
+  ctx.globalAlpha=alpha*.3;
+  ctx.lineWidth=width+3;
+  ctx.filter='blur(4px)';
+  ctx.stroke();
+  ctx.filter='none';
+  ctx.restore();
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // BG gradient
+  const bg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.7);
+  bg.addColorStop(0,'#0F1F38');
+  bg.addColorStop(1,'#080B12');
+  ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='rgba(28,48,80,.25)';ctx.lineWidth=.5;
+  for(let lat=-10;lat<=50;lat+=5){
+    const[,y]=proj(lat,50);
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();
+  }
+  for(let lng=30;lng<=110;lng+=5){
+    const[x]=proj(20,lng);
+    ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();
+  }
+
+  // Land masses
+  drawOutline(INDIA,'#131E33','#1C3050');
+  drawOutline(KERALA,'#1A2D4A','rgba(0,191,166,.3)');
+  drawOutline(SRI_LANKA,'#131E33','#1C3050');
+  drawOutline(GULF_OUTLINE,'#131E33','#1C3050');
+
+  const hosp=HOSPS.find(h=>h.id===sel);
+  const[hx,hy]=proj(hosp.lat,hosp.lng);
+
+  // Arcs
+  const progress=Math.min(1,animTime/60);
+  O.forEach(o=>{
+    const pct=o[sel]||0;
+    if(pct<=0||!lyrs[o.t])return;
+    const[ox,oy]=proj(o.lat,o.lng);
+    const w=Math.max(.5,pct*.55);
+    const a=Math.min(.85,.12+pct/12);
+    drawArc(ox,oy,hx,hy,COLORS[o.t],w,a,progress);
+  });
+
+  // Origin dots
+  O.forEach(o=>{
+    const pct=o[sel]||0;
+    if(pct<=0||!lyrs[o.t])return;
+    const[ox,oy]=proj(o.lat,o.lng);
+    const r=Math.max(2,Math.min(8,pct*.8));
+    const c=COLORS[o.t];
+
+    // Glow
+    ctx.save();
+    ctx.globalAlpha=.3;
+    ctx.beginPath();ctx.arc(ox,oy,r+4,0,Math.PI*2);
+    ctx.fillStyle=`rgb(${c[0]},${c[1]},${c[2]})`;
+    ctx.filter='blur(4px)';ctx.fill();ctx.filter='none';
+    ctx.restore();
+
+    // Dot
+    ctx.beginPath();ctx.arc(ox,oy,r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},.85)`;ctx.fill();
+
+    // Labels for significant origins
+    if(pct>=2.5&&zoom>=.8){
+      ctx.font='500 9px Inter,sans-serif';
+      ctx.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},.7)`;
+      ctx.fillText(o.n,ox+r+3,oy+3);
+    }
+  });
+
+  // Hospital dots (others)
+  HOSPS.forEach(h=>{
+    if(h.id===sel)return;
+    const[x,y]=proj(h.lat,h.lng);
+    ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(90,107,124,.5)';ctx.fill();
+  });
+
+  // Selected hospital — pulsing dot
+  const pulse=.5+.5*Math.sin(animTime*.08);
+  ctx.save();
+  ctx.globalAlpha=.15+pulse*.15;
+  ctx.beginPath();ctx.arc(hx,hy,14+pulse*8,0,Math.PI*2);
+  ctx.strokeStyle='#00BFA6';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.restore();
+  ctx.save();
+  ctx.globalAlpha=.1+pulse*.1;
+  ctx.beginPath();ctx.arc(hx,hy,8+pulse*4,0,Math.PI*2);
+  ctx.strokeStyle='#00BFA6';ctx.lineWidth=1;ctx.stroke();
+  ctx.restore();
+  ctx.beginPath();ctx.arc(hx,hy,5,0,Math.PI*2);
+  ctx.fillStyle='#00BFA6';ctx.fill();
+
+  // Hospital label
+  ctx.font='600 11px Inter,sans-serif';
+  ctx.fillStyle='#00BFA6';
+  ctx.fillText(hosp.name,hx+10,hy-8);
+  ctx.font='400 9px Inter,sans-serif';
+  ctx.fillStyle='#5A6B7C';
+  ctx.fillText(`${hosp.beds} beds · Kochi`,hx+10,hy+4);
+}
+
+function animate(){
+  animTime++;
+  draw();
+  animId=requestAnimationFrame(animate);
+}
+
+// ═══════════════════════════════════════════════
+// UI CONTROLS
+// ═══════════════════════════════════════════════
+
+function renderBtns(){
+  const el=document.getElementById('hospBtns');
+  el.innerHTML=HOSPS.map(h=>`<button class="hb ${h.id===sel?'on':''}" data-id="${h.id}"><span class="d" style="background:${h.color}"></span>${h.name}<span class="b">${h.beds}b</span></button>`).join('');
+  el.querySelectorAll('.hb').forEach(b=>b.onclick=()=>{sel=b.dataset.id;animTime=0;renderBtns();updStats();updBars();updIntl();draw()});
+}
+function updStats(){
+  const h=HOSPS.find(h=>h.id===sel);
+  document.getElementById('stats').innerHTML=`<div class="sb"><div class="v">${h.stats.opd}</div><div class="l">OPD/yr</div></div><div class="sb"><div class="v">${h.stats.ipd}</div><div class="l">IPD/yr</div></div><div class="sb"><div class="v">${h.stats.intl}</div><div class="l">Int'l</div></div>`;
+}
+function updBars(){
+  const sorted=[...O].map(o=>({...o,pct:o[sel]||0})).filter(o=>o.pct>0&&lyrs[o.t]).sort((a,b)=>b.pct-a.pct).slice(0,14);
+  const mx=sorted[0]?.pct||1;
+  document.getElementById('bars').innerHTML=sorted.map(o=>`<div class="oi"><div class="oh"><span class="n">${o.n}</span><span class="p">${o.pct}%</span></div><div class="ob"><div class="of" style="width:${o.pct/mx*100}%;background:${COLHEX[o.t]}"></div></div></div>`).join('');
+}
+function updIntl(){
+  const intl=O.filter(o=>o.t==='international').map(o=>({n:o.n,p:o[sel]||0})).filter(o=>o.p>0).sort((a,b)=>b.p-a.p);
+  const mx=intl[0]?.p||1;
+  document.getElementById('intlBars').innerHTML=intl.map(o=>`<div class="oi"><div class="oh"><span class="n">${o.n}</span><span class="p">${o.p}%</span></div><div class="ob"><div class="of" style="width:${o.p/mx*100}%;background:#E85D5D"></div></div></div>`).join('');
+}
+
+// Layer toggles
+document.querySelectorAll('[data-lyr]').forEach(cb=>{
+  cb.addEventListener('change',()=>{lyrs[cb.dataset.lyr]=cb.checked;updBars();draw()});
+});
+
+// Tooltip on hover
+cvs.addEventListener('mousemove',e=>{
+  const tip=document.getElementById('tipBox');
+  // We skip heavy tooltip for performance — data is in side panels
+});
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+renderBtns();updStats();updBars();updIntl();
+animate();
+</script>
+</body>
+</html>
