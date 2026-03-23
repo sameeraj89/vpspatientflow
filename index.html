@@ -313,7 +313,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 <div class="hdr">
   <div class="hdr-top">
     <div class="vps-logo-wrap">
-    <img class="vps-logo-img" src="https://tukuz.com/wp-content/uploads/2020/09/vps-lakeshore-hospital-logo-vector.png" alt="VPS Lakeshore" class="vps-logo-img" alt="VPS Lakeshore">
+    <img class="vps-logo-img" src="https://tukuz.com/wp-content/uploads/2020/09/vps-lakeshore-hospital-logo-vector.png" alt="VPS Lakeshore">
     </div>
     <div class="hdr-divider"></div>
     <div class="hdr-txt">
@@ -918,6 +918,7 @@ const mapSvgEl = document.getElementById('mapSvg');
 const mapSvgD3 = d3.select('#mapSvg');
 let d3Proj = d3.geoMercator();
 let worldGeoData = null;
+let indiaGeoData = null; // Official India boundary (Highcharts map collection)
 
 function updateProjection(){
   // Mirror the Mercator math to D3: D3 scale = pixels/degree * (180/π)
@@ -953,20 +954,6 @@ const KERALA_PTS=[
   [11.5,75.2],[11.0,75.6],[10.5,75.9],[10.0,76.0],[9.5,76.1],
   [9.0,76.2],[8.5,76.5],[8.3,76.9]
 ];
-// Pakistan-administered Kashmir (Azad Kashmir + Gilgit-Baltistan)
-// Shown per India's official territorial claim
-const POK_PTS=[
-  [33.7,74.2],[34.1,74.9],[34.6,75.4],[35.0,76.1],[35.5,76.6],
-  [36.0,77.1],[36.5,76.6],[36.9,75.6],[37.1,74.6],[37.1,73.9],
-  [36.8,73.1],[36.4,72.5],[35.8,72.4],[35.0,72.6],[34.2,72.9],
-  [33.7,73.2],[33.2,74.1],[33.5,74.4],[33.7,74.2]
-];
-// Aksai Chin — shown per India's official territorial claim
-const AKSAI_PTS=[
-  [35.5,78.1],[36.0,78.9],[36.3,79.9],[35.9,80.6],
-  [35.2,80.9],[34.5,80.6],[34.0,80.1],[33.5,79.3],
-  [33.8,78.3],[34.4,77.9],[35.1,77.9],[35.5,78.1]
-];
 
 function renderMap(){
   updateProjection();
@@ -996,23 +983,28 @@ function renderMap(){
     .attr('stroke-width', d => String(d.id)==='356' ? 1.5 : 0.5)
     .attr('d', pathGen);
 
-  // India slightly emphasised
-  const india = countries.features.find(f=>String(f.id)==='356');
-  if(india){
-    mapSvgD3.append('path').datum(india)
+  // India — prefer official boundary from Highcharts map collection (Survey of India claim)
+  // Falls back to world-atlas if the official source failed to load
+  if(indiaGeoData){
+    try{
+      const objKey=Object.keys(indiaGeoData.objects)[0];
+      const geoms=indiaGeoData.objects[objKey].geometries;
+      const mergedGeom=topojson.merge(indiaGeoData, geoms);
+      mapSvgD3.append('path')
+        .datum({type:'Feature',geometry:mergedGeom})
+        .attr('fill','#ede8d8').attr('stroke','#7a9aac').attr('stroke-width',1.5)
+        .attr('d',pathGen);
+    }catch(e){
+      console.warn('India official render failed',e);
+      const india=countries.features.find(f=>String(f.id)==='356');
+      if(india) mapSvgD3.append('path').datum(india)
+        .attr('fill','#ede8d8').attr('stroke','#7a9aac').attr('stroke-width',1.5).attr('d',pathGen);
+    }
+  } else {
+    const india=countries.features.find(f=>String(f.id)==='356');
+    if(india) mapSvgD3.append('path').datum(india)
       .attr('fill','#ede8d8').attr('stroke','#7a9aac').attr('stroke-width',1.5).attr('d',pathGen);
   }
-
-  // Kashmir patches — India's claimed territory (POK + Aksai Chin)
-  [[POK_PTS],[AKSAI_PTS]].forEach(([pts])=>{
-    const screenPts=pts.map(([la,ln])=>d3Proj([ln,la])).filter(Boolean);
-    if(screenPts.length){
-      const pathStr='M'+screenPts.map(p=>p.join(',')).join('L')+'Z';
-      mapSvgD3.append('path').attr('d',pathStr)
-        .attr('fill','#ede8d8').attr('stroke','#7a9aac').attr('stroke-width',1.0)
-        .attr('stroke-dasharray','3,2');
-    }
-  });
 
   // Kerala green overlay (state level from custom polygon)
   if(zoom>=0.5){
@@ -1031,13 +1023,15 @@ function renderMap(){
 }
 
 async function initMap(){
-  try{
-    worldGeoData = await d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json');
-    renderMap();
-  }catch(e){
-    console.warn('Map data unavailable, using fallback');
-    renderMap(); // Still renders background
-  }
+  // Load world atlas and official India boundary in parallel
+  const worldP = d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json')
+    .catch(()=>null);
+  // Highcharts map-collection: India all states — Survey of India official claim
+  // Includes J&K, Ladakh, Aksai Chin, and all territories per GoI
+  const indiaP = d3.json('https://cdn.jsdelivr.net/npm/@highcharts/map-collection@2.2.0/countries/in/in-all.topo.json')
+    .catch(()=>null);
+  [worldGeoData, indiaGeoData] = await Promise.all([worldP, indiaP]);
+  renderMap();
 }
 
 // Pan & zoom — update both SVG map and canvas
