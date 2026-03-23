@@ -16,6 +16,9 @@
   --border:#cddeed;--surf:#ffffff;
   /* Light theme tokens */
   --bg:#f0f6fb;--text:#0d2535;--muted:#5a7a8a;
+  /* Mobile layout — updated dynamically by adjustPanels() */
+  --hdr-h: 80px;
+  --tab-h: 48px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
@@ -280,7 +283,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   .kc{padding:5px 8px;min-width:90px}
   .kv{font-size:13px}
   .ks,.ksrc{display:none}
-  .mob-tabs{display:block}
+  .mob-tabs{display:block;height:var(--tab-h)}
+  /* Canvas and SVG map sit in visible area between header and tab bar */
+  #cvs{top:var(--hdr-h) !important;bottom:var(--tab-h) !important;height:auto !important}
+  #mapSvg{top:var(--hdr-h) !important;bottom:var(--tab-h) !important;height:auto !important}
+  /* Mobile content panels start below header */
+  .mob-pnl{top:var(--hdr-h) !important}
   #stratPanel{width:calc(100vw - 16px);left:8px;transform:none;max-height:45vh;bottom:56px;
     border-radius:10px}
   .strat-body{grid-template-columns:1fr}
@@ -291,15 +299,17 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 }
 /* Extra compact for small phones */
 @media(max-width:480px){
-  .hdr{padding:6px 10px 5px}
-  .hdr-txt h1{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hdr{padding:5px 10px 4px}
+  .hdr-top{gap:6px;align-items:center}
+  .hdr-txt h1{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
   .hdr-txt .sub{display:none}
-  .vps-logo-img{height:26px}
-  .hdr-divider{height:30px}
-  .kpi-row{margin-top:4px;gap:4px}
-  .kc{min-width:74px;padding:4px 7px}
-  .kv{font-size:12px}
-  .kl{font-size:6.5px}
+  .vps-logo-img{height:24px}
+  .hdr-divider{height:28px}
+  .kpi-row{margin-top:3px;gap:3px;padding-bottom:2px}
+  .kc{min-width:68px;padding:3px 6px;border-radius:4px}
+  .kv{font-size:11px;line-height:1.2}
+  .kl{font-size:6px}
+  .ks,.ksrc{display:none}
 }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
@@ -934,8 +944,10 @@ function proj(lat,lng){
 }
 
 function resize(){
-  W = cvs.width = window.innerWidth;
-  H = cvs.height = window.innerHeight;
+  // Use actual CSS-rendered size of canvas so it respects
+  // the --hdr-h / --tab-h offsets on mobile
+  W = cvs.width = cvs.offsetWidth || window.innerWidth;
+  H = cvs.height = cvs.offsetHeight || window.innerHeight;
   mapSvgEl.setAttribute('width', W);
   mapSvgEl.setAttribute('height', H);
   renderMap();
@@ -1589,12 +1601,17 @@ document.querySelectorAll('[data-lyr]').forEach(cb=>{
 
 // Adjust panel tops dynamically after header renders
 function adjustPanels(){
-  const hdrH=document.querySelector('.hdr').getBoundingClientRect().height;
-  const top=Math.round(hdrH)+6;
+  const hdrH=Math.round(document.querySelector('.hdr').getBoundingClientRect().height);
+  // Update CSS variable — drives canvas/SVG/mob-pnl top on mobile
+  document.documentElement.style.setProperty('--hdr-h', hdrH+'px');
+  // Desktop panels
+  const top=hdrH+6;
   document.getElementById('panL').style.top=top+'px';
   document.getElementById('panL').style.maxHeight=`calc(100vh - ${top+10}px)`;
   document.getElementById('panR').style.top=top+'px';
   document.getElementById('panR').style.maxHeight=`calc(100vh - ${top+10}px)`;
+  // Mobile: recalculate canvas now that --hdr-h is set
+  if(window.innerWidth<=900){ resize(); draw(); }
 }
 
 // ════════════════════════════════════════════════════════
