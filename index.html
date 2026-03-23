@@ -214,9 +214,80 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .strat-compete{font-size:9px;color:#8a2030;background:#fff5f7;padding:6px 8px;border-radius:5px;border:1px solid #f0c0c8;line-height:1.5;margin-top:2px}
 .strat-pot{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#1a7a50;margin-top:4px}
 
-@media(max-width:900px){.pnl{display:none}.hdr-txt h1{font-size:14px}
-  #stratPanel{width:calc(100vw - 20px);left:10px;transform:none;max-height:50vh}
-  .strat-body{grid-template-columns:1fr}}
+/* ── Mobile Tab Bar ── */
+.mob-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:110;
+  background:#fff;border-top:2px solid #0072BC;padding:0;
+  box-shadow:0 -2px 12px rgba(0,60,120,.12)}
+.mob-tabs-row{display:flex}
+.mob-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 4px 6px;border:none;background:none;cursor:pointer;font-family:inherit;
+  font-size:8px;color:#5a7a8a;letter-spacing:.3px;transition:all .15s;gap:2px;
+  border-right:1px solid #e0eaf3}
+.mob-tab:last-child{border-right:none}
+.mob-tab .mob-ico{font-size:16px;line-height:1}
+.mob-tab.on{color:#0072BC;background:#e8f4fb;font-weight:600}
+.mob-tab.on .mob-ico{transform:scale(1.1)}
+
+/* Mobile panel (full-screen overlay) */
+.mob-pnl{display:none;position:fixed;z-index:105;top:0;left:0;right:0;bottom:48px;
+  background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:#9bb8d0 transparent}
+.mob-pnl.open{display:block}
+.mob-pnl-hdr{position:sticky;top:0;z-index:2;background:#fff;padding:14px 16px 10px;
+  border-bottom:2px solid #e0eaf3;display:flex;align-items:center;gap:10px}
+.mob-pnl-hdr .vps-logo-img{height:28px}
+.mob-pnl-hdr h2{font-size:14px;font-weight:700;color:#0072BC;flex:1}
+.mob-pnl-body{padding:12px 14px 20px}
+.mob-pnl-body .sec{padding:14px 0;border-bottom:1px solid #e0eaf3}
+.mob-pnl-body .sec:last-child{border-bottom:none}
+.mob-pnl-body .sec-t{font-size:10px;margin-bottom:10px}
+.mob-pnl-body .kc{min-width:120px;padding:8px 12px}
+.mob-pnl-body .kv{font-size:16px}
+.mob-pnl-body .kl{font-size:9px;margin-top:2px}
+.mob-pnl-body .ks{font-size:8.5px}
+.mob-pnl-body .hb{padding:10px 12px;font-size:12px;margin-bottom:5px}
+.mob-pnl-body .hb .beds{font-size:10px}
+.mob-pnl-body .stab{font-size:10px;padding:6px 10px}
+.mob-pnl-body .tgl{font-size:12px;padding:4px 0}
+.mob-pnl-body .tbox{width:16px;height:16px}
+.mob-pnl-body .sg{gap:8px}
+.mob-pnl-body .sb{padding:10px}
+.mob-pnl-body .sb .v{font-size:16px}
+.mob-pnl-body .sb .l{font-size:9.5px}
+.mob-pnl-body .oh .n{font-size:11px}
+.mob-pnl-body .oh .p{font-size:10px}
+.mob-pnl-body .ob{height:6px}
+.mob-pnl-body .al{padding:10px 12px;font-size:10px;line-height:1.6}
+.mob-pnl-body .al .ah{font-size:11px}
+.mob-pnl-body .nb{font-size:9.5px;padding:10px;line-height:1.6}
+.mob-pnl-body .so-item{padding:8px 10px;font-size:11px;margin-bottom:3px}
+.mob-pnl-body .so-fbtn{font-size:9px;padding:4px 8px}
+.mob-pnl-body .so-pot{font-size:9px}
+.mob-pnl-body .hc{font-size:10px;margin-bottom:6px}
+.mob-pnl-body .hc-name{width:100px;font-size:10px}
+.mob-pnl-body .hc-val{font-size:9px}
+.mob-pnl-body .lr{font-size:11px;margin-bottom:5px}
+
+@media(max-width:900px){
+  body{overflow:hidden}
+  .pnl{display:none !important}
+  .hdr{padding:8px 12px 6px}
+  .hdr-top{gap:8px}
+  .hdr-txt h1{font-size:13px}
+  .hdr-txt .sub{font-size:9px}
+  .tags{display:none}
+  .kpi-row{gap:6px;margin-top:4px}
+  .kc{padding:5px 8px;min-width:90px}
+  .kv{font-size:13px}
+  .mob-tabs{display:block}
+  #stratPanel{width:calc(100vw - 16px);left:8px;transform:none;max-height:45vh;bottom:56px;
+    border-radius:10px}
+  .strat-body{grid-template-columns:1fr}
+  .strat-hdr h3{font-size:11px;flex-wrap:wrap}
+  .strat-item{font-size:10px}
+  .strat-bridge,.strat-compete{font-size:10px}
+  #tip{max-width:70vw;font-size:9px}
+}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
@@ -327,6 +398,39 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <button class="strat-close" onclick="closeStrat()">✕</button>
   </div>
   <div class="strat-body" id="stratBody"></div>
+</div>
+
+<!-- Mobile Panels (tab content) -->
+<div class="mob-pnl" id="mobMap"></div>
+<div class="mob-pnl" id="mobControls">
+  <div class="mob-pnl-hdr"><h2>Controls & Metrics</h2></div>
+  <div class="mob-pnl-body" id="mobControlsBody"></div>
+</div>
+<div class="mob-pnl" id="mobIntel">
+  <div class="mob-pnl-hdr"><h2>Market Intelligence</h2></div>
+  <div class="mob-pnl-body" id="mobIntelBody"></div>
+</div>
+<div class="mob-pnl" id="mobStrategy">
+  <div class="mob-pnl-hdr"><h2>Strategy Playbook</h2></div>
+  <div class="mob-pnl-body" id="mobStrategyBody"></div>
+</div>
+
+<!-- Mobile Tab Bar -->
+<div class="mob-tabs">
+  <div class="mob-tabs-row">
+    <button class="mob-tab on" data-mob="map" onclick="switchMobTab('map')">
+      <span class="mob-ico">🗺</span>Map
+    </button>
+    <button class="mob-tab" data-mob="controls" onclick="switchMobTab('controls')">
+      <span class="mob-ico">⚙</span>Controls
+    </button>
+    <button class="mob-tab" data-mob="intel" onclick="switchMobTab('intel')">
+      <span class="mob-ico">⚠</span>Intel
+    </button>
+    <button class="mob-tab" data-mob="strategy" onclick="switchMobTab('strategy')">
+      <span class="mob-ico">📋</span>Strategy
+    </button>
+  </div>
 </div>
 
 <!-- Tooltip -->
@@ -1445,6 +1549,178 @@ animate();
 initMap(); // Load world atlas data and render D3 map layer
 setTimeout(adjustPanels,100);
 window.addEventListener('resize',adjustPanels);
+
+// ════════════════════════════════════════════════════════
+// MOBILE — Tab switching & panel population
+// ════════════════════════════════════════════════════════
+let activeMobTab='map';
+
+function switchMobTab(tab){
+  activeMobTab=tab;
+  // Update tab buttons
+  document.querySelectorAll('.mob-tab').forEach(t=>{
+    t.classList.toggle('on',t.dataset.mob===tab);
+  });
+  // Hide all mobile panels
+  document.querySelectorAll('.mob-pnl').forEach(p=>p.classList.remove('open'));
+  // Show selected panel (map tab = no overlay, just the map)
+  if(tab!=='map'){
+    document.getElementById('mob'+tab.charAt(0).toUpperCase()+tab.slice(1)).classList.add('open');
+    populateMobPanel(tab);
+  }
+}
+
+function populateMobPanel(tab){
+  if(tab==='controls'){
+    const h=HOSPS.find(h=>h.id===sel);
+    const badge=h.id==='vps'||h.id==='aster'?'Confirmed FY25':'Estimated';
+    document.getElementById('mobControlsBody').innerHTML=`
+      <div class="sec">
+        <div class="sec-t">Select Hospital</div>
+        <div id="mobHospBtns"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Specialty Filter</div>
+        <div class="spec-tabs" id="mobSpecTabs"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Layer Controls</div>
+        <label class="tgl"><input type="checkbox" data-mlyr="local" ${lyrs.local?'checked':''}><div class="tbox"></div> Local (Ernakulam)</label>
+        <label class="tgl"><input type="checkbox" data-mlyr="kerala" ${lyrs.kerala?'checked':''}><div class="tbox"></div> Kerala Districts</label>
+        <label class="tgl"><input type="checkbox" data-mlyr="domestic" ${lyrs.domestic?'checked':''}><div class="tbox"></div> Other Indian States</label>
+        <label class="tgl"><input type="checkbox" data-mlyr="international" ${lyrs.international?'checked':''}><div class="tbox"></div> International</label>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Key Metrics <span class="badge badge-pos">${badge}</span></div>
+        <div class="sg">
+          <div class="sb"><div class="v">${h.stats.opd}</div><div class="l">OPD/yr</div><div class="yoy yoy-up">${h.yoy.opd}</div></div>
+          <div class="sb"><div class="v">${h.stats.ipd}</div><div class="l">IPD/yr</div><div class="yoy yoy-up">${h.yoy.ipd}</div></div>
+          <div class="sb"><div class="v">${h.stats.intl}</div><div class="l">Int'l Pts</div><div class="yoy yoy-up">${h.yoy.intl}</div></div>
+        </div>
+        <div style="margin-top:8px;padding:8px;background:#f0f8ff;border-radius:5px;border:1px solid #c2dff0;font-size:10px;color:#4a6070;line-height:1.5">${h.highlight}</div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Top Origins by Volume</div>
+        <div id="mobBars"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Kochi Hospital Landscape</div>
+        <div id="mobHospComp"></div>
+      </div>`;
+    // Render hospital buttons for mobile
+    document.getElementById('mobHospBtns').innerHTML=HOSPS.map(h=>
+      `<button class="hb ${h.id===sel?'on':''}" data-mid="${h.id}">
+        <span class="dot" style="background:${h.color}"></span>${h.name}<span class="beds">${h.beds}b</span>
+      </button>`).join('');
+    document.querySelectorAll('[data-mid]').forEach(b=>b.onclick=()=>{
+      sel=b.dataset.mid;animTime=0;
+      renderBtns();renderKPIs();updStats();updBars();updIntl();
+      populateMobPanel('controls');
+    });
+    // Render spec tabs for mobile
+    document.getElementById('mobSpecTabs').innerHTML=SPECS.map(s=>
+      `<button class="stab ${s.id===activeSpec?'on':''}" data-mspec="${s.id}" style="${s.id===activeSpec?`border-color:${s.color};color:${s.color}`:''}">${s.label}</button>`
+    ).join('');
+    document.querySelectorAll('[data-mspec]').forEach(b=>b.onclick=()=>{
+      activeSpec=b.dataset.mspec;renderSpecTabs();updBars();draw();
+      populateMobPanel('controls');
+    });
+    // Mobile layer toggles
+    document.querySelectorAll('[data-mlyr]').forEach(cb=>{
+      cb.addEventListener('change',()=>{lyrs[cb.dataset.mlyr]=cb.checked;updBars();updIntl();draw()});
+    });
+    // Render bars for mobile
+    const sorted=[...O].map(o=>({...o,pct:o[sel]||0}))
+      .filter(o=>o.pct>0&&lyrs[o.t]&&(activeSpec==='all'||specMatch(o)))
+      .sort((a,b)=>b.pct-a.pct).slice(0,10);
+    const mx=sorted[0]?.pct||1;
+    document.getElementById('mobBars').innerHTML=sorted.map(o=>{
+      const tc=o.trendDir||'neu';
+      return`<div class="oi"><div class="oh"><span class="n">${o.n}</span>
+        <span class="oh-right"><span class="trnd ${tc}">${o.trend>0.05?'↑':o.trend<-0.1?'↓':'↔'}</span>
+        <span class="p">${o.pct}%</span></span></div>
+        <div class="ob"><div class="of" style="width:${o.pct/mx*100}%;background:${o.alert?'#E8A838':COLHEX[o.t]}"></div></div></div>`;
+    }).join('');
+    // Hospital comparison
+    const maxBeds=Math.max(...HOSPS.map(h=>h.beds));
+    document.getElementById('mobHospComp').innerHTML=HOSPS.map(h=>
+      `<div class="hc"><div class="hc-name" style="color:${h.id===sel?h.color:'var(--gray)'}">${h.name}</div>
+        <div class="hc-bg"><div class="hc-bar" style="width:${h.beds/maxBeds*100}%;background:${h.color};opacity:${h.id===sel?1:.5}"></div></div>
+        <div class="hc-val">${h.beds.toLocaleString()}</div></div>`).join('');
+  }
+  else if(tab==='intel'){
+    const intl=O.filter(o=>o.t==='international').map(o=>({...o,p:o[sel]||0}))
+      .filter(o=>o.p>0).sort((a,b)=>b.p-a.p);
+    const mx=intl[0]?.p||1;
+    document.getElementById('mobIntelBody').innerHTML=`
+      <div class="sec">
+        <div class="sec-t">⚠ Market Intelligence <span class="badge badge-danger">2025–26</span></div>
+        <div id="mobAlerts"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">International Corridors</div>
+        <div id="mobIntlBars"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-t">Data & Sources</div>
+        <div class="nb">
+          <b>Data Sources</b><br>
+          <b style="color:#0072BC">VPS stats:</b> VPS Lakeshore 29th AR FY25 (audited).<br>
+          <b style="color:#0072BC">Aster stats:</b> Aster DM Integrated AR FY25 (audited).<br>
+          <b style="color:#0072BC">Market intel:</b> ICRIER 2025; ET Mar 2025; BusinessToday 2025.
+        </div>
+      </div>`;
+    // Alerts
+    const alerts=[
+      {cls:'high',title:'VPS Int\'l Patients ↓4% FY25',body:'International patients declined from 20,074 (FY24) to 19,193 (FY25). VPS launching Maldives OPD clinics to counter.'},
+      {cls:'high',title:'Bangladesh FTA ↓67% Dec 2024',body:'Visa restrictions caused ↓67% in Dec 2024. Kerala share already small.'},
+      {cls:'high',title:'Gulf Conflict — Yemen, Iraq, Iran',body:'Middle East air routes disrupted. KIMSHEALTH expects 10–15% revenue decline.'},
+      {cls:'good',title:'Aster–QCIL Blackstone Merger',body:'Combined 10,301 beds. Aster Medcity adding 100 beds → ~950 total.'},
+      {cls:'good',title:'VPS FY26: ₹504 Cr Target',body:'New OPDs in Malappuram, Edappal, Fort Kochi. Maldives clinics launching.'},
+    ];
+    document.getElementById('mobAlerts').innerHTML=alerts.map(a=>
+      `<div class="al ${a.cls}"><div class="ah">${a.title}</div><p>${a.body}</p></div>`).join('');
+    // Int'l bars
+    document.getElementById('mobIntlBars').innerHTML=intl.map(o=>{
+      return`<div class="oi"><div class="oh"><span class="n">${o.n}</span>
+        <span class="oh-right"><span class="trnd ${o.trendDir||'neu'}">${o.trend>0.05?'↑':o.trend<-0.1?'↓':'↔'}</span>
+        <span class="p">${o.p}%</span></span></div>
+        <div class="ob"><div class="of" style="width:${o.p/mx*100}%;background:${o.alert?'#E8A838':'#B41432'}"></div></div></div>`;
+    }).join('');
+  }
+  else if(tab==='strategy'){
+    const entries=Object.entries(STRATEGY)
+      .map(([name,s])=>{const origin=O.find(o=>o.n===name);return{name,origin,...s}})
+      .filter(e=>stratFilter==='all'||e.priority===stratFilter)
+      .sort((a,b)=>(PRI_ORDER[a.priority]||3)-(PRI_ORDER[b.priority]||3));
+    const counts={all:Object.keys(STRATEGY).length};
+    Object.values(STRATEGY).forEach(s=>{counts[s.priority]=(counts[s.priority]||0)+1});
+    const filters=['all','critical','high','medium','low'];
+    let html=`<div class="sec"><div class="sec-t">📋 Strategy Priorities</div>`;
+    html+=`<div class="so-filter">${filters.map(f=>
+      `<button class="so-fbtn ${f===stratFilter?'on':''}" data-pf="${f}" data-mpf="1">${f==='all'?'All':f.charAt(0).toUpperCase()+f.slice(1)} (${counts[f]||0})</button>`
+    ).join('')}</div>`;
+    html+=entries.map(e=>
+      `<div class="so-item" data-msn="${e.name.replace(/"/g,'&quot;')}">
+        <span class="so-pri" style="background:${PRI_COLORS[e.priority]||'#8aabb8'}"></span>
+        <span class="so-name">${e.name}</span>
+        <span class="so-pot">${e.estPotential?e.estPotential.split(' ')[0]:''}</span>
+      </div>`
+    ).join('');
+    html+=`</div>`;
+    document.getElementById('mobStrategyBody').innerHTML=html;
+    // Bind filter clicks
+    document.querySelectorAll('[data-mpf]').forEach(b=>b.onclick=()=>{
+      stratFilter=b.dataset.pf;populateMobPanel('strategy');
+    });
+    // Bind strategy item clicks
+    document.querySelectorAll('[data-msn]').forEach(el=>el.onclick=()=>{
+      const name=el.dataset.msn;
+      const origin=O.find(o=>o.n===name);
+      if(origin && STRATEGY[name]){openStrat(origin)}
+    });
+  }
+}
 </script>
 </body>
 </html>
