@@ -177,9 +177,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="hdr-divider"></div>
     <div class="hdr-txt">
       <h1><span>VPS Lakeshore</span> — Patient Flow Intelligence</h1>
-      <div class="sub">Patient origin flows to Kochi super-specialty hospitals · FY23 data + 2025–26 market intelligence</div>
+      <div class="sub">Patient origin flows to Kochi super-specialty hospitals · FY25 data + 2025–26 market intelligence</div>
       <div class="tags">
-        <span class="tag">VPS 27th Annual Report FY23</span>
+        <span class="tag">VPS 29th Annual Report FY25</span>
+        <span class="tag">Aster DM Integrated AR FY25</span>
         <span class="tag">Grant Thornton Kerala MVT</span>
         <span class="tag">KPMG MVT Vision 2030</span>
         <span class="tag">Kerala DHS Statistics</span>
@@ -246,11 +247,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="sec-t">Data & Sources</div>
     <div class="nb">
       <b>Data Sources</b><br>
-      <b style="color:#0072BC">VPS stats:</b> VPS Lakeshore Annual Report FY2022–23 (audited).<br>
+      <b style="color:#0072BC">VPS stats:</b> VPS Lakeshore 29th Annual Report FY2024–25 (audited) &amp; Lakeshore Hospital AR FY25.<br>
+      <b style="color:#0072BC">Aster stats:</b> Aster DM Healthcare Integrated Annual Report FY2024–25 (audited). Medcity Kochi = 862 beds.<br>
       <b style="color:#0072BC">Competitor stats:</b> Industry estimates; not independently verified.<br>
       <b style="color:#0072BC">Bangladesh FTA ↓67%:</b> Ministry of Tourism (MoTA) data, reported BusinessToday &amp; Economic Times, Mar 2025.<br>
       <b style="color:#0072BC">Gulf conflict impact:</b> KIMSHEALTH Kerala press statements; ET Mar 2025.<br>
-      <b style="color:#0072BC">Origin flow %:</b> Grant Thornton India Medical Tourism Report 2015; ICRIER Working Paper 2025; VPS AR FY23 (int'l corridors).<br>
+      <b style="color:#0072BC">Origin flow %:</b> Grant Thornton India Medical Tourism Report 2015; ICRIER Working Paper 2025; VPS AR FY25 (int'l corridors).<br>
       <b style="color:#0072BC">Kerala district beds:</b> Kerala Health Atlas 2022 (Govt of Kerala).<br>
       <b style="color:#0072BC">Market intel:</b> ICRIER 2025; Manipal / KIMSHEALTH statements; ASSOCHAM 2024.
     </div>
@@ -277,15 +279,15 @@ const SPECS = [
 
 const HOSPS = [
   {id:'vps',  name:'VPS Lakeshore',  color:'#0072BC', beds:470,  lat:9.9312, lng:76.3176,
-   founded:2003, accred:'NABH', jci:false,
-   stats:{opd:'3,43,876',ipd:'21,087',intl:'20,047',rev:'₹424 Cr',transplant:'257'},
-   yoy: {opd:'+9%',ipd:'+12%',intl:'+234%',rev:'+17%',transplant:'+18%'},
-   highlight:'Nephrology #1 · 208 Renal + 49 Liver Transplants · >95% success'},
-  {id:'aster',name:'Aster Medcity',  color:'#0055B8', beds:1745, lat:9.9536, lng:76.2920,
+   founded:2003, accred:'NABH · ISO 9001 · NABL', jci:false,
+   stats:{opd:'3,38,651',ipd:'21,022',intl:'19,193',rev:'₹416 Cr',transplant:'250+'},
+   yoy: {opd:'−1%',ipd:'+0.4%',intl:'−4%',rev:'+3%',transplant:'~Stable'},
+   highlight:'Nephrology #1 · Maldives clinics launching (Malé & Mahibadhoo) · New OPDs: Malappuram, Edappal, Fort Kochi · Robotic surgery expansion · Projected FY26 turnover ₹504 Cr'},
+  {id:'aster',name:'Aster Medcity',  color:'#0055B8', beds:862, lat:9.9536, lng:76.2920,
    founded:2014, accred:'JCI · NABH · NABL', jci:true,
-   stats:{opd:'~5,50,000',ipd:'~38,000',intl:'~28,000',rev:'Est. ₹900+ Cr',transplant:'1,000+'},
-   yoy: {opd:'~+10%',ipd:'~+10%',intl:'+15%',rev:'N/A',transplant:'+20%'},
-   highlight:'JCI: 1st quaternary care Kerala · 5,000+ robotic surgeries · 40-acre campus'},
+   stats:{opd:'~6,00,000',ipd:'~40,000',intl:'~30,000',rev:'₹4,138 Cr (co-wide)',transplant:'575+'},
+   yoy: {opd:'~+9%',ipd:'~+5%',intl:'+7%',rev:'+12% (co-wide)',transplant:'+15%'},
+   highlight:'JCI: 1st quaternary Kerala · 1,865+ robotic surgeries · 100-bed new tower (10th anniv.) · 65% occupancy · Bed capacity to ~950 planned · QCIL-Blackstone merger → 10,301 beds combined'},
   {id:'aims', name:'AIMS Kochi',     color:'#7040C0', beds:1300, lat:10.0375,lng:76.2918,
    founded:1998, accred:'NABH · NABL', jci:false,
    stats:{opd:'~8,00,000',ipd:'~55,000',intl:'~15,000',rev:'Est. ₹1,200+ Cr',transplant:'500+'},
@@ -877,19 +879,19 @@ function handleHover(mx,my){
 // ════════════════════════════════════════════════════════
 function renderKPIs(){
   const h=HOSPS.find(h=>h.id===sel);
-  const confirmed=h.id==='vps';
+  const confirmed=h.id==='vps'||h.id==='aster';
   const estSrc='Industry estimate (not audited)';
   const cards=[
     {v:h.stats.opd,l:'OPD / year',s:h.yoy.opd+' YoY',cls:'pos',
-     src:confirmed?'VPS Lakeshore Annual Report FY2022–23':estSrc},
+     src:confirmed?(h.id==='vps'?'VPS Lakeshore 29th AR FY25 (Audited)':'Aster DM Integrated AR FY25'):estSrc},
     {v:h.stats.ipd,l:'Inpatients',s:h.yoy.ipd+' YoY',cls:'pos',
-     src:confirmed?'VPS Lakeshore Annual Report FY2022–23':estSrc},
-    {v:h.stats.intl,l:"Int'l Patients",s:h.yoy.intl+' YoY',cls:'pos',vCls:'grn',
-     src:confirmed?'VPS AR FY23: 6,008→20,047 (+234%)':estSrc},
-    {v:h.stats.rev,l:'Revenue FY23',s:h.yoy.rev+' YoY',cls:'',
-     src:confirmed?'VPS AR FY23 (₹424 Cr, +17% YoY)':estSrc},
+     src:confirmed?(h.id==='vps'?'VPS Lakeshore 29th AR FY25 (Audited)':'Aster DM Integrated AR FY25'):estSrc},
+    {v:h.stats.intl,l:"Int'l Patients",s:h.yoy.intl+' YoY',cls:h.id==='vps'?'warn':'pos',vCls:h.id==='vps'?'amber':'grn',
+     src:confirmed?(h.id==='vps'?'VPS AR FY25: 18,820 OP + 373 IP (↓4% YoY)':'Aster DM AR FY25 (3.6 Mn+ patients co-wide)'):estSrc},
+    {v:h.stats.rev,l:'Revenue FY25',s:h.yoy.rev+' YoY',cls:'',
+     src:confirmed?(h.id==='vps'?'VPS AR FY25 (₹416 Cr, +3% YoY)':'Aster DM AR FY25 (₹4,138 Cr standalone, +12%)'):estSrc},
     {v:h.stats.transplant,l:'Transplants',s:h.yoy.transplant+' YoY',cls:'pos',
-     src:confirmed?'VPS AR FY23: 208 Renal + 49 Liver':estSrc},
+     src:confirmed?(h.id==='vps'?'VPS AR FY25: Nephrology, Renal & Liver':'Aster DM AR FY25: 575+ co-wide'):estSrc},
     {v:'↓67%',l:'Bangladesh FTA',s:'Nov–Dec 2024',cls:'warn',vCls:'amber',
      src:'BusinessToday Mar 2025 · Ministry of Tourism (MoTA) data'},
     {v:'↓25%',l:'Gulf MVT Revenue',s:'2025 conflict impact',cls:'danger',vCls:'red',
@@ -927,14 +929,18 @@ function renderSpecTabs(){
 
 function renderAlerts(){
   const alerts=[
+    {cls:'high',title:'VPS Int\'l Patients ↓4% FY25',
+     body:'International patients declined from 20,074 (FY24) to 19,193 (FY25). Gulf conflict & Bangladesh visa restrictions likely drivers. VPS launching Maldives OPD clinics (Malé & Mahibadhoo) to counter. (VPS 29th AR FY25)'},
     {cls:'high',title:'Bangladesh FTA ↓67% Dec 2024',
      body:'Visa restrictions caused ↓44% in Nov, ↓67% in Dec 2024. Bangladesh was 70% of India\'s MVT nationally. Kerala share already small — Kolkata most impacted. (BusinessToday Mar 2025)'},
     {cls:'high',title:'Gulf Conflict — Yemen, Iraq, Iran',
      body:'Middle East = ~25% India int\'l MVT revenue. Yemen/Iraq/Iran air routes disrupted. KIMSHEALTH Kerala expects 10–15% revenue decline. Manipal: \'many patients from Yemen & Oman\'. (ET Mar 2025)'},
     {cls:'med',title:'Visa Barriers — Iraq, Yemen, Nigeria',
      body:'ICRIER 2025: Iraq, Yemen & Nigeria lack access to India\'s e-medical visa, significantly limiting volumes despite high demand for oncology, cardiac & transplant care.'},
-    {cls:'good',title:'VPS Opportunity: UAE/Abu Dhabi Growing',
-     body:'VPS Healthcare HQ in Abu Dhabi provides direct pipeline. International patients grew 3.3× (6,008→20,047) in FY23. Gulf-connected segment remains high-value with premium room preference.'},
+    {cls:'good',title:'Aster–QCIL Blackstone Merger',
+     body:'Aster DM merging with Blackstone-backed QCIL (KIMSHEALTH, Evercare). Combined entity: 10,301 beds, top-3 hospital chain in India. Plans 3,300+ new beds. Aster Medcity adding 100 beds → ~950 total. (Aster DM AR FY25)'},
+    {cls:'good',title:'VPS FY26 Outlook: ₹504 Cr Revenue Target',
+     body:'VPS projects ₹504 Cr turnover and ₹98 Cr PBT for FY26. New OPD centres in Malappuram, Edappal & Fort Kochi. Mobile medical van launching Nov 2025. Robotic surgery expansion planned. (VPS AR FY25)'},
   ];
   document.getElementById('alerts').innerHTML=alerts.map(a=>
     `<div class="al ${a.cls}"><div class="ah">${a.title}</div><p>${a.body}</p></div>`).join('');
@@ -943,10 +949,13 @@ function renderAlerts(){
 function updStats(){
   const h=HOSPS.find(h=>h.id===sel);
   const badge=document.getElementById('metricBadge');
-  if(h.id==='vps'){badge.textContent='Confirmed FY23';badge.className='badge badge-pos'}
+  if(h.id==='vps'){badge.textContent='Confirmed FY25';badge.className='badge badge-pos'}
+  else if(h.id==='aster'){badge.textContent='Confirmed FY25';badge.className='badge badge-pos'}
   else{badge.textContent='Estimated';badge.className='badge badge-warn'}
   const statSrc = h.id==='vps'
-    ? '⊙ Source: VPS Lakeshore Annual Report FY2022–23 (Audited)'
+    ? '⊙ Source: VPS Lakeshore 29th Annual Report FY2024–25 (Audited)'
+    : h.id==='aster'
+    ? '⊙ Source: Aster DM Healthcare Integrated Annual Report FY2024–25 (Audited). Medcity-specific where available.'
     : '⊙ Competitor figures are estimates. Not independently verified.';
   document.getElementById('stats').innerHTML=`
     <div class="sg">
