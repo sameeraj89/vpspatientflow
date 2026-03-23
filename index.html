@@ -19,7 +19,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
-#cvs{position:absolute;inset:0;cursor:grab;background:transparent;z-index:1}#cvs:active{cursor:grabbing}
+#cvs{position:absolute;inset:0;cursor:grab;background:transparent;z-index:1;touch-action:none}#cvs:active{cursor:grabbing}
 
 /* ── Header ── */
 
@@ -953,6 +953,20 @@ const KERALA_PTS=[
   [11.5,75.2],[11.0,75.6],[10.5,75.9],[10.0,76.0],[9.5,76.1],
   [9.0,76.2],[8.5,76.5],[8.3,76.9]
 ];
+// Pakistan-administered Kashmir (Azad Kashmir + Gilgit-Baltistan)
+// Shown per India's official territorial claim
+const POK_PTS=[
+  [33.7,74.2],[34.1,74.9],[34.6,75.4],[35.0,76.1],[35.5,76.6],
+  [36.0,77.1],[36.5,76.6],[36.9,75.6],[37.1,74.6],[37.1,73.9],
+  [36.8,73.1],[36.4,72.5],[35.8,72.4],[35.0,72.6],[34.2,72.9],
+  [33.7,73.2],[33.2,74.1],[33.5,74.4],[33.7,74.2]
+];
+// Aksai Chin — shown per India's official territorial claim
+const AKSAI_PTS=[
+  [35.5,78.1],[36.0,78.9],[36.3,79.9],[35.9,80.6],
+  [35.2,80.9],[34.5,80.6],[34.0,80.1],[33.5,79.3],
+  [33.8,78.3],[34.4,77.9],[35.1,77.9],[35.5,78.1]
+];
 
 function renderMap(){
   updateProjection();
@@ -988,6 +1002,17 @@ function renderMap(){
     mapSvgD3.append('path').datum(india)
       .attr('fill','#ede8d8').attr('stroke','#7a9aac').attr('stroke-width',1.5).attr('d',pathGen);
   }
+
+  // Kashmir patches — India's claimed territory (POK + Aksai Chin)
+  [[POK_PTS],[AKSAI_PTS]].forEach(([pts])=>{
+    const screenPts=pts.map(([la,ln])=>d3Proj([ln,la])).filter(Boolean);
+    if(screenPts.length){
+      const pathStr='M'+screenPts.map(p=>p.join(',')).join('L')+'Z';
+      mapSvgD3.append('path').attr('d',pathStr)
+        .attr('fill','#ede8d8').attr('stroke','#7a9aac').attr('stroke-width',1.0)
+        .attr('stroke-dasharray','3,2');
+    }
+  });
 
   // Kerala green overlay (state level from custom polygon)
   if(zoom>=0.5){
@@ -1072,24 +1097,13 @@ cvs.addEventListener('touchmove',e=>{
       e.touches[0].clientX-e.touches[1].clientX,
       e.touches[0].clientY-e.touches[1].clientY
     );
-    if(d>5){
+    if(d>10){
       const factor=d/lastTD;
-      if(factor>0.3&&factor<3.0){
-        const pcx=(e.touches[0].clientX+e.touches[1].clientX)/2;
-        const pcy=(e.touches[0].clientY+e.touches[1].clientY)/2;
-        const geo=d3Proj&&d3Proj.invert?d3Proj.invert([pcx,pcy]):null;
+      if(factor>0.8&&factor<1.25){
         zoom=Math.max(.3,Math.min(14,zoom*factor));
-        if(geo){
-          renderMap();
-          const newPt=d3Proj(geo);
-          if(newPt){
-            mapX-=(newPt[0]-pcx)/(zoom*3.8);
-            mapY+=(newPt[1]-pcy)/(zoom*3.8);
-          }
-        }
+        renderMap();draw();
       }
       lastTD=d;
-      renderMap();draw();
     }
   }
 },{passive:true});
