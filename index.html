@@ -163,7 +163,42 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .nb{font-size:8px;color:#5a7a8a;line-height:1.55;padding:7px;background:#f0f8ff;border-radius:5px;border:1px solid #c2dff0}
 .nb b{color:#2a4a60;font-weight:500}
 
-@media(max-width:900px){.pnl{display:none}.hdr-txt h1{font-size:14px}}
+/* Strategy Panel (bottom center overlay) */
+#stratPanel{position:fixed;z-index:95;bottom:14px;left:50%;transform:translateX(-50%);
+  width:min(680px,calc(100vw - 310px));max-height:280px;overflow-y:auto;
+  background:#ffffff;border:1.5px solid #0072BC;border-radius:12px;
+  box-shadow:0 -4px 24px rgba(0,60,120,.15);display:none;
+  scrollbar-width:thin;scrollbar-color:#9bb8d0 transparent;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#stratPanel::-webkit-scrollbar{width:5px}
+#stratPanel::-webkit-scrollbar-thumb{background:#9bb8d0;border-radius:3px}
+#stratPanel.open{display:block}
+.strat-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;
+  border-bottom:1px solid #e0eaf3;position:sticky;top:0;background:#fff;z-index:1;border-radius:12px 12px 0 0}
+.strat-hdr h3{font-size:12px;font-weight:700;color:#0072BC;display:flex;align-items:center;gap:6px}
+.strat-hdr h3 .pri{font-size:7px;padding:2px 6px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.pri-critical{background:#C8103E;color:#fff}
+.pri-high{background:#b87800;color:#fff}
+.pri-medium{background:#0072BC;color:#fff}
+.pri-low{background:#8aabb8;color:#fff}
+.strat-close{background:none;border:none;cursor:pointer;font-size:18px;color:#5a7a8a;padding:2px 6px;border-radius:4px}
+.strat-close:hover{background:#e8f4fb;color:#C8103E}
+.strat-body{padding:10px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.strat-col h4{font-family:'JetBrains Mono',monospace;font-size:7.5px;text-transform:uppercase;
+  letter-spacing:.8px;color:#5a7a8a;margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.strat-col h4::before{content:'';width:3px;height:10px;border-radius:1px;display:inline-block}
+.strat-col.channels h4::before{background:#0072BC}
+.strat-col.actions h4::before{background:#1a8a5a}
+.strat-col.bridge h4::before{background:#b87800}
+.strat-col.compete h4::before{background:#C8103E}
+.strat-item{font-size:9px;color:#2a4a60;line-height:1.55;padding:3px 0 3px 10px;border-left:2px solid #e0eaf3;margin-bottom:3px}
+.strat-item.action{border-left-color:#1a8a5a;background:#f6fcf8;padding:4px 8px;border-radius:0 4px 4px 0}
+.strat-bridge{font-size:9px;color:#6a5000;background:#fffbee;padding:6px 8px;border-radius:5px;border:1px solid #f0e0a0;line-height:1.5;margin-top:2px}
+.strat-compete{font-size:9px;color:#8a2030;background:#fff5f7;padding:6px 8px;border-radius:5px;border:1px solid #f0c0c8;line-height:1.5;margin-top:2px}
+.strat-pot{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:#1a7a50;margin-top:4px}
+
+@media(max-width:900px){.pnl{display:none}.hdr-txt h1{font-size:14px}
+  #stratPanel{width:calc(100vw - 20px);left:10px;transform:none;max-height:50vh}
+  .strat-body{grid-template-columns:1fr}}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
@@ -261,6 +296,15 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <b style="color:#0072BC">Market intel:</b> ICRIER 2025; Manipal / KIMSHEALTH statements; ASSOCHAM 2024.
     </div>
   </div>
+</div>
+
+<!-- Strategy Panel (Chairman's briefing) -->
+<div id="stratPanel">
+  <div class="strat-hdr">
+    <h3 id="stratTitle">Select an origin point</h3>
+    <button class="strat-close" onclick="closeStrat()">✕</button>
+  </div>
+  <div class="strat-body" id="stratBody"></div>
 </div>
 
 <!-- Tooltip -->
@@ -494,12 +538,154 @@ const COLORS={local:[0,114,188],kerala:[0,90,160],domestic:[160,96,0],internatio
 const COLHEX={local:'#0072BC',kerala:'#005AA0',domestic:'#a06000',international:'#B41432'};
 
 // ════════════════════════════════════════════════════════
+// CHAIRMAN'S STRATEGY DATA — Referral Pathways & Actions
+// ════════════════════════════════════════════════════════
+const STRATEGY = {
+  // ── KERALA DISTRICTS ──
+  "Thrissur":{priority:'high',estPotential:'500+ additional referrals/yr',
+    channels:['Thrissur GP/physician liaison program','Amala & Jubilee Hospital overflow capture','Community health camps (Thrissur Pooram season)'],
+    actions:['Deploy 2 medical reps for Thrissur-Ernakulam corridor','Offer free second-opinion teleconsults to Thrissur GPs','Partner with Thrissur IMA chapter for CME events'],
+    vpsBridge:'Kozhikode Medical Centre can serve as north feeder — dual referral path',competitor:'AIMS & Aster strong here. Rajagiri gaining via Aluva proximity.'},
+  "Alappuzha":{priority:'high',estPotential:'300+ additional referrals/yr',
+    channels:['District hospital overflow for oncology/nephro','NRI families (Gulf returnees)','Houseboat tourism corridor — wellness+checkup packages'],
+    actions:['OPD satellite clinic (like new Fort Kochi centre)','Oncology screening camps in Cherthala/Ambalapuzha','Tie-up with Alappuzha Medical College for tertiary referrals'],
+    vpsBridge:'Short 55km corridor. VPS ambulance service could be differentiator.',competitor:'Lisie & Medical Trust have legacy presence from Archdiocese network.'},
+  "Kottayam":{priority:'medium',estPotential:'250+ additional referrals/yr',
+    channels:['Medical College Kottayam overflow','Rubber plantation worker occupational health','NRI diaspora (Gulf + US)'],
+    actions:['Cardiac & transplant awareness camps','Partnership with Kottayam MC for complex case referrals','Church community outreach (Syrian Christian network)'],
+    vpsBridge:'60km SE corridor. Good road connectivity.',competitor:'AIMS strong via Ettumanoor proximity. Kottayam MC handles most cases locally.'},
+  "Idukki":{priority:'critical',estPotential:'400+ additional referrals/yr',
+    channels:['Lowest govt beds in Kerala (1,096) — massive referral need','Plantation worker health programs','Tribal health outreach (Govt partnerships)'],
+    actions:['Mobile medical van priority route (launching Nov 2025)','Tele-ICU link with Idukki District Hospital','Emergency air-ambulance partnership for highland access'],
+    vpsBridge:'Underserved = highest growth potential. First-mover advantage critical.',competitor:'All Kochi hospitals compete. AIMS leads slightly via Thodupuzha road.'},
+  "Pathanamthitta":{priority:'medium',estPotential:'200+ additional referrals/yr',
+    channels:['Sabarimala pilgrim corridor (seasonal surge)','Gulf returnee families','District Hospital overflow'],
+    actions:['Sabarimala season health desk (Nov–Jan)','GP liaison in Thiruvalla, Adoor, Pandalam','Cardiac screening camps targeting Gulf returnees'],
+    vpsBridge:'High Gulf diaspora = VPS brand recognition advantage.',competitor:'Split between Kochi & Trivandrum hospitals.'},
+  "Palakkad":{priority:'medium',estPotential:'200+ additional referrals/yr',
+    channels:['Tamil Nadu border corridor — Coimbatore competition','Palakkad Gap transport route','Govt hospital overflow'],
+    actions:['Price-competitive packages vs Coimbatore hospitals','Tamil-speaking patient coordinator at VPS','Satellite OPD in Palakkad town'],
+    vpsBridge:'Competing with Coimbatore. Price + VPS brand must win.',competitor:'Coimbatore hospitals (PSG, KMCH) dominate. AIMS & Rajagiri compete from Kochi side.'},
+  "Malappuram":{priority:'high',estPotential:'500+ additional referrals/yr',
+    channels:['Most populous district — highest Gulf diaspora density','New Edappal OPD centre (just launched)','KIMSHEALTH/Al Shifa competition response'],
+    actions:['Edappal OPD must be aggressively marketed','Arabic-speaking coordinators for Gulf families','Community health camps in Manjeri, Perinthalmanna, Tirur'],
+    vpsBridge:'New Edappal OPD is strategic entry point. Must convert to main hospital referrals.',competitor:'KIMSHEALTH Al-Shifa dominates. Aster MIMS Calicut is strong north competitor.'},
+  "Kozhikode":{priority:'high',estPotential:'300+ additional referrals/yr',
+    channels:['VPS Kozhikode Medical Centre (28,000+ patients FY25)','Quaternary case upward referral to Kochi','NRI families (high Gulf diaspora)'],
+    actions:['Strengthen Kozhikode→Kochi referral protocol','Add specialties at Kozhikode centre to build trust','Joint CMEs between Kozhikode & Kochi teams'],
+    vpsBridge:'VPS ALREADY has a feeder here. This is the #1 internal pipeline to optimize.',competitor:'Aster MIMS Calicut, Baby Memorial, KIMSHEALTH Al-Shifa.'},
+  "Kollam":{priority:'low',estPotential:'100+ additional referrals/yr',
+    channels:['Southern Kerala — TVPM closer but Kochi preferred for transplant','Cashew industry workers','NRI families'],
+    actions:['Transplant & oncology focused outreach only','Partner with Kollam MC for specific referrals'],
+    vpsBridge:'Niche opportunity for transplant/oncology only.',competitor:'Trivandrum hospitals (SCTIMST, KIMS) dominate.'},
+  "Trivandrum":{priority:'low',estPotential:'50+ additional referrals/yr',
+    channels:['Only exceptional quaternary cases','SCTIMST overflow for transplant','IT/Space corridor professionals'],
+    actions:['Focus on transplant and rare procedures only','VPS brand positioning for "2nd opinion" from TVPM patients'],
+    vpsBridge:'Very selective. Not a volume play.',competitor:'Strong local ecosystem: SCTIMST, KIMS, GMC.'},
+  "Kannur":{priority:'medium',estPotential:'150+ additional referrals/yr',
+    channels:['Far north — 400km but high Gulf diaspora','Govt hospital overflow','Airport connectivity via CIAL'],
+    actions:['Partner with Kannur airport lounge for health awareness','Gulf returnee cardiac screening camp','Teleconsult tie-up with Kannur MC'],
+    vpsBridge:'Long distance but Kozhikode centre can serve as midway feeder.',competitor:'Aster MIMS Kannur (just added 100 beds in FY25). Manipal closer.'},
+  "Wayanad":{priority:'high',estPotential:'200+ additional referrals/yr',
+    channels:['Tribal highland — near-lowest beds (1,367)','Disaster-affected area (VPS already CSR here)','NRI diaspora'],
+    actions:['Mobile medical van route priority','Tribal health partnership with Govt','Post-disaster rehabilitation follow-up care'],
+    vpsBridge:'CSR connection from Wayanad disaster relief builds trust. Convert to referrals.',competitor:'Underserved area — all hospitals compete but none dominate.'},
+  "Kasaragod":{priority:'medium',estPotential:'100+ additional referrals/yr',
+    channels:['Northernmost — 400km from Kochi','Tulu/Beary community (cross-border Karnataka)','Gulf diaspora'],
+    actions:['Teleconsult only — too far for regular referrals','Air ambulance for emergencies','Partner with Kasaragod DH for rare case referrals'],
+    vpsBridge:'Aster planning 264-bed greenfield in Kasaragod. VPS must decide: compete or concede.',competitor:'Aster MIMS Kasaragod (264 beds planned). Manipal Mangalore is closer.'},
+  // ── DOMESTIC ──
+  "Lakshadweep":{priority:'critical',estPotential:'200+ additional referrals/yr',
+    channels:['No tertiary care — Kochi is DEFAULT referral','Govt medical evacuation contracts','Navy/Coast Guard medical referrals'],
+    actions:['Bid for Govt medical evacuation contract','Establish telemedicine link with Lakshadweep hospitals','Dedicated Lakshadweep patient coordinator at VPS'],
+    vpsBridge:'Zero competition for tertiary. Lock in govt contracts.',competitor:'AIMS slightly ahead. First to secure govt contract wins.'},
+  "TN (Coimbatore)":{priority:'low',estPotential:'100+ additional referrals/yr',
+    channels:['Cross-referrals for transplant & oncology','Cost + wait-time advantage over Coimbatore','Corporate employee health schemes'],
+    actions:['Transplant outcome data marketing to CBE physicians','Tamil-language outreach materials'],
+    vpsBridge:'Palakkad Gap corridor. Niche transplant referrals.',competitor:'Coimbatore has strong local hospitals (PSG, KMCH, GEM). Tough market.'},
+  "Bengaluru":{priority:'medium',estPotential:'150+ additional referrals/yr',
+    channels:['NRI families — IT corridor','Corporate health tie-ups','Keralite diaspora in Bengaluru'],
+    actions:['Bangalore representative office for patient coordination','Corporate tie-ups with IT companies (Keralite employees)','VPS brand presence at Malayali associations'],
+    vpsBridge:'High-value segment. NRIs prefer Kochi for family proximity during recovery.',competitor:'Aster has hospitals in Bengaluru. Narayana, Manipal, Apollo strong locally.'},
+  "Mumbai":{priority:'medium',estPotential:'100+ additional referrals/yr',
+    channels:['Keralite diaspora transplant tourism','Corporate referrals','NRI stopovers from Gulf'],
+    actions:['Transplant outcome marketing to Mumbai nephrologists','Keralite association partnerships in Mumbai'],
+    vpsBridge:'Transplant is the unique draw. No one flies Mumbai→Kochi for general care.',competitor:'Mumbai has world-class hospitals. Only VPS transplant brand can pull.'},
+  // ── INTERNATIONAL ──
+  "UAE (Dubai)":{priority:'critical',estPotential:'1,000+ additional referrals/yr',
+    channels:['Burjeel/VPS network — direct internal referral pipeline','Keralite expat community health camps','Insurance tie-ups with Dubai health insurers','CIAL direct flights (3h)'],
+    actions:['Formalize Burjeel→VPS Lakeshore referral protocol for transplant/oncology','Embed VPS Lakeshore liaison at Burjeel Hospital Dubai','Health camp at Dubai Malayali associations quarterly','Negotiate with DHA/HAAD for cross-border insurance recognition'],
+    vpsBridge:'THIS IS THE #1 STRATEGIC ASSET. Chairman\'s own Burjeel network = direct pipeline. Must be systematized.',competitor:'Aster has strong Dubai presence. AIMS has NRI network.'},
+  "UAE (Abu Dhabi)":{priority:'critical',estPotential:'800+ additional referrals/yr',
+    channels:['VPS Healthcare HQ — corporate health schemes','Burjeel Medical City referral pathway','Royal family connection — premium segment','Abu Dhabi expat Malayali community'],
+    actions:['Monthly case conference between BMC oncology & VPS Lakeshore','VPS employee family health scheme → Lakeshore for tertiary','Premium suite marketing to Abu Dhabi high-value patients','Insurance portability arrangement with HAAD-approved insurers'],
+    vpsBridge:'VPS HQ in Abu Dhabi. This is an OWNED channel. Zero acquisition cost for referrals.',competitor:'Cleveland Clinic Abu Dhabi is premium competitor. Aster gaining ground.'},
+  "Saudi Arabia (Riyadh)":{priority:'high',estPotential:'500+ additional referrals/yr',
+    channels:['Largest Keralite expat community globally','Saudi Vision 2030 insurance reforms','VPS/Burjeel Saudi expansion pipeline','Kerala diaspora associations (KMCC, KMC)'],
+    actions:['Health desk at Indian Embassy Riyadh','Partner with Saudi medical tourism facilitators','Cardiac & nephrology screening camps in Riyadh Kerala community','Leverage Burjeel Saudi expansion for cross-referral'],
+    vpsBridge:'Burjeel is expanding to Saudi. Direct pipeline once established.',competitor:'Aster DM has stronger Riyadh presence currently.'},
+  "Saudi Arabia (Jeddah)":{priority:'medium',estPotential:'200+ additional referrals/yr',
+    channels:['Western province Kerala workers','Hajj medical corridor','Kerala community associations'],
+    actions:['Hajj season health screening partnership','Jeddah Malayali association outreach'],
+    vpsBridge:'Seasonal Hajj corridor creates predictable demand spikes.',competitor:'Multiple Indian hospitals market to Jeddah. Competitive.'},
+  "Qatar (Doha)":{priority:'medium',estPotential:'200+ additional referrals/yr',
+    channels:['Post-World Cup infrastructure workers','VPS/Aster presence in Qatar','Kerala expat community'],
+    actions:['Qatar Malayali association health camps','Teleconsult tie-up with Qatar primary care clinics'],
+    vpsBridge:'VPS has Qatar presence. Leverage for referrals.',competitor:'Aster has strong Qatar presence via DM Healthcare.'},
+  "Kuwait":{priority:'medium',estPotential:'200+ additional referrals/yr',
+    channels:['Established Malayali community since 1960s','Government referral schemes','Kerala school alumni networks'],
+    actions:['Kuwait Malayali Association partnership','Govt referral scheme registration'],
+    vpsBridge:'Long-established community. Brand loyalty matters.',competitor:'AIMS has strong Kuwait alumni network.'},
+  "Oman (Muscat)":{priority:'high',estPotential:'300+ additional referrals/yr',
+    channels:['Historical Kerala trading ties','Burjeel Medical Centre Oman — direct VPS network','Govt bilateral arrangements','CIAL direct flight to Muscat'],
+    actions:['Formalize BMC Oman→VPS Lakeshore referral pathway','Oman Govt medical referral scheme bid','Community health camps in Muscat, Sohar, Salalah'],
+    vpsBridge:'Burjeel already in Oman. Direct owned-channel referral. Second strongest after UAE.',competitor:'Aster has Oman presence. KIMSHEALTH competes via Calicut.'},
+  "Maldives":{priority:'critical',estPotential:'500+ additional referrals/yr',
+    channels:['VPS launching OPD clinics in Malé & Mahibadhoo (FY26)','Govt referral agreements — no local tertiary care','Aasandha national health insurance scheme','Direct CIAL–Malé flights'],
+    actions:['FAST-TRACK Malé & Mahibadhoo clinic launch','Bid for Aasandha empanelment (Maldives national insurance)','Dedicated Dhivehi-speaking coordinator at VPS','Telemedicine link with all Maldivian atolls'],
+    vpsBridge:'OWNED CHANNEL incoming. Maldives clinics = direct feeder. This is VPS\'s biggest near-term growth lever.',competitor:'AIMS currently leads in Maldives referrals. VPS clinics will disrupt.'},
+  "Yemen (Sana'a)":{priority:'medium',estPotential:'200+ (if conflict stabilizes)',
+    channels:['Conflict-driven MVT via Dubai/Muscat hubs','Oncology, cardiac, transplant cases','Aid organization medical evacuations'],
+    actions:['Maintain Dubai hub referral pathway (Burjeel)','Partner with ICRC/WHO for medical evacuation referrals','Arabic-speaking oncology coordinator'],
+    vpsBridge:'Cannot control conflict. But Burjeel Dubai is the natural transit hub.',competitor:'Aster slightly ahead in Yemen corridor.'},
+  "Iraq (Baghdad)":{priority:'medium',estPotential:'200+ (visa reform dependent)',
+    channels:['No e-medical visa from India — key barrier','Oncology, cardiac, transplant demand','Baghdad medical facilitator network'],
+    actions:['Lobby via CII/FICCI for Iraq e-medical visa inclusion','Partner with Iraqi medical facilitators in Dubai','Arabic-language website & marketing materials'],
+    vpsBridge:'Visa barrier is structural. Lobby is the strategy.',competitor:'Delhi/Chennai hospitals dominate Iraq corridor currently.'},
+  "East Africa (Nairobi)":{priority:'high',estPotential:'300+ additional referrals/yr',
+    channels:['Kenya/Tanzania/Uganda — emerging MVT corridor','20-30% annual growth in Africa→India MVT','Aster has Nairobi presence — VPS must compete','East African Indian diaspora'],
+    actions:['Appoint East Africa medical tourism representative','Partner with Nairobi facilitators (MCS, HealthcareTrips)','Transplant & oncology focused marketing','Facilitate Kenya medical visa process guidance'],
+    vpsBridge:'Africa is India\'s fastest-growing MVT source. VPS is late but can leverage Burjeel Africa connections.',competitor:'Aster ahead via Nairobi presence. Apollo, Fortis market aggressively.'},
+  "Nigeria (Lagos)":{priority:'medium',estPotential:'100+ (visa dependent)',
+    channels:['GT top-5 India medical visa country','Visa barriers limit volume','Oncology & cardiac demand'],
+    actions:['Partner with Nigerian medical facilitators','Lobby for Nigeria e-medical visa inclusion'],
+    vpsBridge:'Visa barrier. Similar strategy to Iraq.',competitor:'Chennai & Delhi hospitals dominate Nigeria corridor.'},
+  "UK (London)":{priority:'medium',estPotential:'150+ additional referrals/yr',
+    channels:['NRI families — transplant & oncology','NHS waiting list arbitrage','Keralite professional diaspora','Direct CIAL–London connectivity via Gulf hubs'],
+    actions:['UK Malayali association health awareness events','Partner with UK medical tourism facilitators (The Medical Travel Company)','Transplant outcome data marketing to UK GPs'],
+    vpsBridge:'Premium segment. 80% cost saving vs NHS private. Brand + outcomes win.',competitor:'Apollo, Fortis market to UK. Aster has recognition via DM brand.'},
+  "USA":{priority:'medium',estPotential:'200+ additional referrals/yr',
+    channels:['NRI transplant & oncology tourism','80% cost saving vs US healthcare','Keralite diaspora — FOKANA, FOMAA networks'],
+    actions:['FOKANA/FOMAA health desk at annual conventions','Transplant outcome benchmarking vs US hospitals','NRI patient concierge service (premium rooms, telefollow-up)'],
+    vpsBridge:'High-value, low-volume. Premium service is key.',competitor:'Apollo dominates US NRI corridor. VPS must differentiate on transplant/nephrology.'},
+  "Canada":{priority:'low',estPotential:'50+ additional referrals/yr',
+    channels:['VPS testimonial-confirmed — dialysis & transplant','Canadian healthcare wait-time arbitrage','Keralite diaspora'],
+    actions:['Transplant-focused outreach only','Canadian Malayali association partnership'],
+    vpsBridge:'Niche. Transplant-only positioning.',competitor:'Limited competition for Canada→Kochi corridor.'},
+  "Australia":{priority:'low',estPotential:'50+ additional referrals/yr',
+    channels:['Aster testimonial-confirmed','NRI & medical tourism segment','Direct flights via Singapore/KL'],
+    actions:['Australian Malayali association outreach','Teleconsult for pre-assessment'],
+    vpsBridge:'Niche. Similar to Canada.',competitor:'Aster ahead via testimonials. Apollo markets to Australia.'},
+};
+
+// ════════════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════════════
 let sel='vps', activeSpec='all';
 let lyrs={local:true,kerala:true,domestic:true,international:true};
 let mapX=0,mapY=0,zoom=1,dragging=false,dragSX=0,dragSY=0,dragMX=0,dragMY=0;
 let animTime=0,animId,hoveredOrigin=null;
+let selectedOrigin=null; // for strategy panel
 
 // ════════════════════════════════════════════════════════
 // CANVAS
@@ -871,12 +1057,12 @@ function handleHover(mx,my){
   // Source logic per origin type
   let tipSrc;
   if(o.alert){tipSrc='Economic Times Mar 2025 · ICRIER 2025'}
-  else if(o.n.includes('UAE')||o.n.includes('Abu Dhabi')){tipSrc='VPS Annual Report FY23 · VPS corporate pipeline'}
-  else if(o.t==='international'&&(o.n.includes('Maldives')||o.n.includes('Gulf')||o.n.includes('Oman')||o.n.includes('Kuwait'))){tipSrc='VPS AR FY23 · ICRIER 2025 · Grant Thornton Medical Tourism 2015'}
+  else if(o.n.includes('UAE')||o.n.includes('Abu Dhabi')){tipSrc='VPS Annual Report FY25 · VPS/Burjeel corporate pipeline'}
+  else if(o.t==='international'&&(o.n.includes('Maldives')||o.n.includes('Gulf')||o.n.includes('Oman')||o.n.includes('Kuwait'))){tipSrc='VPS AR FY25 · ICRIER 2025 · Grant Thornton Medical Tourism 2015'}
   else if(o.t==='international'){tipSrc='Grant Thornton India Medical Tourism Report 2015 · ICRIER 2025'}
   else if(o.t==='domestic'){tipSrc='ICRIER 2025 · National Health Systems Resource Centre (NHSRC)'}
-  else if(o.t==='kerala'){tipSrc='Kerala Health Atlas 2022 · VPS Lakeshore operational data'}
-  else{tipSrc='VPS Lakeshore catchment analysis · Field data'}
+  else if(o.t==='kerala'){tipSrc='Kerala Health Atlas 2022 · VPS Lakeshore operational data FY25'}
+  else{tipSrc='VPS Lakeshore catchment analysis · Field data FY25'}
   tip.innerHTML=`
     <div class="tip-name" style="color:${dotClr}">${o.n}</div>
     <div class="tip-pct">${pct}%</div>
@@ -886,12 +1072,68 @@ function handleHover(mx,my){
     <span class="tip-t ${tClass}">${o.trendLabel||'Stable'}</span>
     <div style="margin-top:6px;padding-top:5px;border-top:1px solid #e0eaf3;font-size:7px;color:#8aabb8;line-height:1.5">
       <span style="opacity:.6">⊙ </span>${tipSrc}
-    </div>`;
+    </div>
+    ${STRATEGY[o.n]?'<div style="margin-top:4px;font-size:8px;color:#0072BC;font-weight:600;cursor:pointer">▸ Click for Chairman\'s Strategy Brief</div>':''}`;
   const tx=Math.min(mx+16,window.innerWidth-230);
   const ty=Math.min(my-10,window.innerHeight-220);
   tip.style.left=tx+'px';tip.style.top=ty+'px';
   tip.classList.add('vis');
 }
+
+// ════════════════════════════════════════════════════════
+// STRATEGY PANEL — Chairman's Referral Playbook
+// ════════════════════════════════════════════════════════
+function openStrat(origin){
+  const s=STRATEGY[origin.n];
+  if(!s)return;
+  selectedOrigin=origin;
+  const panel=document.getElementById('stratPanel');
+  const priCls='pri-'+(s.priority||'medium');
+  document.getElementById('stratTitle').innerHTML=
+    `<span style="color:${COLHEX[origin.t]||'#0072BC'}">⬤</span> ${origin.n} — Referral Strategy `+
+    `<span class="pri ${priCls}">${s.priority} priority</span>`;
+  const pct=origin[sel]||0;
+  let html=`
+    <div class="strat-col channels">
+      <h4>Referral Channels</h4>
+      ${(s.channels||[]).map(c=>`<div class="strat-item">${c}</div>`).join('')}
+      <div class="strat-pot">Est. Potential: ${s.estPotential||'N/A'}</div>
+    </div>
+    <div class="strat-col actions">
+      <h4>Recommended Actions</h4>
+      ${(s.actions||[]).map(a=>`<div class="strat-item action">▸ ${a}</div>`).join('')}
+    </div>
+    <div class="strat-col bridge" style="grid-column:1/-1">
+      <h4>VPS Strategic Advantage</h4>
+      <div class="strat-bridge">${s.vpsBridge||'No specific VPS advantage identified.'}</div>
+    </div>`;
+  if(s.competitor){
+    html+=`<div class="strat-col compete" style="grid-column:1/-1">
+      <h4>Competitive Landscape</h4>
+      <div class="strat-compete">${s.competitor}</div>
+    </div>`;
+  }
+  document.getElementById('stratBody').innerHTML=html;
+  panel.classList.add('open');
+}
+
+function closeStrat(){
+  document.getElementById('stratPanel').classList.remove('open');
+  selectedOrigin=null;
+}
+
+// Click on canvas to open strategy for hovered origin
+cvs.addEventListener('click',e=>{
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  if(el && (el.closest('.pnl')||el.closest('.hdr')||el.closest('#stratPanel')))return;
+  const o=hitTest(e.clientX,e.clientY);
+  if(o && STRATEGY[o.n]){
+    openStrat(o);
+    tip.classList.remove('vis');
+  } else {
+    closeStrat();
+  }
+});
 
 // ════════════════════════════════════════════════════════
 // UI RENDERS
