@@ -19,7 +19,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden;height:100vh}
-#cvs{position:absolute;inset:0;cursor:grab;background:transparent}#cvs:active{cursor:grabbing}
+#cvs{position:absolute;inset:0;cursor:grab;background:transparent;z-index:1}#cvs:active{cursor:grabbing}
 
 /* ── Header ── */
 
@@ -32,8 +32,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 
 .hdr{position:fixed;top:0;left:0;right:0;z-index:100;padding:11px 18px 8px;
   background:#ffffff;border-bottom:1px solid #cddeed;
-  pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.08);}
-.hdr>*{pointer-events:auto}
+  pointer-events:auto;box-shadow:0 2px 8px rgba(0,0,0,.08);}
 .hdr-top{display:flex;align-items:flex-start;gap:12px}
 
 .hdr-txt h1{font-size:17px;font-weight:600;letter-spacing:-.3px;color:#0072BC}
@@ -44,8 +43,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   background:#e8f4fb;border:1px solid #c2dff0;color:#005a96;text-transform:uppercase;letter-spacing:.3px}
 
 /* KPI strip */
-.kpi-row{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
-.kc{background:#fff;border:1px solid var(--border);border-radius:5px;padding:4px 8px;min-width:75px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.kpi-row{display:flex;gap:4px;margin-top:6px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:4px;
+  scrollbar-width:thin;scrollbar-color:#cddeed transparent;-webkit-overflow-scrolling:touch}
+.kpi-row::-webkit-scrollbar{height:3px}
+.kpi-row::-webkit-scrollbar-thumb{background:#cddeed;border-radius:2px}
+.kc{background:#fff;border:1px solid var(--border);border-radius:5px;padding:4px 8px;min-width:75px;box-shadow:0 1px 3px rgba(0,0,0,.05);flex-shrink:0}
 .kc.warn{border-color:#f5c842;background:#fffbee}
 .kc.danger{border-color:#f0a0b0;background:#fff5f7}
 .kc.pos{border-color:#aad4ef;background:#f0f8ff}
@@ -59,10 +61,12 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 /* ── Shared panel ── */
 .pnl{position:fixed;z-index:90;background:#ffffff;
   border:1px solid #cddeed;border-radius:10px;overflow-y:auto;
-  scrollbar-width:thin;scrollbar-color:#cddeed transparent;
-  box-shadow:0 2px 12px rgba(0,60,120,.08)}
-.pnl::-webkit-scrollbar{width:3px}
-.pnl::-webkit-scrollbar-thumb{background:#cddeed;border-radius:3px}
+  scrollbar-width:thin;scrollbar-color:#9bb8d0 transparent;
+  box-shadow:0 2px 12px rgba(0,60,120,.08);
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.pnl::-webkit-scrollbar{width:6px}
+.pnl::-webkit-scrollbar-thumb{background:#9bb8d0;border-radius:3px}
+.pnl::-webkit-scrollbar-thumb:hover{background:#6a9ab8}
 .sec{padding:12px;border-bottom:1px solid #e0eaf3}
 .sec:last-child{border-bottom:none}
 .sec-t{font-family:'JetBrains Mono',monospace;font-size:8.5px;text-transform:uppercase;
@@ -609,7 +613,12 @@ async function initMap(){
 }
 
 // Pan & zoom — update both SVG map and canvas
-cvs.addEventListener('mousedown',e=>{dragging=true;dragSX=e.clientX;dragSY=e.clientY;dragMX=mapX;dragMY=mapY});
+cvs.addEventListener('mousedown',e=>{
+  // Only start drag if clicking on canvas itself, not on panels/header
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if(el && (el.closest('.pnl') || el.closest('.hdr'))){return;}
+  dragging=true;dragSX=e.clientX;dragSY=e.clientY;dragMX=mapX;dragMY=mapY;
+});
 window.addEventListener('mousemove',e=>{
   if(dragging){
     mapX=dragMX+(e.clientX-dragSX)/(zoom*3.8);
@@ -620,17 +629,27 @@ window.addEventListener('mousemove',e=>{
 });
 window.addEventListener('mouseup',()=>{dragging=false});
 cvs.addEventListener('wheel',e=>{
+  // Only zoom the map if the wheel event is over the canvas (not a panel)
+  const el = document.elementFromPoint(e.clientX, e.clientY);
+  if(el && el.closest('.pnl')){return;} // let panels scroll naturally
+  if(el && el.closest('.hdr')){return;} // let header scroll naturally
   e.preventDefault();
   const d=e.deltaY>0?.92:1.08;
   zoom=Math.max(.3,Math.min(14,zoom*d));
   renderMap(); draw();
 },{passive:false});
 let lastTD=0;
+let touchOnPanel=false;
 cvs.addEventListener('touchstart',e=>{
+  // Check if touch started over a panel or header — if so, don't capture it for map drag
+  const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
+  touchOnPanel = !!(el && (el.closest('.pnl') || el.closest('.hdr')));
+  if(touchOnPanel) return;
   if(e.touches.length===1){dragging=true;dragSX=e.touches[0].clientX;dragSY=e.touches[0].clientY;dragMX=mapX;dragMY=mapY}
   if(e.touches.length===2)lastTD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
 },{passive:true});
 cvs.addEventListener('touchmove',e=>{
+  if(touchOnPanel) return;
   if(e.touches.length===1&&dragging){
     mapX=dragMX+(e.touches[0].clientX-dragSX)/(zoom*3.8);
     mapY=dragMY-(e.touches[0].clientY-dragSY)/(zoom*3.8);
@@ -642,7 +661,7 @@ cvs.addEventListener('touchmove',e=>{
     renderMap(); draw();
   }
 },{passive:true});
-cvs.addEventListener('touchend',()=>{dragging=false});
+cvs.addEventListener('touchend',()=>{dragging=false;touchOnPanel=false});
 
 // ════════════════════════════════════════════════════════
 // CANVAS ARC & DOT RENDERING
