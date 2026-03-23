@@ -437,6 +437,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   <div class="mob-pnl-hdr"><h2>Strategy Playbook</h2></div>
   <div class="mob-pnl-body" id="mobStrategyBody"></div>
 </div>
+<div class="mob-pnl" id="mobBrief">
+  <div class="mob-pnl-hdr"><h2>Leadership Brief</h2></div>
+  <div class="mob-pnl-body" id="mobBriefBody"></div>
+</div>
 
 <!-- Mobile Tab Bar -->
 <div class="mob-tabs">
@@ -445,13 +449,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <span class="mob-ico">🗺</span>Map
     </button>
     <button class="mob-tab" data-mob="controls" onclick="switchMobTab('controls')">
-      <span class="mob-ico">⚙</span>Controls
+      <span class="mob-ico">⚙</span>Filter
     </button>
     <button class="mob-tab" data-mob="intel" onclick="switchMobTab('intel')">
       <span class="mob-ico">⚠</span>Intel
     </button>
     <button class="mob-tab" data-mob="strategy" onclick="switchMobTab('strategy')">
-      <span class="mob-ico">📋</span>Strategy
+      <span class="mob-ico">🎯</span>Play
+    </button>
+    <button class="mob-tab" data-mob="brief" onclick="switchMobTab('brief')">
+      <span class="mob-ico">📊</span>Brief
     </button>
   </div>
 </div>
@@ -944,10 +951,18 @@ function proj(lat,lng){
 }
 
 function resize(){
-  // Use actual CSS-rendered size of canvas so it respects
-  // the --hdr-h / --tab-h offsets on mobile
-  W = cvs.width = cvs.offsetWidth || window.innerWidth;
-  H = cvs.height = cvs.offsetHeight || window.innerHeight;
+  // NOTE: never use cvs.offsetWidth/Height — canvas default intrinsic
+  // size is 300×150 which is truthy and breaks the || fallback.
+  // Always compute from window dimensions directly.
+  const isMob = window.innerWidth <= 900;
+  const hdrH = isMob
+    ? (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr-h')) || 80)
+    : 0;
+  const tabH = isMob ? 48 : 0;
+  W = window.innerWidth;
+  H = window.innerHeight - hdrH - tabH;
+  cvs.width = W;
+  cvs.height = H;
   mapSvgEl.setAttribute('width', W);
   mapSvgEl.setAttribute('height', H);
   renderMap();
@@ -1803,6 +1818,114 @@ function populateMobPanel(tab){
       if(origin && STRATEGY[name]){openStrat(origin)}
     });
   }
+  else if(tab==='brief'){
+    document.getElementById('mobBriefBody').innerHTML=renderLeadershipBrief();
+  }
+}
+
+function renderLeadershipBrief(){
+  return `
+  <!-- FY25 Scorecard -->
+  <div class="sec">
+    <div class="sec-t" style="color:#0072BC;font-size:11px;font-weight:700">📊 FY2024–25 SCORECARD</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+      ${[
+        ['OPD Visits','3,38,651','↓1% YoY','#e8f4fb'],
+        ['Inpatients','21,022','↑0.4% YoY','#e8f8f0'],
+        ['Intl Patients','19,193','↓4% YoY','#fff5f7'],
+        ['Revenue','₹416 Cr','↑3% YoY','#e8f4fb'],
+        ['Net Profit','₹39 Cr','↓11% YoY','#fff5f7'],
+        ['Transplants','257+','Nephrology #1','#e8f8f0'],
+      ].map(([l,v,t,bg])=>`
+        <div style="background:${bg};border-radius:6px;padding:8px 10px;border:1px solid #cddeed">
+          <div style="font-size:9px;color:#5a7a8a;text-transform:uppercase;letter-spacing:.3px">${l}</div>
+          <div style="font-size:16px;font-weight:700;color:#0d2535;line-height:1.2">${v}</div>
+          <div style="font-size:9px;color:#5a7a8a;margin-top:2px">${t}</div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <!-- Top 3 Immediate Priorities -->
+  <div class="sec">
+    <div class="sec-t" style="color:#C8103E;font-size:11px;font-weight:700">🔴 TOP PRIORITIES — ACT NOW</div>
+    ${[
+      {
+        n:'1. Systematise Burjeel→VPS referral pipeline',
+        d:'Abu Dhabi & Dubai are OWNED channels with zero acquisition cost. Formalise the Burjeel Medical City→VPS Lakeshore referral protocol for transplant, oncology and cardiac cases. Embed a dedicated VPS liaison at Burjeel Hospital Dubai. Target: +500 int\'l patients/yr from UAE alone.',
+        col:'#C8103E'
+      },
+      {
+        n:'2. Fast-track Maldives OPD clinics (FY26)',
+        d:'Malé & Mahibadhoo clinics are the most capital-efficient growth lever available. AIMS currently leads Maldives referrals — VPS clinics will flip this. Aasandha empanelment (national insurance) is the unlock. Every month of delay loses ground.',
+        col:'#C8103E'
+      },
+      {
+        n:'3. Upgrade Kozhikode Medical Centre to L2',
+        d:'28,000+ patients/yr at Kozhikode with only a fraction referred to Kochi. A structured referral protocol + shared EMR + joint CMEs can move this within 12 months. Upgrading to surgical L2 (₹80–120 Cr) captures North Kerala before Aster MIMS does.',
+        col:'#C8103E'
+      }
+    ].map(p=>`
+      <div style="border-left:3px solid ${p.col};padding:10px 12px;background:#fff8f8;border-radius:0 6px 6px 0;margin-bottom:8px">
+        <div style="font-size:11px;font-weight:700;color:#0d2535;margin-bottom:4px">${p.n}</div>
+        <div style="font-size:9.5px;color:#3a5a6a;line-height:1.6">${p.d}</div>
+      </div>`).join('')}
+  </div>
+
+  <!-- 3 High-Value Kerala Corridors -->
+  <div class="sec">
+    <div class="sec-t" style="color:#1a7a50;font-size:11px;font-weight:700">🟢 KERALA MARKET — FOCUS CORRIDORS</div>
+    ${[
+      {z:'Malappuram / Edappal',why:'Most populous district, highest Gulf diaspora density. New OPD just launched. Must convert to Kochi referrals aggressively.', pot:'500+ referrals/yr'},
+      {z:'Idukki / Wayanad',why:'Lowest hospital bed counts in Kerala. Mobile medical van + tele-ICU = first-mover advantage. VPS CSR in Wayanad builds trust.',pot:'600+ referrals/yr combined'},
+      {z:'Thrissur Corridor',why:'500+ additional referrals potential. Deploy 2 medical reps, free second-opinion teleconsults to GPs, IMA chapter CME partnership.',pot:'500+ referrals/yr'},
+    ].map(c=>`
+      <div style="background:#f0faf4;border:1px solid #b0dfc0;border-radius:6px;padding:10px 12px;margin-bottom:7px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:700;color:#1a5a40">${c.z}</span>
+          <span style="font-size:9px;font-weight:700;color:#1a7a50;background:#d0f0e0;padding:2px 6px;border-radius:10px">${c.pot}</span>
+        </div>
+        <div style="font-size:9.5px;color:#2a5a40;line-height:1.5">${c.why}</div>
+      </div>`).join('')}
+  </div>
+
+  <!-- L3 Hospital Question -->
+  <div class="sec">
+    <div class="sec-t" style="color:#7B4FC8;font-size:11px;font-weight:700">🏥 L3 HOSPITAL DECISION</div>
+    <div style="background:#f5f0ff;border:1px solid #c8b0e8;border-radius:8px;padding:12px;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:#4a2a90;margin-bottom:6px">Calicut — YES (upgrade, not greenfield)</div>
+      <div style="font-size:9.5px;color:#3a2a60;line-height:1.6">Existing 28,000-patient Kozhikode Medical Centre is a proven platform. Upgrade to L2 surgical capability (₹80–120 Cr) vs greenfield L3 (₹400–600 Cr). North Kerala = 10M people, high Gulf diaspora, underserved for quaternary care. Aster MIMS is incumbent — move fast.</div>
+    </div>
+    <div style="background:#fff5f0;border:1px solid #f0c8b0;border-radius:8px;padding:12px">
+      <div style="font-size:11px;font-weight:700;color:#8a3a10;margin-bottom:6px">Trivandrum — NO (for now)</div>
+      <div style="font-size:9.5px;color:#5a2a10;line-height:1.6">SCTIMST, KIMS and GMC dominate a saturated market. VPS draws &lt;50 referrals/yr from TVPM. Capital better deployed in Maldives clinics and Burjeel network optimisation — where VPS has structural competitive advantage.</div>
+    </div>
+  </div>
+
+  <!-- Watch List -->
+  <div class="sec">
+    <div class="sec-t" style="color:#b87800;font-size:11px;font-weight:700">⚠ RISKS TO MONITOR</div>
+    ${[
+      ['Aster–QCIL merger','10,301 combined beds. Aster Medcity adding 100 beds. Scale gap with VPS (470 beds) widens.'],
+      ['Gulf conflict disruption','Yemen/Iraq/Iran air routes disrupted. ~25% of India\'s int\'l MVT revenue at risk.'],
+      ['Profit margin squeeze','Net profit ↓11% despite revenue ↑3%. Cost control is critical before any new capex.'],
+      ['Maldives delay risk','Every quarter delay on clinic launch lets AIMS consolidate their referral lead.'],
+    ].map(([t,d])=>`
+      <div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid #f0e8d0">
+        <span style="font-size:14px;flex-shrink:0">⚡</span>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:#7a5000">${t}</div>
+          <div style="font-size:9px;color:#5a4010;line-height:1.5;margin-top:2px">${d}</div>
+        </div>
+      </div>`).join('')}
+  </div>
+
+  <!-- Single ask -->
+  <div class="sec" style="border-bottom:none">
+    <div style="background:linear-gradient(135deg,#0072BC,#005a96);border-radius:8px;padding:14px 16px;color:#fff">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.5px;opacity:.8;margin-bottom:4px">CHAIRMAN'S SINGLE BIGGEST LEVER</div>
+      <div style="font-size:13px;font-weight:700;line-height:1.4">Burjeel → VPS Lakeshore referral pipeline is worth more than any new hospital build. It's an owned channel. Make it systematic in FY26.</div>
+    </div>
+  </div>`;
 }
 </script>
 </body>
