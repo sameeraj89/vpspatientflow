@@ -1063,8 +1063,8 @@ cvs.addEventListener('touchstart',e=>{
 cvs.addEventListener('touchmove',e=>{
   if(touchOnPanel)return;
   if(e.touches.length===1&&dragging){
-    mapX=dragMX+(e.touches[0].clientX-dragSX)/(zoom*3.8);
-    mapY=dragMY-(e.touches[0].clientY-dragSY)/(zoom*3.8);
+    mapX=dragMX-(e.touches[0].clientX-dragSX)/(zoom*3.8);
+    mapY=dragMY+(e.touches[0].clientY-dragSY)/(zoom*3.8);
     renderMap();draw();
   }
   if(e.touches.length===2&&lastTD>0){
@@ -1072,13 +1072,25 @@ cvs.addEventListener('touchmove',e=>{
       e.touches[0].clientX-e.touches[1].clientX,
       e.touches[0].clientY-e.touches[1].clientY
     );
-    const factor=d/lastTD;
-    // clamp factor to prevent wild jumps from accidental large deltas
-    if(factor>0.5&&factor<2.0){
-      zoom=Math.max(.3,Math.min(14,zoom*factor));
+    if(d>5){
+      const factor=d/lastTD;
+      if(factor>0.3&&factor<3.0){
+        const pcx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+        const pcy=(e.touches[0].clientY+e.touches[1].clientY)/2;
+        const geo=d3Proj&&d3Proj.invert?d3Proj.invert([pcx,pcy]):null;
+        zoom=Math.max(.3,Math.min(14,zoom*factor));
+        if(geo){
+          renderMap();
+          const newPt=d3Proj(geo);
+          if(newPt){
+            mapX-=(newPt[0]-pcx)/(zoom*3.8);
+            mapY+=(newPt[1]-pcy)/(zoom*3.8);
+          }
+        }
+      }
+      lastTD=d;
+      renderMap();draw();
     }
-    lastTD=d;
-    renderMap();draw();
   }
 },{passive:true});
 cvs.addEventListener('touchend',e=>{
