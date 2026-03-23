@@ -1025,7 +1025,7 @@ cvs.addEventListener('mousedown',e=>{
 window.addEventListener('mousemove',e=>{
   if(dragging){
     mapX=dragMX+(e.clientX-dragSX)/(zoom*3.8);
-    mapY=dragMY+(e.clientY-dragSY)/(zoom*3.8);
+    mapY=dragMY-(e.clientY-dragSY)/(zoom*3.8);
     renderMap(); draw();
   }
   handleHover(e.clientX,e.clientY);
@@ -1044,27 +1044,56 @@ cvs.addEventListener('wheel',e=>{
 let lastTD=0;
 let touchOnPanel=false;
 cvs.addEventListener('touchstart',e=>{
-  // Check if touch started over a panel or header — if so, don't capture it for map drag
-  const el = document.elementFromPoint(e.touches[0].clientX, e.touches[0].clientY);
-  touchOnPanel = !!(el && (el.closest('.pnl') || el.closest('.hdr')));
-  if(touchOnPanel) return;
-  if(e.touches.length===1){dragging=true;dragSX=e.touches[0].clientX;dragSY=e.touches[0].clientY;dragMX=mapX;dragMY=mapY}
-  if(e.touches.length===2)lastTD=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-},{passive:true});
-cvs.addEventListener('touchmove',e=>{
-  if(touchOnPanel) return;
-  if(e.touches.length===1&&dragging){
-    mapX=dragMX+(e.touches[0].clientX-dragSX)/(zoom*3.8);
-    mapY=dragMY+(e.touches[0].clientY-dragSY)/(zoom*3.8);
-    renderMap(); draw();
+  const el=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);
+  touchOnPanel=!!(el&&(el.closest('.pnl')||el.closest('.hdr')||el.closest('.mob-pnl')||el.closest('.mob-tabs')));
+  if(touchOnPanel)return;
+  if(e.touches.length===1){
+    dragging=true;
+    dragSX=e.touches[0].clientX;dragSY=e.touches[0].clientY;
+    dragMX=mapX;dragMY=mapY;
   }
   if(e.touches.length===2){
-    const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
-    zoom=Math.max(.3,Math.min(14,zoom*(d/lastTD)));lastTD=d;
-    renderMap(); draw();
+    dragging=false; // stop single-finger pan when pinch begins
+    lastTD=Math.hypot(
+      e.touches[0].clientX-e.touches[1].clientX,
+      e.touches[0].clientY-e.touches[1].clientY
+    );
   }
 },{passive:true});
-cvs.addEventListener('touchend',()=>{dragging=false;touchOnPanel=false});
+cvs.addEventListener('touchmove',e=>{
+  if(touchOnPanel)return;
+  if(e.touches.length===1&&dragging){
+    mapX=dragMX+(e.touches[0].clientX-dragSX)/(zoom*3.8);
+    mapY=dragMY-(e.touches[0].clientY-dragSY)/(zoom*3.8);
+    renderMap();draw();
+  }
+  if(e.touches.length===2&&lastTD>0){
+    const d=Math.hypot(
+      e.touches[0].clientX-e.touches[1].clientX,
+      e.touches[0].clientY-e.touches[1].clientY
+    );
+    const factor=d/lastTD;
+    // clamp factor to prevent wild jumps from accidental large deltas
+    if(factor>0.5&&factor<2.0){
+      zoom=Math.max(.3,Math.min(14,zoom*factor));
+    }
+    lastTD=d;
+    renderMap();draw();
+  }
+},{passive:true});
+cvs.addEventListener('touchend',e=>{
+  touchOnPanel=false;
+  if(e.touches.length===0){
+    dragging=false;
+    lastTD=0;
+  } else if(e.touches.length===1){
+    // one finger left after pinch — restart single-finger pan from current position
+    dragging=true;
+    dragSX=e.touches[0].clientX;dragSY=e.touches[0].clientY;
+    dragMX=mapX;dragMY=mapY;
+    lastTD=0;
+  }
+});
 
 // ════════════════════════════════════════════════════════
 // CANVAS ARC & DOT RENDERING
