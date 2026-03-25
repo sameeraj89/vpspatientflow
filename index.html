@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VPS Lakeshore — Patient Flow Intelligence</title>
+<title>VPS Lakeshore | Patient Flow Intelligence — FY25 Chairman's Dashboard</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230072BC'/><rect x='14' y='6' width='4' height='20' rx='2' fill='white'/><rect x='6' y='14' width='20' height='4' rx='2' fill='white'/></svg>">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 :root{
@@ -60,6 +61,21 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .ks{font-size:7px;color:#8aabb8;font-style:italic;display:block}
 .ksrc{font-size:6.5px;color:#aac4d8;display:block;margin-top:2px;border-top:1px solid #e0eaf3;padding-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ksrc::before{content:'⊙ ';opacity:.6}
+/* Search + Reset */
+.origin-search{width:100%;padding:5px 8px 5px 26px;border:1px solid #cddeed;border-radius:5px;
+  font-size:11px;font-family:inherit;color:#0d2535;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235a7a8a' stroke-width='2.5'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E") no-repeat 7px center;outline:none;box-sizing:border-box;transition:border-color .15s}
+.origin-search:focus{border-color:#0072BC}
+.origin-search-wrap{position:relative;margin-bottom:6px}
+.origin-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:#8aabb8;cursor:pointer;font-size:13px;line-height:1;padding:0;display:none}
+.origin-clear.vis{display:block}
+.bars-sort{display:flex;gap:4px;margin-bottom:6px}
+.sort-btn{font-size:8px;padding:2px 7px;border-radius:3px;border:1px solid #cddeed;background:#f5f9fc;color:#5a7a8a;cursor:pointer;font-family:inherit;transition:all .12s}
+.sort-btn.on{background:#0072BC;color:#fff;border-color:#0072BC}
+.reset-btn{display:flex;align-items:center;gap:4px;padding:4px 10px;border:1px solid #cddeed;border-radius:4px;background:#fff;color:#0072BC;font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+.reset-btn:hover{background:#e8f4fb;border-color:#0072BC}
+.reset-btn svg{flex-shrink:0}
+.data-ts{font-size:7.5px;color:#8aabb8;padding:8px 12px 4px;text-align:center;border-top:1px solid #e8f0f6;margin-top:4px}
+.data-ts span{color:#5a7a8a;font-weight:600}
 
 /* ── Shared panel ── */
 .pnl{position:fixed;z-index:90;background:#ffffff;
@@ -355,7 +371,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="spec-tabs" id="specTabs"></div>
   </div>
   <div class="sec">
-    <div class="sec-t">Layer Controls</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="sec-t" style="margin-bottom:0">Layer Controls</div>
+      <button class="reset-btn" onclick="resetAllFilters()" title="Reset all filters">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Reset All
+      </button>
+    </div>
     <label class="tgl"><input type="checkbox" data-lyr="local" checked><div class="tbox"></div> Local (Ernakulam)</label>
     <label class="tgl"><input type="checkbox" data-lyr="kerala" checked><div class="tbox"></div> Kerala Districts</label>
     <label class="tgl"><input type="checkbox" data-lyr="domestic" checked><div class="tbox"></div> Other Indian States</label>
@@ -367,12 +389,22 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
   </div>
   <div class="sec">
     <div class="sec-t">Top Origins by Volume</div>
+    <div class="origin-search-wrap">
+      <input class="origin-search" id="originSearch" type="search" placeholder="Search origins…" oninput="onOriginSearch(this.value)">
+      <button class="origin-clear" id="originClear" onclick="clearOriginSearch()" title="Clear search">✕</button>
+    </div>
+    <div class="bars-sort">
+      <button class="sort-btn on" id="sortVol" onclick="setBarsSort('vol')">Volume</button>
+      <button class="sort-btn" id="sortTrend" onclick="setBarsSort('trend')">Trend ↑↓</button>
+      <button class="sort-btn" id="sortAlpha" onclick="setBarsSort('alpha')">A–Z</button>
+    </div>
     <div id="bars"></div>
   </div>
   <div class="sec">
     <div class="sec-t">📋 Strategy Priorities <span class="badge badge-pos">Click to open</span></div>
     <div id="stratOverview"></div>
   </div>
+  <div class="data-ts">Data refreshed: <span>March 2026</span> · VPS 29th AR FY25 (audited)</div>
 </div>
 
 <!-- Right Panel -->
@@ -1483,6 +1515,23 @@ function renderSpecTabs(){
   });
 }
 
+function resetAllFilters(){
+  // Hospital → VPS
+  sel='vps';
+  // Specialty → all
+  activeSpec='all';
+  // Layers → all on
+  Object.keys(lyrs).forEach(k=>lyrs[k]=true);
+  document.querySelectorAll('[data-lyr]').forEach(cb=>cb.checked=true);
+  // Search → clear
+  clearOriginSearch();
+  // Sort → volume
+  barsSort='vol';
+  setBarsSort('vol');
+  // Re-render everything
+  renderKPIs();renderBtns();renderSpecTabs();updStats();updBars();updIntl();draw();
+}
+
 function renderAlerts(){
   const alerts=[
     {cls:'high',title:'VPS Int\'l Patients ↓4% FY25',
@@ -1525,23 +1574,56 @@ function updStats(){
     <div style="margin-top:5px;font-size:7px;color:#8aabb8;line-height:1.6;padding:4px 0">${statSrc}</div>`;
 }
 
+let barsSort='vol';     // 'vol' | 'trend' | 'alpha'
+let originQuery='';    // live search text
+
+function onOriginSearch(v){
+  originQuery=v.trim().toLowerCase();
+  document.getElementById('originClear').classList.toggle('vis',originQuery.length>0);
+  updBars();
+}
+function clearOriginSearch(){
+  originQuery='';
+  const inp=document.getElementById('originSearch');
+  if(inp){inp.value='';}
+  document.getElementById('originClear').classList.remove('vis');
+  updBars();
+}
+function setBarsSort(mode){
+  barsSort=mode;
+  ['Vol','Trend','Alpha'].forEach(m=>
+    document.getElementById('sort'+m)?.classList.toggle('on',m.toLowerCase()===mode));
+  updBars();
+}
+
 function updBars(){
-  const sorted=[...O].map(o=>({...o,pct:o[sel]||0}))
-    .filter(o=>o.pct>0&&lyrs[o.t]&&(activeSpec==='all'||specMatch(o)))
-    .sort((a,b)=>b.pct-a.pct).slice(0,14);
-  const mx=sorted[0]?.pct||1;
-  document.getElementById('bars').innerHTML=sorted.map(o=>{
-    const tc=o.trendDir||'neu';
-    const tl=o.trend>0.05?'↑':o.trend<-0.1?'↓':'↔';
-    return`<div class="oi">
-      <div class="oh"><span class="n">${o.n}</span>
-        <span class="oh-right">
-          <span class="trnd ${tc}">${tl}</span>
-          <span class="p">${o.pct}%</span>
-        </span>
-      </div>
-      <div class="ob"><div class="of" style="width:${o.pct/mx*100}%;background:${o.alert?'#E8A838':COLHEX[o.t]}"></div></div>
-    </div>`;}).join('');
+  let items=[...O].map(o=>({...o,pct:o[sel]||0}))
+    .filter(o=>o.pct>0&&lyrs[o.t]&&(activeSpec==='all'||specMatch(o)));
+  // Apply search filter
+  if(originQuery){
+    items=items.filter(o=>o.n.toLowerCase().includes(originQuery)||
+      (o.d&&o.d.toLowerCase().includes(originQuery)));
+  }
+  // Sort
+  if(barsSort==='vol')   items.sort((a,b)=>b.pct-a.pct);
+  else if(barsSort==='trend') items.sort((a,b)=>b.trend-a.trend);
+  else if(barsSort==='alpha') items.sort((a,b)=>a.n.localeCompare(b.n));
+  items=items.slice(0,18);
+  const mx=items[0]?.pct||1;
+  document.getElementById('bars').innerHTML=items.length
+    ? items.map(o=>{
+        const tc=o.trendDir||'neu';
+        const tl=o.trend>0.05?'↑':o.trend<-0.1?'↓':'↔';
+        return`<div class="oi">
+          <div class="oh"><span class="n">${o.n}</span>
+            <span class="oh-right">
+              <span class="trnd ${tc}">${tl}</span>
+              <span class="p">${o.pct}%</span>
+            </span>
+          </div>
+          <div class="ob"><div class="of" style="width:${o.pct/mx*100}%;background:${o.alert?'#E8A838':COLHEX[o.t]}"></div></div>
+        </div>`;}).join('')
+    : `<div style="font-size:10px;color:#8aabb8;padding:8px 0">No origins match "${originQuery}"</div>`;
 }
 
 function updIntl(){
