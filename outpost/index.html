@@ -317,6 +317,35 @@ input[type=range]::-moz-range-thumb {
 .rec-stat-lbl { font-size: 11px; color: var(--tx3); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 3px; font-weight: 500; }
 .rec-stat-val { font-size: 15px; font-weight: 600; }
 
+/* ═══ DEPT BUTTONS ═══ */
+.dept-btn {
+  padding: 7px 16px; font-size: 13px; font-weight: 500; font-family: var(--f);
+  background: var(--bg); border: 1px solid var(--bd); color: var(--tx2);
+  cursor: pointer; border-radius: 20px; transition: all .15s;
+}
+.dept-btn:hover { border-color: var(--vps-blue); color: var(--vps-blue); }
+.dept-btn.active {
+  background: var(--vps-blue); border-color: var(--vps-blue); color: #fff;
+}
+.dept-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  font-size: 13px; border-radius: var(--rl); overflow: hidden;
+  border: 1px solid var(--bd); box-shadow: var(--sh);
+}
+.dept-table thead th {
+  background: var(--bg2); padding: 10px 14px; text-align: left;
+  font-size: 11px; font-weight: 600; color: var(--tx3);
+  text-transform: uppercase; letter-spacing: .5px;
+  border-bottom: 1px solid var(--bd);
+}
+.dept-table tbody td {
+  padding: 12px 14px; background: var(--bg);
+  border-bottom: 1px solid var(--bd);
+}
+.dept-table tbody tr:last-child td { border-bottom: none; }
+.dept-table tbody tr:hover td { background: var(--bg2); }
+.str-bar { display:inline-block; height:6px; border-radius:3px; vertical-align:middle; margin-right:6px; }
+
 /* ═══ FOOTER ═══ */
 .footer {
   margin-top: clamp(32px,5vw,60px); padding: 22px clamp(16px,4vw,48px);
@@ -346,8 +375,9 @@ input[type=range]::-moz-range-thumb {
     <nav class="nav" id="mainNav">
       <button class="nav-btn active" data-tab="0">Town map</button>
       <button class="nav-btn" data-tab="1">Patient flow</button>
-      <button class="nav-btn" data-tab="2">Scoring</button>
-      <button class="nav-btn" data-tab="3">Recommendations</button>
+      <button class="nav-btn" data-tab="2">Dept. flows</button>
+      <button class="nav-btn" data-tab="3">Scoring</button>
+      <button class="nav-btn" data-tab="4">Recommendations</button>
     </nav>
   </div>
 </header>
@@ -405,8 +435,39 @@ input[type=range]::-moz-range-thumb {
   </div>
 </section>
 
-<!-- ═══ TAB 2: SCORING ═══ -->
+<!-- ═══ TAB 2: DEPARTMENT FLOWS ═══ -->
 <section class="section" id="sec2">
+  <div class="section-head anim">
+    <h2>Department-wise patient flows</h2>
+    <p>Specialty-level analysis of patient corridors and competitive dynamics. Select a department to see how flows differ from the aggregate — oncology patients, for instance, have very different referral patterns than cardiac or ortho patients.</p>
+  </div>
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px" class="anim d1">
+    <button class="dept-btn active" data-dept="onco">Oncology</button>
+    <button class="dept-btn" data-dept="cardiac">Cardiac sciences</button>
+    <button class="dept-btn" data-dept="neuro">Neurosciences</button>
+    <button class="dept-btn" data-dept="ortho">Orthopaedics</button>
+    <button class="dept-btn" data-dept="gastro">Gastro / liver</button>
+    <button class="dept-btn" data-dept="transplant">Transplant</button>
+  </div>
+
+  <div id="deptMetrics" class="anim d1"></div>
+
+  <div class="map-wrap anim d2" style="margin-top:16px">
+    <div class="map-el" id="map2"></div>
+    <div class="map-legend">
+      <span><i style="background:var(--vps-blue)"></i>VPS Lakeshore</span>
+      <span><i style="background:var(--vps-maroon)"></i>Competitor strength</span>
+      <span><i style="background:#2471A3"></i>Patient origin</span>
+    </div>
+  </div>
+
+  <div id="deptDetail" class="anim d3" style="margin-top:20px"></div>
+  <div id="deptInsight" class="anim d3" style="margin-top:16px"></div>
+</section>
+
+<!-- ═══ TAB 3: SCORING ═══ -->
+<section class="section" id="sec3">
   <div class="section-head anim">
     <h2>Multi-criteria outpost scoring</h2>
     <p>Adjust the five strategic weights to model different priorities. The ranking updates in real-time.</p>
@@ -417,8 +478,8 @@ input[type=range]::-moz-range-thumb {
   </div>
 </section>
 
-<!-- ═══ TAB 3: RECOMMENDATIONS ═══ -->
-<section class="section" id="sec3">
+<!-- ═══ TAB 4: RECOMMENDATIONS ═══ -->
+<section class="section" id="sec4">
   <div class="section-head anim">
     <h2>Site recommendations</h2>
     <p>Deep-dive profiles for the top 5 outpost locations with population data, competitor mapping, patient leakage capture potential, and strategic positioning rationale.</p>
@@ -739,6 +800,262 @@ function addVPS(map) {
       '</div></div></div>';
   });
   document.getElementById('recCards').innerHTML = html;
+})();
+
+
+/* ═══════════════════════════════════════
+   TAB 2: DEPARTMENT FLOWS
+   ═══════════════════════════════════════ */
+var DEPTS = {
+  onco: {
+    name: 'Oncology',
+    vpsBeds: 48, vpsStrength: 'Surgical oncology (head & neck, gynae-onc firsts in Kerala), radiation oncology (ELEKTA Versa HD), Centre for Complex Head & Neck Cancer (CCHNC) — India\u2019s first',
+    keralaStats: 'Kerala: ~35,000 new cancer cases/year. Ernakulam estimated ~4,200/year. Breast (30\u201335% of female cancers), lung, oral, colorectal, thyroid most common. Incidence rising 3\u20134% annually due to aging population and lifestyle shift.',
+    metrics: [
+      {l:'Estimated new cases/yr (Ernakulam)', v:'~4,200'},
+      {l:'VPS oncology OP volume/day', v:'80\u2013100'},
+      {l:'Key VPS differentiator', v:'CCHNC (India 1st)'},
+      {l:'Chemo chairs', v:'24'},
+      {l:'Radiation machines', v:'2 LINAC'}
+    ],
+    competitors: [
+      {n:'Amrita AIMS Cancer Centre',lat:10.0345,lon:76.2885,str:95,note:'Full cancer centre: medical, surgical, radiation onco, BMT, molecular lab. 300+ stem cell transplants. Strongest research. Largest team.'},
+      {n:'Aster Medcity AIIO',lat:10.0055,lon:76.3115,str:90,note:'Aster International Institute of Oncology. PET-CT (Siemens Biograph), BMT unit, site-specific disease groups, head & neck CoE.'},
+      {n:'Rajagiri Hospital',lat:10.104,lon:76.346,str:55,note:'Medical and surgical oncology. No radiation facility — refers out for radiotherapy.'},
+      {n:'Lisie Hospital',lat:9.993,lon:76.295,str:45,note:'Medical oncology and palliative. Limited surgical oncology. No radiation unit.'},
+      {n:'Lourdes Hospital',lat:9.981,lon:76.287,str:40,note:'Basic oncology services. Refers complex cases to Amrita/Aster/VPS.'},
+      {n:'Regional Cancer Centre (TVM)',lat:8.525,lon:76.934,str:98,note:'Govt apex centre 220 km away. Many Ernakulam patients prefer Kochi private hospitals over travel to RCC TVM.'}
+    ],
+    corridors: [
+      {name:'Tripunithura\u2013Puthencruz belt',from:[9.948,76.360],pct:20,leak:30,leakTo:'Aster AIIO',note:'No oncology screening nearby. Patients discover cancer late, get referred to whichever hospital their GP is affiliated with.'},
+      {name:'Kakkanad\u2013Thrikkakara IT belt',from:[9.990,76.342],pct:12,leak:45,leakTo:'Aster AIIO',note:'Working population. Insurance-driven choice. Aster\u2019s corporate tie-ups dominate.'},
+      {name:'North Kochi (Edathala\u2013Kalamassery)',from:[10.050,76.300],pct:8,leak:70,leakTo:'Amrita Cancer Centre',note:'Amrita\u2019s cancer centre is the default. Research reputation pulls patients.'},
+      {name:'Aluva\u2013Angamaly\u2013Perumbavoor',from:[10.130,76.400],pct:5,leak:60,leakTo:'Amrita / Rajagiri',note:'Long-distance patients. Airport medical tourism patients often choose Amrita or Aster for brand recognition.'},
+      {name:'Central Ernakulam',from:[9.980,76.288],pct:18,leak:35,leakTo:'Lisie / Medical Trust',note:'Convenience-driven. Patients with mild symptoms go to nearest hospital; VPS captures referrals for complex surgical cases.'},
+      {name:'South belt (Maradu\u2013Kumbalam)',from:[9.918,76.295],pct:25,leak:8,leakTo:'EMC',note:'VPS\u2019s home territory. Strongest oncology capture. Walk-in screening patients.'},
+      {name:'Alappuzha & Kottayam districts',from:[9.500,76.340],pct:12,leak:40,leakTo:'Aster / Amrita',note:'Inter-district referrals. 45\u201360 min drive. Patients choose based on doctor reputation.'}
+    ],
+    outpostImplication: 'An oncology-focused outpost in <strong>Kakkanad</strong> (screening, chemo day-care, second opinions) would intercept the 45% leakage to Aster AIIO from the IT corridor. A satellite screening centre in <strong>Thrippunithura</strong> could enable early detection in the 115k population belt that currently has zero cancer screening within 8 km. For northern Kochi, a chemo day-care at <strong>Kalamassery</strong> would be an aggressive move into Amrita\u2019s territory but addresses the 192k population that currently travels 12+ km for chemo cycles.',
+    insight: 'Oncology is VPS Lakeshore\u2019s highest-value department for outpost strategy. Cancer patients generate 15\u201320 visits over a treatment journey (consultations, chemo cycles, radiation sessions, follow-ups) vs 2\u20133 for most other departments. Each intercepted oncology patient represents \u20b95\u201315 lakh lifetime value. The CCHNC (India\u2019s first) is a brand asset — screening camps referencing this centre could pull patients from Aster and Amrita.'
+  },
+  cardiac: {
+    name: 'Cardiac sciences',
+    vpsBeds: 60, vpsStrength: 'Interventional cardiology, electrophysiology, CABG, valve surgery, paediatric cardiology. LVAD implantation capability.',
+    keralaStats: 'Kerala: cardiovascular disease is #1 killer. 20% diabetes prevalence (2x national average) drives cardiac load. Ernakulam estimated 8,000+ cardiac interventions/year across all hospitals.',
+    metrics: [{l:'Cardiac interventions/yr (est.)',v:'8,000+'},{l:'VPS cath lab procedures/day',v:'8\u201312'},{l:'Key differentiator',v:'Electrophysiology + LVAD'},{l:'ICU beds (cardiac)',v:'22'},{l:'Competition intensity',v:'Very high'}],
+    competitors: [
+      {n:'Lisie Heart Institute',lat:9.993,lon:76.295,str:92,note:'Premier cardiac centre in Kochi. First beating-heart total arterial bypass. 4,000+ interventional procedures/year. Dominant brand.'},
+      {n:'Amrita Cardiac Centre',lat:10.0345,lon:76.2885,str:88,note:'Heart transplant capability. Full paediatric cardiac surgery. Academic powerhouse.'},
+      {n:'Aster Heart Centre',lat:10.0055,lon:76.3115,str:85,note:'Advanced interventional. JCI accredited. Structural heart disease programme.'},
+      {n:'Medical Trust',lat:9.971,lon:76.289,str:65,note:'Established cardiac surgery. Good interventional programme. City-centre convenience.'},
+      {n:'Rajagiri',lat:10.104,lon:76.346,str:60,note:'Growing cardiac programme. Robotic surgery capability.'}
+    ],
+    corridors: [
+      {name:'Central Ernakulam',from:[9.980,76.288],pct:15,leak:50,leakTo:'Lisie Heart Institute',note:'Lisie dominates central Kochi cardiac. Brand loyalty is generational.'},
+      {name:'South belt',from:[9.918,76.295],pct:28,leak:12,leakTo:'EMC',note:'VPS strongest cardiac catchment.'},
+      {name:'Kakkanad\u2013Vazhakkala',from:[9.990,76.342],pct:10,leak:50,leakTo:'Aster Heart Centre',note:'Corporate insurance tie-ups drive to Aster.'},
+      {name:'North Kochi',from:[10.050,76.300],pct:8,leak:60,leakTo:'Amrita / Lisie',note:'Amrita for complex, Lisie for routine interventional.'},
+      {name:'Aluva corridor',from:[10.130,76.370],pct:5,leak:65,leakTo:'Rajagiri / Amrita',note:'Distance barrier. Emergency cardiac goes to nearest.'}
+    ],
+    outpostImplication: 'Cardiac is the most competitive department in Kochi — Lisie Heart Institute is a legacy brand. Outpost strategy should focus on <strong>cardiac screening and preventive check-ups</strong> (diabetes-linked cardiac risk) rather than competing on intervention volume. Kakkanad (diabetic IT worker demographic) and Thrippunithura (aging population) are ideal for preventive cardiac clinics.',
+    insight: 'Cardiac has the highest competition density — 5 major centres within 15 km. VPS\u2019s electrophysiology and LVAD capability are differentiators but don\u2019t drive volume the way a screening outpost would. The outpost play is preventive: diabetes + cardiac risk screening in the IT corridor.'
+  },
+  neuro: {
+    name: 'Neurosciences',
+    vpsBeds: 35, vpsStrength: 'Neurology, neurosurgery, neuro-interventional radiology, stroke centre, epilepsy surgery.',
+    keralaStats: 'Kerala: high stroke incidence linked to hypertension and diabetes. Aging population drives neuro-degenerative conditions. Growing demand for epilepsy and movement disorder services.',
+    metrics: [{l:'Stroke cases/yr (Ernakulam est.)',v:'~2,800'},{l:'VPS neuro OPs/day',v:'40\u201360'},{l:'Key differentiator',v:'Neuro-interventional radiology'},{l:'Neuro ICU beds',v:'16'},{l:'Competition intensity',v:'High'}],
+    competitors: [
+      {n:'Aster Neuro CoE',lat:10.0055,lon:76.3115,str:90,note:'First independent neuro facility in Kerala. Comprehensive brain & spine. Very strong brand.'},
+      {n:'Amrita Neurosciences',lat:10.0345,lon:76.2885,str:88,note:'Academic neurosciences. Movement disorders, epilepsy surgery. Deep brain stimulation.'},
+      {n:'Lisie',lat:9.993,lon:76.295,str:55,note:'Neurology dept but limited neurosurgery.'},
+      {n:'Medical Trust',lat:9.971,lon:76.289,str:60,note:'Stroke management. Neurosurgery.'}
+    ],
+    corridors: [
+      {name:'South belt',from:[9.918,76.295],pct:30,leak:10,leakTo:'EMC',note:'VPS stronghold.'},
+      {name:'Tripunithura',from:[9.948,76.360],pct:15,leak:30,leakTo:'Aster',note:'Aging population = higher stroke risk.'},
+      {name:'North Kochi',from:[10.050,76.300],pct:8,leak:65,leakTo:'Aster / Amrita',note:'Aster Neuro CoE dominates.'},
+      {name:'Central Ernakulam',from:[9.980,76.288],pct:15,leak:40,leakTo:'Medical Trust / Lisie',note:'Proximity-driven emergency referrals.'}
+    ],
+    outpostImplication: 'Neuro is time-critical (stroke golden hour). An outpost with <strong>stroke stabilisation and thrombolysis capability</strong> in Thrippunithura or Kakkanad could capture cases that currently go to Aster or Medical Trust simply because they\u2019re closer during emergencies.',
+    insight: 'Neuro outpost strategy is about <strong>time, not brand</strong>. Stroke patients go to the nearest facility. A stabilisation + telestroke outpost extends VPS\u2019s effective stroke catchment radius by 8\u201310 km.'
+  },
+  ortho: {
+    name: 'Orthopaedics & sports medicine',
+    vpsBeds: 40, vpsStrength: 'India\u2019s first digitally integrated ortho OT. Joint replacement, sports medicine, spine surgery, trauma. Wireless arthroscopy (India first).',
+    keralaStats: 'Kerala: high road accident rate drives trauma demand. Aging population drives joint replacement. Growing sports medicine segment.',
+    metrics: [{l:'Joint replacements/yr (VPS)',v:'600+'},{l:'Key differentiator',v:'Digital OT + wireless arthroscopy'},{l:'Trauma volume',v:'High (NH-66 corridor)'},{l:'Competition intensity',v:'Moderate'}],
+    competitors: [
+      {n:'Amrita',lat:10.0345,lon:76.2885,str:75,note:'Ortho dept with trauma centre.'},
+      {n:'Aster',lat:10.0055,lon:76.3115,str:70,note:'Joint replacement and spine.'},
+      {n:'Medical Trust',lat:9.971,lon:76.289,str:65,note:'Sports injuries, joint replacement.'},
+      {n:'Rajagiri',lat:10.104,lon:76.346,str:60,note:'Robotic-assisted ortho surgery.'}
+    ],
+    corridors: [
+      {name:'NH-66 corridor (trauma)',from:[9.935,76.305],pct:35,leak:8,leakTo:'EMC',note:'Accident cases from NH-66 come directly. VPS\u2019s strongest ortho flow.'},
+      {name:'Kakkanad (sports medicine)',from:[9.990,76.342],pct:12,leak:35,leakTo:'Aster',note:'IT workers with sports injuries and repetitive strain.'},
+      {name:'Tripunithura (joint replacement)',from:[9.948,76.360],pct:15,leak:25,leakTo:'Medical Trust',note:'Aging population drives elective joint replacement demand.'}
+    ],
+    outpostImplication: 'Ortho is VPS\u2019s natural strength — the digital OT and wireless arthroscopy are unique differentiators. An outpost offering <strong>physiotherapy + sports medicine consultations</strong> in Kakkanad (IT corridor RSI/sports injuries) could funnel surgical cases to the main campus. Thrippunithura outpost could run <strong>joint replacement assessment clinics</strong> for the aging population.',
+    insight: 'Ortho outpost strategy: light-touch entry (physio + consultation) that funnels surgical volume to main campus. VPS\u2019s tech advantage (digital OT) is the conversion argument.'
+  },
+  gastro: {
+    name: 'Gastroenterology & liver care',
+    vpsBeds: 30, vpsStrength: 'Comprehensive GI and hepatology. Advanced endoscopy, liver transplant programme, ERCP, EUS.',
+    keralaStats: 'Kerala: high meat consumption drives colorectal cancer (5.5/100k vs national avg). Alcohol-related liver disease significant. Growing NAFLD from diabetes.',
+    metrics: [{l:'Liver transplants (VPS cumulative)',v:'100+'},{l:'ERCP procedures/month',v:'40\u201350'},{l:'Key differentiator',v:'Liver transplant programme'},{l:'Competition intensity',v:'Moderate\u2013high'}],
+    competitors: [
+      {n:'Aster Liver Care',lat:10.0055,lon:76.3115,str:88,note:'Integrated liver care unit. Liver transplant. Very strong GI.'},
+      {n:'Amrita GI',lat:10.0345,lon:76.2885,str:80,note:'Academic GI. IBD centre. Liver transplant.'},
+      {n:'Lourdes',lat:9.981,lon:76.287,str:50,note:'GI department, endoscopy. No transplant.'},
+      {n:'Medical Trust',lat:9.971,lon:76.289,str:55,note:'GI surgery. Endoscopy suite.'}
+    ],
+    corridors: [
+      {name:'South belt',from:[9.918,76.295],pct:28,leak:10,leakTo:'EMC',note:'Proximity advantage.'},
+      {name:'Central Ernakulam',from:[9.980,76.288],pct:15,leak:40,leakTo:'Lourdes / Medical Trust',note:'Walk-in convenience.'},
+      {name:'North Kochi',from:[10.050,76.300],pct:8,leak:60,leakTo:'Amrita / Aster',note:'Liver transplant reputation drives referrals north.'}
+    ],
+    outpostImplication: 'GI/liver outpost play: <strong>NAFLD and liver screening clinics</strong> in Kakkanad (diabetic IT population) and Kalamassery (industrial belt). Kerala\u2019s diabetic epidemic makes liver screening a population-health play with strong patient acquisition potential.',
+    insight: 'GI outpost is a screening play: 20% diabetes prevalence in Kerala = massive NAFLD pipeline. Early screening at outpost \u2192 conversion to liver clinic at main campus.'
+  },
+  transplant: {
+    name: 'Multi-organ transplant',
+    vpsBeds: 20, vpsStrength: 'First paediatric BMT and liver transplant in the region. Kidney, liver, heart transplant capability. 300+ organ transplants.',
+    keralaStats: 'Kerala: growing transplant demand driven by CKD (diabetes) and liver disease (alcohol + NAFLD). Cadaveric organ donation improving with KNOS (Kerala Network for Organ Sharing).',
+    metrics: [{l:'Total transplants (VPS)',v:'300+'},{l:'Key programmes',v:'Kidney, liver, BMT'},{l:'Cadaveric transplants/yr',v:'Growing'},{l:'Competition intensity',v:'High (top 3 tight)'}],
+    competitors: [
+      {n:'Aster Transplant',lat:10.0055,lon:76.3115,str:90,note:'Multi-organ transplant. Kidney, liver, heart. High volume.'},
+      {n:'Amrita Transplant',lat:10.0345,lon:76.2885,str:88,note:'Kidney and liver transplant. Academic programme. Living donor programme.'},
+      {n:'Lisie',lat:9.993,lon:76.295,str:50,note:'Kidney transplant support. Limited.'},
+      {n:'Rajagiri',lat:10.104,lon:76.346,str:45,note:'Developing transplant. Renal transplant.'}
+    ],
+    corridors: [
+      {name:'All Ernakulam',from:[9.980,76.310],pct:30,leak:35,leakTo:'Aster / Amrita',note:'Transplant is doctor-reputation driven. Patients travel for specific surgeons.'},
+      {name:'Kerala districts',from:[9.600,76.400],pct:40,leak:40,leakTo:'Amrita (academic rep)',note:'Inter-district referrals from nephrologists and hepatologists.'},
+      {name:'International',from:[10.150,76.400],pct:30,leak:50,leakTo:'Aster (Gulf connections)',note:'Medical tourism transplant. Aster\u2019s Gulf network is strong.'}
+    ],
+    outpostImplication: 'Transplant is not an outpost specialty — it requires full hospital infrastructure. However, outposts can serve as <strong>CKD screening and pre-transplant evaluation centres</strong>, identifying patients earlier in the disease journey and building the funnel for transplant referrals to main campus.',
+    insight: 'Transplant outpost strategy is indirect: screen for CKD and liver disease at outpost, manage early-stage at outpost, refer for transplant to main campus. The earlier you enter the patient journey, the more likely they choose VPS for the eventual transplant.'
+  }
+};
+
+(function() {
+  var deptMap = null;
+  var deptLayers = [];
+
+  function renderDept(key) {
+    var d = DEPTS[key];
+    if (!d) return;
+
+    // Metrics
+    var mh = '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:var(--bd);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh)">';
+    d.metrics.forEach(function(m) {
+      mh += '<div style="background:var(--bg);padding:14px 18px"><div style="font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;font-weight:500;margin-bottom:3px">' + m.l + '</div><div style="font-size:18px;font-weight:700">' + m.v + '</div></div>';
+    });
+    mh += '</div>';
+    document.getElementById('deptMetrics').innerHTML = mh;
+
+    // Map
+    if (!deptMap) {
+      deptMap = makeMap('map2', 11);
+      addVPS(deptMap);
+    }
+    deptLayers.forEach(function(ly) { deptMap.removeLayer(ly); });
+    deptLayers = [];
+
+    // Competitor markers
+    d.competitors.forEach(function(c) {
+      var r = Math.max(5, c.str / 12);
+      var mk = L.circleMarker([c.lat, c.lon], {
+        radius: r, fillColor: '#8B1A4A', color: '#8B1A4A',
+        weight: 1, fillOpacity: Math.min(0.8, c.str / 100)
+      }).addTo(deptMap).bindPopup(
+        '<strong style="color:#8B1A4A">' + c.n + '</strong>' +
+        '<div class="sub">Strength: ' + c.str + '/100<br>' + c.note + '</div>'
+      );
+      deptLayers.push(mk);
+    });
+
+    // Corridor flows
+    if (d.corridors) {
+      d.corridors.forEach(function(c) {
+        var line = L.polyline([c.from, [VPS.lat, VPS.lon]], {
+          color: '#2471A3', weight: Math.max(1.5, c.pct / 5), opacity: 0.45
+        }).addTo(deptMap);
+        deptLayers.push(line);
+
+        var mk2 = L.circleMarker(c.from, {
+          radius: Math.max(4, c.leak / 8), fillColor: '#2471A3', color: '#2471A3',
+          weight: 1, fillOpacity: 0.5
+        }).addTo(deptMap).bindPopup(
+          '<strong>' + c.name + '</strong>' +
+          '<div class="sub">VPS share: ' + c.pct + '% \u00b7 Leakage: ' + c.leak + '%<br>Leaks to: ' + c.leakTo + '</div>'
+        );
+        deptLayers.push(mk2);
+      });
+    }
+
+    // Detail table
+    var th = '<div style="margin-bottom:16px"><div style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:12px"><strong style="color:var(--vps-blue)">VPS Lakeshore ' + d.name + ':</strong> ' + d.vpsStrength + '</div>';
+    th += '<div style="font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:16px"><strong style="color:var(--vps-maroon)">Market context:</strong> ' + d.keralaStats + '</div></div>';
+
+    // Competitor table
+    th += '<table class="dept-table"><thead><tr><th>Competitor</th><th>Strength</th><th>Notes</th></tr></thead><tbody>';
+    d.competitors.forEach(function(c) {
+      var barW = Math.round(c.str * 0.8);
+      var barColor = c.str > 80 ? '#8B1A4A' : (c.str > 60 ? '#C8922A' : '#2B7CBE');
+      th += '<tr><td style="font-weight:600">' + c.n + '</td>' +
+        '<td><span class="str-bar" style="width:' + barW + 'px;background:' + barColor + '"></span>' + c.str + '</td>' +
+        '<td style="font-size:12px;color:var(--tx2)">' + c.note + '</td></tr>';
+    });
+    th += '</tbody></table>';
+
+    // Corridor table
+    if (d.corridors) {
+      th += '<div style="margin-top:20px"><div style="font-size:14px;font-weight:700;margin-bottom:10px">Patient corridors \u2014 ' + d.name + '</div>';
+      th += '<table class="dept-table"><thead><tr><th>Corridor</th><th>VPS share</th><th>Leakage</th><th>Leaks to</th></tr></thead><tbody>';
+      d.corridors.forEach(function(c) {
+        th += '<tr><td><div style="font-weight:600">' + c.name + '</div><div style="font-size:11px;color:var(--tx3)">' + c.note + '</div></td>' +
+          '<td style="font-weight:700;color:var(--vps-blue)">' + c.pct + '%</td>' +
+          '<td style="font-weight:700;color:var(--vps-maroon)">' + c.leak + '%</td>' +
+          '<td style="font-size:12px">' + c.leakTo + '</td></tr>';
+      });
+      th += '</tbody></table></div>';
+    }
+
+    // Outpost implication
+    th += '<div style="margin-top:20px"><div style="font-size:14px;font-weight:700;margin-bottom:8px">Outpost implication</div><div style="font-size:14px;color:var(--tx2);line-height:1.7">' + d.outpostImplication + '</div></div>';
+
+    document.getElementById('deptDetail').innerHTML = th;
+
+    // Insight box
+    document.getElementById('deptInsight').innerHTML = '<div class="insight"><strong>Strategic takeaway:</strong> ' + d.insight + '</div>';
+  }
+
+  // Dept button handlers
+  document.querySelectorAll('.dept-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.dept-btn').forEach(function(b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      renderDept(this.dataset.dept);
+      if (deptMap) setTimeout(function() { deptMap.invalidateSize(); }, 100);
+    });
+  });
+
+  // Initial render (deferred until tab is shown)
+  var deptInited = false;
+  var origNavHandler = null;
+  document.querySelectorAll('.nav-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      if (this.dataset.tab === '2' && !deptInited) {
+        setTimeout(function() {
+          renderDept('onco');
+          deptInited = true;
+          if (deptMap) deptMap.invalidateSize();
+        }, 200);
+      }
+    });
+  });
 })();
 </script>
 </body>
