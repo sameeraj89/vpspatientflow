@@ -408,7 +408,8 @@ input[type=range]::-moz-range-thumb {
     <div class="map-el" id="map0"></div>
     <div class="map-legend">
       <span><i style="background:var(--vps-blue)"></i>VPS Lakeshore</span>
-      <span><i style="background:var(--vps-blue-d)"></i>Has tertiary</span>
+      <span><i style="background:#C0392B"></i>Competitor hospital</span>
+      <span><i style="background:var(--vps-blue-d)"></i>Has tertiary (town)</span>
       <span><i style="background:var(--vps-maroon)"></i>No tertiary (&gt;40k)</span>
       <span><i style="background:var(--tx3)"></i>No tertiary (&lt;40k)</span>
     </div>
@@ -658,6 +659,16 @@ function addVPS(map) {
       '<br>' + (t.t ? '\u2713 Has tertiary hospital' : '\u2717 No tertiary care') + '</div>'
     );
   });
+
+  // Add competitor hospitals
+  COMPETITORS.forEach(function(c) {
+    L.circleMarker([c.lat, c.lon], {
+      radius: 7, fillColor: '#C0392B', color: '#fff', weight: 2, fillOpacity: 0.85
+    }).addTo(m).bindPopup(
+      '<strong style="color:#C0392B">' + c.n + '</strong>' +
+      '<div class="sub">' + c.b + ' beds \u00b7 Competitor (tertiary/quaternary)</div>'
+    );
+  });
 })();
 
 
@@ -666,6 +677,17 @@ function addVPS(map) {
    ═══════════════════════════════════════ */
 (function() {
   var m = makeMap('map1'); addVPS(m);
+
+  // Add competitor hospitals (dimmed)
+  COMPETITORS.forEach(function(c) {
+    L.circleMarker([c.lat, c.lon], {
+      radius: 5, fillColor: '#C0392B', color: '#C0392B', weight: 1, fillOpacity: 0.3
+    }).addTo(m).bindPopup(
+      '<strong style="color:#C0392B">' + c.n + '</strong>' +
+      '<div class="sub">' + c.b + ' beds</div>'
+    );
+  });
+
   CORRIDORS.forEach(function(c) {
     L.polyline([c.from, [VPS.lat, VPS.lon]], {
       color: '#2471A3', weight: Math.max(2, c.vol / 3), opacity: 0.5
