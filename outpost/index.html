@@ -1636,25 +1636,25 @@ var DEPTS = {
     if (kkInited) return;
     kkInited = true;
 
-    /* Corrected coordinates verified against Google Maps */
-    // VPS Lakeshore: NH-66, Nettoor, Maradu — 9.9378, 76.3070
-    // Kakkanad SmartCity: 10.0006, 76.3540
-    // Infopark Ph1: 10.0219, 76.3711
-    // Aster Medcity: Cheranallur Rd — 9.9958, 76.3119
-    // Sunrise: NH bypass, near Edapally junction area — 9.9940, 76.3302
-    // Rajagiri: Aluva — 10.1067, 76.3524
-    // Lisie: MG Road area — 9.9930, 76.2950
-    // CUSAT: Kalamassery — 10.0432, 76.3293
+    /* Coordinates verified against OpenStreetMap, Grokipedia, and latlong.net */
+    // VPS Lakeshore: NH-66, Nettoor — 9.9378, 76.3070 (verified)
+    // Kakkanad proposed: SmartCity SEZ — 10.0006, 76.3540
+    // Aster Medcity: Grokipedia/OSM — 10°02'36"N 76°16'41"E = 10.0433, 76.2781
+    // Amrita AIMS: Ponekkara, Edappally — 10.0265, 76.3082
+    // Rajagiri: OSM/latlong — 10.0877, 76.3882
+    // Sunrise: Palarivattom junction — 9.9985, 76.3119
+    // Infopark: Kakkanad — 10.0219, 76.3711
+    // SmartCity campus: 10.0040, 76.3580
 
     var m = L.map('mapKK', { zoomControl: true, scrollWheelZoom: true })
-              .setView([9.990, 76.330], 13);
+              .setView([9.995, 76.330], 13);
     L.tileLayer(TILE_URL, { attribution: TILE_ATTR, maxZoom: 18 }).addTo(m);
     maps['mapKK'] = m;
 
     /* VPS Lakeshore (existing) */
     L.circleMarker([9.9378, 76.3070], {
       radius: 14, fillColor: '#2B7CBE', color: '#fff', weight: 2.5, fillOpacity: 1
-    }).addTo(m).bindPopup('<strong>VPS Lakeshore</strong><div class="sub">470+ beds · NH-66, Nettoor<br>Specialist &amp; quaternary hub<br>Transplant · Cardiac surgery · Oncology · Neuro · MVT</div>');
+    }).addTo(m).bindPopup('<strong>VPS Lakeshore</strong><div class="sub">470+ beds · NH-66, Nettoor, Maradu<br>Specialist &amp; quaternary hub<br>Transplant · Cardiac surgery · Oncology · Neuro · MVT</div>');
     L.circleMarker([9.9378, 76.3070], {
       radius: 40, fillColor: '#2B7CBE', color: '#2B7CBE', weight: 1, fillOpacity: 0.07, dashArray: '6 4'
     }).addTo(m);
@@ -1673,12 +1673,12 @@ var DEPTS = {
       color: '#2B7CBE', weight: 3, dashArray: '8 6', opacity: 0.55
     }).addTo(m).bindPopup('<strong>Inter-campus corridor</strong><div class="sub">~8 km via Seaport–Airport Road<br>18–22 min transfer<br>Complex cases up · step-down back</div>');
 
-    /* IT parks — corrected positions */
+    /* IT parks */
     [
       { n:'Infopark Kochi', lat:10.0219, lon:76.3711,
         sub:'72,000 professionals · TCS, Wipro, HCL, IBM, Cognizant, KPMG, EY, Nielsen<br>323 acres · Phase II still under development' },
-      { n:'SmartCity Kochi', lat:10.0040, lon:76.3560,
-        sub:'246 acres SEZ · 90,000+ target jobs<br>VPS proposed land parcel · adjacent to Infopark' },
+      { n:'SmartCity Kochi (VPS parcel)', lat:10.0040, lon:76.3580,
+        sub:'246 acres SEZ · 90,000+ target jobs<br>VPS proposed land parcel B3-3/B3-4 · adjacent to Infopark' },
       { n:'CSEZ / KINFRA', lat:10.0110, lon:76.3490,
         sub:'Cochin Special Economic Zone · Collectorate nearby · PSU offices' }
     ].forEach(function(p) {
@@ -1687,16 +1687,16 @@ var DEPTS = {
       L.polyline([[p.lat,p.lon],[kkLat,kkLon]], {color:'#e67e22',weight:1.5,dashArray:'3 6',opacity:.35}).addTo(m);
     });
 
-    /* Competitors — corrected real coordinates */
+    /* Competitors — coordinates from OSM, Grokipedia, latlong.net */
     [
-      { n:'Aster Medcity', lat:9.9958, lon:76.3119,
-        sub:'710 beds · Cheranallur Rd · JCI accredited<br>Quaternary · dominates Kakkanad corridor' },
-      { n:'Sunrise Hospital', lat:9.9943, lon:76.3285,
-        sub:'500+ beds · near Edapally Toll · NH bypass<br>General multispecialty · high OPD volume' },
-      { n:'Lisie Hospital', lat:9.9930, lon:76.2950,
-        sub:'600 beds · MG Road · premier cardiac centre<br>Lisie Heart Institute — legacy brand' },
-      { n:'Rajagiri Hospital', lat:10.1067, lon:76.3524,
-        sub:'650 beds · Aluva · tertiary care<br>Growing cardiac · captures north Kochi' }
+      { n:'Aster Medcity', lat:10.0433, lon:76.2781,
+        sub:'710 beds · Kuttisahib Rd, Cheranelloor · JCI accredited<br>Quaternary · waterfront campus · 40 acres' },
+      { n:'Amrita Hospital (AIMS)', lat:10.0265, lon:76.3082,
+        sub:'1450 beds · Ponekkara, Edappally · 125 acres<br>Tertiary + academic · transplant · cardiac' },
+      { n:'Sunrise Hospital', lat:9.9985, lon:76.3119,
+        sub:'500+ beds · Palarivattom Junction<br>General multispecialty · high OPD volume' },
+      { n:'Rajagiri Hospital', lat:10.0877, lon:76.3882,
+        sub:'570 beds · Chunangamvely, Aluva · JCI accredited<br>Quaternary · captures north Kochi corridor' }
     ].forEach(function(c) {
       L.circleMarker([c.lat, c.lon], { radius:9, fillColor:'#8B1A4A', color:'#fff', weight:2, fillOpacity:.85 })
         .addTo(m).bindPopup('<strong style="color:#8B1A4A">'+c.n+'</strong><div class="sub">'+c.sub+'</div>');
@@ -1704,16 +1704,16 @@ var DEPTS = {
 
     /* Residential catchment zones */
     [
-      { n:'Kakkanad residential', lat:9.9750, lon:76.3470,
+      { n:'Kakkanad', lat:9.9750, lon:76.3450,
         sub:'37k+ residents · fast-growing · IT professional families' },
       { n:'Vazhakkala', lat:10.0120, lon:76.3400,
         sub:'51k pop · no tertiary hospital · key residential belt' },
       { n:'Thrippunithura', lat:9.9450, lon:76.3400,
         sub:'69k pop · SE residential belt · feeds both campuses' },
-      { n:'Cheranallur', lat:10.0050, lon:76.3120,
-        sub:'30k pop · mid-corridor residential' },
-      { n:'CUSAT campus', lat:10.0432, lon:76.3293,
-        sub:'15,000 students · MOU opportunity · adjacent to IT cluster' }
+      { n:'Edappally', lat:10.0195, lon:76.3088,
+        sub:'Major transit hub · NH bypass · growing residential' },
+      { n:'CUSAT', lat:10.0432, lon:76.3293,
+        sub:'15,000 students · Kalamassery · MOU opportunity' }
     ].forEach(function(r) {
       L.circleMarker([r.lat, r.lon], { radius:7, fillColor:'#8e44ad', color:'#fff', weight:1.5, fillOpacity:.6 })
         .addTo(m).bindPopup('<strong>'+r.n+'</strong><div class="sub">'+r.sub+'</div>');
@@ -1721,22 +1721,22 @@ var DEPTS = {
 
     /* COMPETITOR CARDS */
     var COMPS = [
-      { name:'Aster Medcity', dist:'~4 km · Cheranallur · 710 beds', threat:90,
+      { name:'Aster Medcity', dist:'~8 km · Cheranelloor (waterfront) · 710 beds', threat:90,
         leakShare:'~60% of Kakkanad corridor',
         str:'Full quaternary · JCI · Aster@SmartCity OPD already on campus · strong corporate TPA base',
         weak:'Higher rack rates · no inpatient inside SmartCity · campus is west of IT cluster',
         opp:'A VPS hospital inside SmartCity with 400 beds and full ED directly displaces Aster\'s OPD-only foothold. Corporate TPA relationships become re-negotiable.' },
-      { name:'Sunrise Hospital', dist:'~3 km · NH bypass · 500+ beds', threat:55,
+      { name:'Sunrise Hospital', dist:'~5 km · Palarivattom Junction · 500+ beds', threat:55,
         leakShare:'~25% of corridor',
         str:'High OPD volume · affordable · accessible · well-known for routine care',
         weak:'Not premium · no quaternary · older infrastructure · limited insured segment appeal',
         opp:'VPS brand premium at comparable pricing converts insured IT workers who use Sunrise by default, not by preference.' },
-      { name:'Lisie Hospital', dist:'~7 km · MG Road · 600 beds', threat:45,
-        leakShare:'Central Ernakulam cardiac referrals',
-        str:'Premier cardiac centre in Kochi · Lisie Heart Institute · legacy brand · city-centre location',
-        weak:'Distance from IT corridor · not multispecialty at Kakkanad scale',
-        opp:'Minimal overlap with Kakkanad catchment. Lisie competes for Nettoor\'s cardiac cases, not Kakkanad\'s.' },
-      { name:'Aster@SmartCity OPD', dist:'Inside SmartCity · OPD only', threat:70,
+      { name:'Amrita Hospital (AIMS)', dist:'~7 km · Ponekkara, Edappally · 1450 beds', threat:65,
+        leakShare:'Edappally & north corridor patients',
+        str:'Largest hospital campus in Kerala · 1450 beds · 125 acres · academic medicine · transplant · cardiac',
+        weak:'Western edge of Kakkanad catchment · premium pricing · academic pace',
+        opp:'Amrita competes primarily for Kalamassery / Edappally patients. VPS Kakkanad targets the eastern IT cluster population Amrita does not reach conveniently.' },
+      { name:'Aster@SmartCity OPD', dist:'Inside SmartCity campus · OPD only', threat:70,
         leakShare:'IT worker first-contact share',
         str:'On-campus · captive IT workers · 9 specialties · Aster brand recognition',
         weak:'No inpatient · no emergency · cannot admit · no diagnostics · no continuity of care',
