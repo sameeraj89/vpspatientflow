@@ -558,8 +558,42 @@ input[type=range]::-moz-range-thumb {
 .kk-recommendation p { font-size:13.5px; line-height:1.75; color:rgba(255,255,255,.9); }
 .kk-recommendation strong { color:#fff; }
 
-/* Legacy — hidden */
-.kk-subnav,.kk-sub,.kk-snav { display:none; }
+.kk-rec-disclaimer {
+  background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+  border-radius: var(--r); padding: 12px 16px; margin-bottom: 16px;
+  font-size: 12.5px; color: rgba(255,255,255,.95); line-height: 1.6;
+}
+.kk-rec-steps { display:flex; flex-direction:column; gap:10px; margin-top:12px; margin-bottom:16px; }
+.kk-rec-step {
+  display: flex; gap: 12px; align-items: flex-start;
+  background: rgba(255,255,255,.1); border-radius: var(--r); padding: 12px 14px;
+  font-size: 13px; line-height: 1.6; color: rgba(255,255,255,.9);
+}
+.kk-rec-step strong { color: #fff; }
+.kk-rec-step-n {
+  width: 24px; height: 24px; border-radius: 50%; background: rgba(255,255,255,.9);
+  color: var(--vps-blue); font-weight: 800; font-size: 13px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.kk-rec-timeline {
+  background: rgba(0,0,0,.18); border-radius: var(--r); overflow: hidden;
+  margin-top: 16px; margin-bottom: 16px;
+}
+.kk-rec-tl-head {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: rgba(255,255,255,.6); padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.1);
+}
+.kk-rec-tl-row {
+  display: grid; grid-template-columns: 180px 1fr; gap: 12px;
+  padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,.08);
+  font-size: 12.5px; color: rgba(255,255,255,.85); line-height: 1.55;
+}
+.kk-rec-tl-row:last-child { border-bottom: none; }
+.kk-rec-tl-row--key { background: rgba(255,255,255,.1); }
+.kk-rec-tl-row--key strong { color: #fff; }
+.kk-rec-tl-phase { font-weight: 700; color: rgba(255,255,255,.95); font-size: 12px; }
+@media(max-width:640px){.kk-rec-tl-row{grid-template-columns:1fr;}.kk-rec-tl-phase{margin-bottom:3px;}}
+
 
 /* ═══ ANIMATIONS ═══ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -976,10 +1010,34 @@ input[type=range]::-moz-range-thumb {
 
   <!-- ══ RECOMMENDATION ══ -->
   <div class="kk-recommendation anim d2">
-    <div class="kk-rec-head">Recommendation — go full steam</div>
-    <p>No hospital group in Kochi operates two large, purpose-differentiated campuses. Aster Medcity is a single quaternary centre trying to be everything. Amrita is anchored in Edappally. Rajagiri is tertiary, not quaternary. <strong>VPS has a rare and time-limited opportunity to build the only two-hospital system in Kerala</strong> — one that looks and functions like what Medeor has done in Abu Dhabi, but at a larger scale and with a stronger referral engine.</p>
-    <p style="margin-top:10px">VPS Lakeshore becomes Kerala's most focused specialist and referral hospital — the place serious cases come for transplant, cardiac surgery, CAR-T, and complex neurosurgery. Kakkanad becomes the premium multispecialty hospital for a young, growing, insured urban population that currently has no quality option in its backyard. Together, they create a system that generates ₹1,500–1,700 Cr in combined revenue by Year 5, achieves &gt;20% IRR, and builds a network moat that no competitor can replicate without land, capital, and a decade of time.</p>
-    <p style="margin-top:10px"><strong>The question is not whether to build VPS Kakkanad. The question is how fast.</strong></p>
+    <div class="kk-rec-head">Recommendation — proceed to full due diligence</div>
+
+    <div class="kk-rec-disclaimer">
+      <strong>⚠ Draft — for internal discussion only.</strong> All financial projections, market sizing, catchment estimates, and competitive assessments in this document are high-level indicative figures based on publicly available data and internal assumptions. They have not been independently validated and should not be relied upon for investment decisions without formal external validation by qualified advisors.
+    </div>
+
+    <p>The strategic direction is clear. No hospital group in Kochi operates two large, purpose-differentiated campuses. Aster Medcity is a single quaternary centre trying to be everything. Amrita is anchored in Edappally. Rajagiri is tertiary. <strong>VPS has a rare and time-limited opportunity to build the only genuine two-hospital system in Kerala</strong> — one that mirrors what Medeor has achieved in Abu Dhabi as a focused specialist centre, but at a larger scale and with a stronger bi-directional referral engine.</p>
+    <p style="margin-top:12px">VPS Lakeshore becomes Kerala's most focused specialist and referral hospital. Kakkanad becomes the premium multispecialty centre for a young, growing, insured urban population that currently has no quality option in its backyard. Together they build a system that no competitor can replicate without land, capital, and a decade of time.</p>
+
+    <p style="margin-top:16px"><strong>Recommended next steps — due diligence and evaluation:</strong></p>
+    <div class="kk-rec-steps">
+      <div class="kk-rec-step"><span class="kk-rec-step-n">1</span><div><strong>Appoint an independent financial and market advisor</strong> — commission a formal feasibility study covering demand validation, competitive benchmarking, financial modelling (DCF, IRR, sensitivity analysis), and regulatory review. Firms with relevant track record: Grant Thornton, KPMG Healthcare, EY Health Sciences, or a specialist healthcare investment bank.</div></div>
+      <div class="kk-rec-step"><span class="kk-rec-step-n">2</span><div><strong>Land and legal due diligence</strong> — conduct title verification, SEZ compliance review, FAR and zoning confirmation, and environmental clearance assessment for both Option 1 (5.85 Ac) and Option 2 (6.17 Ac) parcels. Engage a Kerala-based real estate legal firm alongside SmartCity's development team.</div></div>
+      <div class="kk-rec-step"><span class="kk-rec-step-n">3</span><div><strong>Operator and clinical model validation</strong> — engage hospital planning consultants (HKS, EDAC, or equivalent) to develop a concept brief, department programme, and bed mix validation for a 400-bed multispecialty facility on 6.17 Ac. Confirm phased build viability and infrastructure requirements.</div></div>
+      <div class="kk-rec-step"><span class="kk-rec-step-n">4</span><div><strong>Corporate TPA pipeline development</strong> — begin informal conversations with HR Directors at top 10 Infopark corporates (TCS, Wipro, HCL, IBM, Cognizant) to gauge willingness to switch or add VPS as a panel hospital. This runs in parallel with due diligence and costs nothing.</div></div>
+      <div class="kk-rec-step"><span class="kk-rec-step-n">5</span><div><strong>Board sanction and capital planning</strong> — present the validated feasibility study and clinical concept brief to the VPS Healthcare board for investment approval. Explore financing structures: internal accruals, project finance, strategic partnership, or a combination.</div></div>
+    </div>
+
+    <div class="kk-rec-timeline">
+      <div class="kk-rec-tl-head">Indicative pathway to first operations</div>
+      <div class="kk-rec-tl-row"><span class="kk-rec-tl-phase">Now → Month 6</span><span>Due diligence, land DD, feasibility study, clinical concept brief, board approval</span></div>
+      <div class="kk-rec-tl-row"><span class="kk-rec-tl-phase">Month 6 → 12</span><span>Architectural design, regulatory approvals, contractor selection, financial close</span></div>
+      <div class="kk-rec-tl-row kk-rec-tl-row--key"><span class="kk-rec-tl-phase">Construction start</span><span>At minimum <strong>12 months from construction start</strong> before any form of operations can commence — fit-out, equipment commissioning, NABH pre-assessment, and staff mobilisation require this lead time as a floor, not a target</span></div>
+      <div class="kk-rec-tl-row"><span class="kk-rec-tl-phase">Phase 1 opening</span><span>~200-bed operations · Emergency, medicine, OBG, cardiology, diagnostics · TPA empanelments active</span></div>
+      <div class="kk-rec-tl-row"><span class="kk-rec-tl-phase">Year 3–4</span><span>Full 400-bed expansion complete · all Phase 2 departments operational · NABH accreditation</span></div>
+    </div>
+
+    <p style="margin-top:16px"><strong>The question is not whether to build VPS Kakkanad. The strategic and competitive case is unambiguous. The immediate task is to validate the numbers with the rigour that a commitment of this scale demands — and to start that process now.</strong></p>
   </div>
 
 </section>
