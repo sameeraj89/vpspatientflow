@@ -358,120 +358,208 @@ input[type=range]::-moz-range-thumb {
 .footer a { color: var(--vps-blue); }
 
 /* ═══ KAKKANAD TAB ═══ */
-.kk-pillars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:24px;}
-@media(max-width:700px){.kk-pillars{grid-template-columns:1fr;}}
-.kk-p{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rl);padding:20px;box-shadow:var(--sh);}
-.kk-p-num{font-size:22px;font-weight:800;color:var(--vps-blue);margin-bottom:6px;}
-.kk-p-title{font-size:14px;font-weight:700;margin-bottom:6px;}
-.kk-p-body{font-size:13px;color:var(--tx2);line-height:1.65;}
-.kk-section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--vps-blue);margin:28px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--vps-blue-l);}
-.kk-fin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:1px;background:var(--bd);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);}
-.kk-fin-card{background:var(--bg);padding:18px 20px;}
-.kk-fin-card--primary{background:var(--vps-blue);}
-.kk-fin-card--primary .kk-fin-label{color:rgba(255,255,255,.7);}
-.kk-fin-card--primary .kk-fin-val{color:#fff;}
-.kk-fin-card--primary .kk-fin-sub{color:rgba(255,255,255,.65);}
-.kk-fin-label{font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:4px;}
-.kk-fin-val{font-size:21px;font-weight:800;color:var(--vps-blue);letter-spacing:-.5px;margin-bottom:4px;}
-.kk-fin-sub{font-size:11.5px;color:var(--tx3);line-height:1.5;}
-.kk-proj-wrap{overflow-x:auto;border-radius:var(--rl);border:1px solid var(--bd);box-shadow:var(--sh);}
-.kk-proj-tbl{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px;}
-.kk-proj-tbl thead tr{background:var(--vps-blue);color:#fff;}
-.kk-proj-tbl thead th{padding:11px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
-.kk-proj-tbl tbody td{padding:11px 14px;border-bottom:1px solid var(--bd);background:var(--bg);}
-.kk-proj-tbl tbody tr:last-child td{border-bottom:none;}
-.kk-proj-tbl tbody tr:hover td{background:var(--bg2);}
-.kk-proj-tbl tbody td:first-child{font-weight:600;color:var(--tx2);font-size:12px;}
-.kk-td-red{color:var(--red);font-weight:700;}
-.kk-td-amber{color:var(--accent);font-weight:700;}
-.kk-td-green{color:var(--teal);font-weight:700;}
-.kk-land-row-top{display:grid;grid-template-columns:300px 1fr;gap:16px;}
+
+/* Vision header */
+.kk-vision {
+  display:grid; grid-template-columns:1.2fr 1fr; gap:24px;
+  background:linear-gradient(135deg,var(--vps-blue-ll) 0%,#fff 60%);
+  border:1px solid rgba(43,124,190,.12); border-radius:var(--rl);
+  padding:clamp(20px,3vw,36px); margin-bottom:20px; box-shadow:var(--sh);
+}
+@media(max-width:760px){.kk-vision{grid-template-columns:1fr;}}
+.kk-vision-badge {
+  font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--vps-maroon); background:var(--vps-maroon-l);
+  display:inline-block; padding:4px 12px; border-radius:20px; margin-bottom:12px;
+}
+.kk-vision-h {
+  font-size:clamp(19px,2.5vw,27px); font-weight:800; line-height:1.2;
+  letter-spacing:-.4px; margin-bottom:12px; color:var(--tx);
+}
+.kk-vision-h em { font-style:normal; color:var(--vps-blue); }
+.kk-vision-p { font-size:13.5px; color:var(--tx2); line-height:1.7; max-width:580px; }
+.kk-vision-right { display:flex; flex-direction:column; gap:0; justify-content:center; }
+.kk-vision-campus {
+  background:var(--bg); border:1px solid var(--bd); border-radius:var(--r);
+  padding:14px 16px;
+}
+.kk-vc-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; margin-bottom:2px; }
+.kk-vc-role { font-size:13px; font-weight:700; margin-bottom:8px; color:var(--tx); }
+.kk-vc-tags { display:flex; flex-wrap:wrap; gap:4px; }
+.kk-vc-tags span {
+  font-size:11px; padding:3px 9px; border-radius:20px; font-weight:500;
+  background:var(--vps-blue-l); color:var(--vps-blue-d);
+}
+.kk-vc-arrow {
+  text-align:center; font-size:11.5px; font-weight:600; color:var(--tx3);
+  padding:8px 0; letter-spacing:.3px;
+}
+
+/* Metrics strip */
+.kk-strip {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:1px; background:var(--bd); border-radius:var(--rl);
+  overflow:hidden; box-shadow:var(--sh); margin-bottom:0;
+}
+.kk-strip-item { background:var(--bg); padding:14px 18px; }
+.kk-strip-item--warn { background:rgba(192,57,43,.04); }
+.kk-strip-v { font-size:22px; font-weight:800; color:var(--vps-blue); letter-spacing:-.5px; margin-bottom:3px; }
+.kk-strip-item--warn .kk-strip-v { color:var(--red); }
+.kk-strip-l { font-size:11px; color:var(--tx3); line-height:1.35; }
+
+/* Section label */
+.kk-section-label {
+  font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px;
+  color:var(--vps-blue); margin:28px 0 12px;
+  padding-bottom:8px; border-bottom:2px solid var(--vps-blue-l);
+}
+
+/* Land options */
+.kk-land-row-top { display:grid; grid-template-columns:290px 1fr; gap:16px; }
 @media(max-width:900px){.kk-land-row-top{grid-template-columns:1fr;}}
-.kk-land-cards{display:flex;flex-direction:column;gap:12px;}
-.kk-lo-card{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rl);padding:18px;box-shadow:var(--sh);}
-.kk-lo-card--sel{border-color:rgba(43,124,190,.3);background:var(--vps-blue-l);}
-.kk-lo-badge{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--tx3);margin-bottom:4px;}
-.kk-lo-badge--sel{color:var(--vps-blue);}
-.kk-lo-area{font-size:26px;font-weight:800;color:var(--vps-blue);letter-spacing:-.5px;}
-.kk-lo-sub{font-size:11px;color:var(--tx3);margin-bottom:10px;}
-.kk-lo-rows{display:flex;flex-direction:column;border-top:1px solid var(--bd);padding-top:8px;margin-bottom:10px;}
-.kk-lo-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--bd);}
-.kk-lo-row:last-child{border-bottom:none;}
-.kk-lo-row span:first-child{color:var(--tx3);}
-.kk-lo-row span:last-child{font-weight:600;}
-.kk-pdf-btn{width:100%;padding:8px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--f);border:1px solid var(--bd);background:var(--bg3);color:var(--tx2);transition:all .15s;}
-.kk-pdf-btn:hover{background:var(--vps-blue);color:#fff;border-color:var(--vps-blue);}
-.kk-pdf-btn--sel{background:var(--vps-blue);color:#fff;border-color:var(--vps-blue);}
-.kk-pdf-panel{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);display:flex;flex-direction:column;min-height:480px;}
-.kk-pdf-tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);background:var(--bg2);align-items:center;}
-.kk-pdf-tab{padding:9px 16px;font-size:12.5px;font-weight:500;font-family:var(--f);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;color:var(--tx2);transition:all .15s;}
-.kk-pdf-tab.active{color:var(--vps-blue);border-bottom-color:var(--vps-blue);}
-.kk-pdf-dl{margin-left:auto;padding:6px 14px;font-size:11.5px;color:var(--vps-blue);text-decoration:none;font-weight:600;}
-.kk-pdf-frame{width:100%;height:460px;border:none;flex:1;}
-.kk-map-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0;}
-.kk-map-chip{font-size:12px;padding:5px 12px;border-radius:20px;background:var(--bg);border:1px solid var(--bd);color:var(--tx2);}
-.kk-two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-@media(max-width:720px){.kk-two-col{grid-template-columns:1fr;}}
-.kk-card{border-radius:var(--rl);border:1px solid var(--bd);overflow:hidden;box-shadow:var(--sh);}
-.kk-card--blue .kk-card-header{background:var(--vps-blue-l);border-bottom:1px solid rgba(43,124,190,.12);}
-.kk-card--green .kk-card-header{background:rgba(26,122,64,.07);border-bottom:1px solid rgba(26,122,64,.12);}
-.kk-card-header{display:flex;align-items:center;gap:12px;padding:16px 20px;}
-.kk-card-icon{font-size:20px;flex-shrink:0;}
-.kk-card-title{font-size:14px;font-weight:700;}
-.kk-card-sub{font-size:11.5px;color:var(--tx3);margin-top:2px;}
-.kk-card-body{padding:16px 20px;background:var(--bg);}
-.kk-spec-list{display:flex;flex-direction:column;gap:4px;margin-bottom:8px;}
-.kk-spec-item{font-size:12.5px;padding:5px 10px;border-radius:6px;display:flex;align-items:center;gap:7px;}
-.kk-spec-item::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0;}
-.kk-spec-item--keep{background:var(--vps-blue-l);color:var(--vps-blue-d);}
-.kk-spec-item--keep::before{background:var(--vps-blue);}
-.kk-spec-item--move{background:rgba(139,26,74,.06);color:var(--vps-maroon);font-style:italic;}
-.kk-spec-item--move::before{background:var(--vps-maroon);}
-.kk-spec-item--new{background:rgba(26,122,64,.07);color:#1a5a30;}
-.kk-spec-item--new::before{background:#1a7a40;}
-.kk-note{font-size:12px;color:var(--tx2);line-height:1.6;border-top:1px solid var(--bd);padding-top:10px;margin-top:8px;}
-.kk-flow-src-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
+.kk-land-cards { display:flex; flex-direction:column; gap:12px; }
+.kk-lo-card { background:var(--bg); border:1px solid var(--bd); border-radius:var(--rl); padding:16px; box-shadow:var(--sh); }
+.kk-lo-card--sel { border-color:rgba(43,124,190,.3); background:var(--vps-blue-l); }
+.kk-lo-badge { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--tx3); margin-bottom:4px; }
+.kk-lo-badge--sel { color:var(--vps-blue); }
+.kk-lo-area { font-size:24px; font-weight:800; color:var(--vps-blue); letter-spacing:-.5px; }
+.kk-lo-sub { font-size:11px; color:var(--tx3); margin-bottom:8px; }
+.kk-lo-rows { display:flex; flex-direction:column; border-top:1px solid var(--bd); padding-top:6px; margin-bottom:8px; }
+.kk-lo-row { display:flex; justify-content:space-between; font-size:11.5px; padding:4px 0; border-bottom:1px solid var(--bd); }
+.kk-lo-row:last-child { border-bottom:none; }
+.kk-lo-row span:first-child { color:var(--tx3); }
+.kk-lo-row span:last-child { font-weight:600; }
+.kk-pdf-btn { width:100%; padding:7px; border-radius:var(--r); font-size:11.5px; font-weight:600; cursor:pointer; font-family:var(--f); border:1px solid var(--bd); background:var(--bg3); color:var(--tx2); transition:all .15s; }
+.kk-pdf-btn:hover { background:var(--vps-blue); color:#fff; border-color:var(--vps-blue); }
+.kk-pdf-btn--sel { background:var(--vps-blue); color:#fff; border-color:var(--vps-blue); }
+.kk-pdf-panel { background:var(--bg); border:1px solid var(--bd); border-radius:var(--rl); overflow:hidden; box-shadow:var(--sh); display:flex; flex-direction:column; min-height:460px; }
+.kk-pdf-tabs { display:flex; border-bottom:1px solid var(--bd); background:var(--bg2); align-items:center; }
+.kk-pdf-tab { padding:9px 14px; font-size:12px; font-weight:500; font-family:var(--f); background:none; border:none; border-bottom:2px solid transparent; cursor:pointer; color:var(--tx2); transition:all .15s; }
+.kk-pdf-tab.active { color:var(--vps-blue); border-bottom-color:var(--vps-blue); }
+.kk-pdf-dl { margin-left:auto; padding:6px 14px; font-size:11.5px; color:var(--vps-blue); text-decoration:none; font-weight:600; }
+.kk-pdf-frame { width:100%; flex:1; border:none; min-height:420px; }
+
+/* Connectivity grid */
+.kk-conn-grid { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-top:10px; }
+@media(max-width:800px){.kk-conn-grid{grid-template-columns:1fr 1fr;}}
+.kk-conn { display:flex; align-items:flex-start; gap:10px; background:var(--bg); border:1px solid var(--bd); border-radius:var(--r); padding:12px; font-size:12px; color:var(--tx2); line-height:1.55; box-shadow:var(--sh); }
+.kk-conn strong { color:var(--tx); display:block; margin-bottom:2px; }
+.kk-conn-icon { font-size:18px; flex-shrink:0; }
+
+/* Flow sources */
+.kk-flow-src-row { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:14px; }
 @media(max-width:800px){.kk-flow-src-row{grid-template-columns:1fr 1fr;}}
-.kk-fsrc{display:flex;align-items:flex-start;gap:10px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rl);padding:14px;box-shadow:var(--sh);}
-.kk-fsrc-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;}
-.kk-fsrc-t{font-size:13px;font-weight:700;margin-bottom:3px;}
-.kk-fsrc-s{font-size:11.5px;color:var(--tx2);line-height:1.5;}
-.kk-referral-table{border-radius:var(--rl);overflow:hidden;border:1px solid var(--bd);box-shadow:var(--sh);}
-.kk-ref-row{display:grid;grid-template-columns:1.2fr 1.4fr 1.4fr;padding:10px 14px;border-bottom:1px solid var(--bd);font-size:12.5px;background:var(--bg);transition:background .12s;}
-.kk-ref-row:last-child{border-bottom:none;}
-.kk-ref-row:hover:not(.kk-ref-head){background:var(--bg2);}
-.kk-ref-head{background:var(--bg2);font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;font-weight:600;}
-.kk-ref-primary{color:#1a5a30;font-weight:600;}
-.kk-ref-secondary{color:var(--vps-blue);}
-.kk-doc-grid{border-radius:var(--rl);overflow:hidden;border:1px solid var(--bd);box-shadow:var(--sh);}
-.kk-dg-head{display:grid;grid-template-columns:1fr 1.5fr 1.5fr 1.5fr;background:var(--bg2);padding:10px 14px;font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;font-weight:600;border-bottom:1px solid var(--bd);}
-.kk-dg-row{display:grid;grid-template-columns:1fr 1.5fr 1.5fr 1.5fr;padding:10px 14px;border-bottom:1px solid var(--bd);font-size:12.5px;background:var(--bg);transition:background .12s;}
-.kk-dg-row:last-child{border-bottom:none;}
-.kk-dg-row:hover{background:var(--bg2);}
-.kk-dg-dept{font-weight:700;color:var(--vps-blue-d);}
-.kk-dg-kk{color:#1a5a30;}
-.kk-dg-sh{color:var(--tx2);font-size:11.5px;font-style:italic;}
+.kk-fsrc { display:flex; align-items:flex-start; gap:10px; background:var(--bg); border:1px solid var(--bd); border-radius:var(--rl); padding:14px; box-shadow:var(--sh); }
+.kk-fsrc-icon { width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:800; flex-shrink:0; }
+.kk-fsrc-t { font-size:12.5px; font-weight:700; margin-bottom:3px; }
+.kk-fsrc-s { font-size:11.5px; color:var(--tx2); line-height:1.5; }
+
+/* Referral table */
+.kk-referral-table { border-radius:var(--rl); overflow:hidden; border:1px solid var(--bd); box-shadow:var(--sh); }
+.kk-ref-row { display:grid; grid-template-columns:1.2fr 1.4fr 1.4fr; padding:10px 14px; border-bottom:1px solid var(--bd); font-size:12.5px; background:var(--bg); transition:background .12s; }
+.kk-ref-row:last-child { border-bottom:none; }
+.kk-ref-row:hover:not(.kk-ref-head) { background:var(--bg2); }
+.kk-ref-head { background:var(--bg2); font-size:11px; color:var(--tx3); text-transform:uppercase; letter-spacing:.6px; font-weight:600; }
+.kk-ref-primary { color:#1a5a30; font-weight:600; }
+.kk-ref-secondary { color:var(--vps-blue); }
+
+/* Competition cards */
+.kk-comp-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; }
+.kk-comp-card { background:var(--bg); border:1px solid var(--bd); border-radius:var(--rl); padding:16px; box-shadow:var(--sh); }
+.kk-comp-name { font-size:13.5px; font-weight:700; margin-bottom:2px; }
+.kk-comp-dist { font-size:11.5px; color:var(--tx3); margin-bottom:8px; }
+.kk-threat-bar { height:4px; border-radius:2px; background:var(--bg3); margin:6px 0 8px; overflow:hidden; }
+.kk-threat-fill { height:100%; border-radius:2px; background:var(--vps-maroon); }
+
+/* Financial grid */
+.kk-fin-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(195px,1fr)); gap:1px; background:var(--bd); border-radius:var(--rl); overflow:hidden; box-shadow:var(--sh); margin-bottom:12px; }
+.kk-fin-card { background:var(--bg); padding:18px 20px; }
+.kk-fin-card--primary { background:var(--vps-blue); }
+.kk-fin-card--primary .kk-fin-label { color:rgba(255,255,255,.75); }
+.kk-fin-card--primary .kk-fin-val { color:#fff; }
+.kk-fin-card--primary .kk-fin-sub { color:rgba(255,255,255,.65); }
+.kk-fin-label { font-size:11px; color:var(--tx3); text-transform:uppercase; letter-spacing:.5px; font-weight:600; margin-bottom:4px; }
+.kk-fin-val { font-size:21px; font-weight:800; color:var(--vps-blue); letter-spacing:-.5px; margin-bottom:4px; }
+.kk-fin-sub { font-size:11.5px; color:var(--tx3); line-height:1.5; }
+
+/* Projection table */
+.kk-proj-wrap { overflow-x:auto; border-radius:var(--rl); border:1px solid var(--bd); box-shadow:var(--sh); }
+.kk-proj-tbl { width:100%; border-collapse:collapse; font-size:12.5px; min-width:640px; }
+.kk-proj-tbl thead tr { background:var(--vps-blue); color:#fff; }
+.kk-proj-tbl thead th { padding:11px 14px; text-align:left; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.4px; }
+.kk-proj-tbl tbody td { padding:11px 14px; border-bottom:1px solid var(--bd); background:var(--bg); }
+.kk-proj-tbl tbody tr:last-child td { border-bottom:none; }
+.kk-proj-tbl tbody tr:hover td { background:var(--bg2); }
+.kk-proj-tbl tbody td:first-child { font-weight:600; color:var(--tx2); font-size:12px; }
+.kk-td-red { color:var(--red); font-weight:700; }
+.kk-td-amber { color:var(--accent); font-weight:700; }
+.kk-td-green { color:var(--teal); font-weight:700; }
+
+/* Two campus */
+.kk-two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:720px){.kk-two-col{grid-template-columns:1fr;}}
+.kk-card { border-radius:var(--rl); border:1px solid var(--bd); overflow:hidden; box-shadow:var(--sh); }
+.kk-card--blue .kk-card-header { background:var(--vps-blue-l); border-bottom:1px solid rgba(43,124,190,.12); }
+.kk-card--green .kk-card-header { background:rgba(26,122,64,.07); border-bottom:1px solid rgba(26,122,64,.12); }
+.kk-card-header { display:flex; align-items:center; gap:12px; padding:16px 20px; }
+.kk-card-icon { font-size:20px; flex-shrink:0; }
+.kk-card-title { font-size:14px; font-weight:700; }
+.kk-card-sub { font-size:11.5px; color:var(--tx3); margin-top:2px; }
+.kk-card-body { padding:16px 20px; background:var(--bg); }
+.kk-spec-list { display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
+.kk-spec-item { font-size:12.5px; padding:5px 10px; border-radius:6px; display:flex; align-items:center; gap:7px; }
+.kk-spec-item::before { content:''; width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.kk-spec-item--keep { background:var(--vps-blue-l); color:var(--vps-blue-d); }
+.kk-spec-item--keep::before { background:var(--vps-blue); }
+.kk-spec-item--move { background:rgba(139,26,74,.06); color:var(--vps-maroon); font-style:italic; }
+.kk-spec-item--move::before { background:var(--vps-maroon); }
+.kk-spec-item--new { background:rgba(26,122,64,.07); color:#1a5a30; }
+.kk-spec-item--new::before { background:#1a7a40; }
+.kk-note { font-size:12px; color:var(--tx2); line-height:1.6; border-top:1px solid var(--bd); padding-top:10px; margin-top:8px; }
+
+/* Doctor grid */
+.kk-doc-grid { border-radius:var(--rl); overflow:hidden; border:1px solid var(--bd); box-shadow:var(--sh); }
+.kk-dg-head { display:grid; grid-template-columns:1fr 1.5fr 1.5fr 1.5fr; background:var(--bg2); padding:10px 14px; font-size:11px; color:var(--tx3); text-transform:uppercase; letter-spacing:.6px; font-weight:600; border-bottom:1px solid var(--bd); }
+.kk-dg-row { display:grid; grid-template-columns:1fr 1.5fr 1.5fr 1.5fr; padding:10px 14px; border-bottom:1px solid var(--bd); font-size:12.5px; background:var(--bg); transition:background .12s; align-items:start; }
+.kk-dg-row:last-child { border-bottom:none; }
+.kk-dg-row:hover { background:var(--bg2); }
+.kk-dg-dept { font-weight:700; color:var(--vps-blue-d); }
+.kk-dg-kk { color:#1a5a30; }
+.kk-dg-sh { color:var(--tx2); font-size:11.5px; font-style:italic; }
 @media(max-width:760px){.kk-dg-head,.kk-dg-row{grid-template-columns:1fr 1.2fr 1.2fr;}.kk-dg-row>*:nth-child(4),.kk-dg-head>*:nth-child(4){display:none;}}
-.kk-tgt-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+
+/* Target segments */
+.kk-tgt-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
 @media(max-width:800px){.kk-tgt-grid{grid-template-columns:1fr 1fr;}}
-.kk-tgt{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;box-shadow:var(--sh);}
-.kk-tgt-hd{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.kk-tgt-icon{font-size:18px;}
-.kk-tgt-nm{font-size:13px;font-weight:700;flex:1;}
-.kk-tp-high{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--vps-maroon-l);color:var(--vps-maroon);white-space:nowrap;}
-.kk-tp-med{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;background:var(--accent-l);color:var(--accent);white-space:nowrap;}
-.kk-tgt-bd{font-size:12.5px;color:var(--tx2);line-height:1.6;}
-.kk-comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
-.kk-comp-card{background:var(--bg);border:1px solid var(--bd);border-radius:var(--rl);padding:16px;box-shadow:var(--sh);}
-.kk-comp-name{font-size:13.5px;font-weight:700;margin-bottom:2px;}
-.kk-comp-dist{font-size:11.5px;color:var(--tx3);margin-bottom:8px;}
-.kk-threat-bar{height:4px;border-radius:2px;background:var(--bg3);margin:6px 0 8px;overflow:hidden;}
-.kk-threat-fill{height:100%;border-radius:2px;background:var(--vps-maroon);}
-.kk-growth-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--bd);border-radius:var(--rl);overflow:hidden;box-shadow:var(--sh);margin-bottom:16px;}
-.kk-gw{background:var(--bg);padding:18px 20px;}
-.kk-gw-v{font-size:26px;font-weight:800;color:var(--vps-blue);letter-spacing:-.5px;margin-bottom:4px;}
-.kk-gw-l{font-size:11.5px;color:var(--tx3);line-height:1.4;}
-.kk-subnav,.kk-sub,.kk-snav{display:none;}
+.kk-tgt { background:var(--bg); border:1px solid var(--bd); border-radius:var(--rl); padding:16px; box-shadow:var(--sh); }
+.kk-tgt-hd { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.kk-tgt-icon { font-size:18px; }
+.kk-tgt-nm { font-size:13px; font-weight:700; flex:1; }
+.kk-tp-high { font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; background:var(--vps-maroon-l); color:var(--vps-maroon); white-space:nowrap; }
+.kk-tp-med { font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; background:var(--accent-l); color:var(--accent); white-space:nowrap; }
+.kk-tgt-bd { font-size:12.5px; color:var(--tx2); line-height:1.6; }
+
+/* Growth grid */
+.kk-growth-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px; background:var(--bd); border-radius:var(--rl); overflow:hidden; box-shadow:var(--sh); margin-bottom:16px; }
+.kk-gw { background:var(--bg); padding:16px 18px; }
+.kk-gw-v { font-size:24px; font-weight:800; color:var(--vps-blue); letter-spacing:-.5px; margin-bottom:4px; }
+.kk-gw-l { font-size:11px; color:var(--tx3); line-height:1.4; }
+
+/* Recommendation block */
+.kk-recommendation {
+  background:var(--vps-blue); color:#fff;
+  border-radius:var(--rl); padding:clamp(20px,3vw,36px);
+  margin-top:8px; box-shadow:0 4px 20px rgba(43,124,190,.25);
+}
+.kk-rec-head {
+  font-size:clamp(16px,2vw,20px); font-weight:800; margin-bottom:12px;
+  letter-spacing:-.2px;
+}
+.kk-recommendation p { font-size:13.5px; line-height:1.75; color:rgba(255,255,255,.9); }
+.kk-recommendation strong { color:#fff; }
+
+/* Legacy — hidden */
+.kk-subnav,.kk-sub,.kk-snav { display:none; }
 
 /* ═══ ANIMATIONS ═══ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -489,7 +577,7 @@ input[type=range]::-moz-range-thumb {
     <div class="logo">
       <img src="logo.png" alt="VPS Lakeshore">
       <div class="logo-sep"></div>
-      <div class="logo-label">Kakkanad Hospital<span>Second Campus Strategic Brief</span></div>
+      <div class="logo-label">VPS Two-Campus Strategy<span>Nettoor · Kakkanad</span></div>
     </div>
     <nav class="nav" id="mainNav">
       <button class="nav-btn active" data-tab="5">Kakkanad hospital</button>
@@ -505,7 +593,7 @@ input[type=range]::-moz-range-thumb {
 
 <!-- ═══ HERO ═══ -->
 <div class="hero anim" id="heroBlock">
-  <div class="hero-badge" id="heroBadge">SmartCity Kochi · Chairman's Strategic Brief · April 2026</div>
+  <div class="hero-badge" id="heroBadge">SmartCity Kochi · Strategic Brief · April 2026</div>
   <h1 id="heroH">VPS Kakkanad — <em>second campus</em> at SmartCity</h1>
   <p id="heroP">A 400-bed multispecialty hospital on the SmartCity land parcel frees Lakeshore Nettoor to operate as Kerala's premier specialist centre — while capturing ₹500–600 Cr in new annual revenue by Year 5.</p>
 </div>
@@ -621,88 +709,45 @@ input[type=range]::-moz-range-thumb {
 <!-- ═══ TAB 5: KAKKANAD HOSPITAL ═══ -->
 <section class="section active" id="sec5">
 
-  <!-- ① STRATEGIC CASE — tight 3-pillar + numbers -->
-  <div class="kk-pillars anim">
-    <div class="kk-p">
-      <div class="kk-p-num">①</div>
-      <div class="kk-p-title">Resolve the Nettoor tension</div>
-      <div class="kk-p-body">Nettoor runs liver transplants and LSCS deliveries in the same facility. Kakkanad absorbs volume; Nettoor intensifies as a pure quaternary centre — higher revenue per bed, cleaner brand.</div>
+  <!-- ══ VISION HEADER ══ -->
+  <div class="kk-vision anim">
+    <div class="kk-vision-left">
+      <div class="kk-vision-badge">VPS Two-Campus Strategy · April 2026</div>
+      <h2 class="kk-vision-h">Two large centres. One system. <em>Nothing like it in Kochi.</em></h2>
+      <p class="kk-vision-p">Transform <strong>VPS Lakeshore Nettoor</strong> into a purely referral-driven specialist hospital — tertiary and quaternary cases only, akin to how Medeor Abu Dhabi operates as a focused specialist centre. Build <strong>VPS Kakkanad</strong> as a full-scale multispecialty hospital on the SmartCity land parcel, capturing Kochi's fastest-growing urban population: young IT professionals, NRI families, and the 140,000-strong Infopark–SmartCity workforce. The two campuses feed each other through a managed referral loop no competitor in Kerala can replicate.</p>
     </div>
-    <div class="kk-p">
-      <div class="kk-p-num">②</div>
-      <div class="kk-p-title">Capture the IT corridor now</div>
-      <div class="kk-p-body">140,000 daytime IT workers. Aster already has an OPD clinic inside SmartCity. Every month without a VPS inpatient presence deepens Aster's TPA relationships with Wipro, TCS, HCL, IBM, Cognizant.</div>
-    </div>
-    <div class="kk-p">
-      <div class="kk-p-num">③</div>
-      <div class="kk-p-title">Build a self-reinforcing network</div>
-      <div class="kk-p-body">Kakkanad detects → Nettoor treats → Kakkanad recovers. No single-campus competitor (Aster, Amrita, Rajagiri) can replicate this two-way referral loop across 8 km.</div>
-    </div>
-  </div>
-
-  <!-- ② FINANCIALS UPFRONT -->
-  <div class="kk-section-label anim">Financial snapshot</div>
-  <div class="kk-fin-grid anim d1">
-    <div class="kk-fin-card kk-fin-card--primary">
-      <div class="kk-fin-label">All-in capex (Option 2 · 400 beds)</div>
-      <div class="kk-fin-val">₹950 – 1,100 Cr</div>
-      <div class="kk-fin-sub">Land (~₹175 Cr) + construction + MEP + equipment + IT. Phased build reduces Year 1 draw to ~₹400 Cr.</div>
-    </div>
-    <div class="kk-fin-card">
-      <div class="kk-fin-label">Year 3 revenue (Kakkanad)</div>
-      <div class="kk-fin-val">₹320 – 380 Cr</div>
-      <div class="kk-fin-sub">350 beds · 68% occupancy · blended ARPU ₹24k/admission + OPD</div>
-    </div>
-    <div class="kk-fin-card">
-      <div class="kk-fin-label">Year 5 revenue (Kakkanad)</div>
-      <div class="kk-fin-val">₹520 – 600 Cr</div>
-      <div class="kk-fin-sub">400 beds · 80% occupancy · corporate TPA at scale · EBITDA 16–18%</div>
-    </div>
-    <div class="kk-fin-card">
-      <div class="kk-fin-label">Nettoor revenue uplift (Year 5)</div>
-      <div class="kk-fin-val">+₹150 – 200 Cr</div>
-      <div class="kk-fin-sub">Case mix shifts to complex procedures — higher revenue per bed even if total admissions fall</div>
-    </div>
-    <div class="kk-fin-card">
-      <div class="kk-fin-label">Combined system revenue (Year 5)</div>
-      <div class="kk-fin-val">₹1,500 – 1,700 Cr</div>
-      <div class="kk-fin-sub">vs ~₹800 Cr today (Nettoor only) — near-doubling without cannibalisation</div>
-    </div>
-    <div class="kk-fin-card">
-      <div class="kk-fin-label">Payback period</div>
-      <div class="kk-fin-val">10 – 12 years</div>
-      <div class="kk-fin-sub">Consistent with greenfield hospital norms. Phased build (200 beds Y1) compresses NPV breakeven to ~8 years.</div>
+    <div class="kk-vision-right">
+      <div class="kk-vision-campus">
+        <div class="kk-vc-label" style="color:var(--vps-blue)">VPS Lakeshore · Nettoor</div>
+        <div class="kk-vc-role">Specialist &amp; referral hub</div>
+        <div class="kk-vc-tags">
+          <span>Transplant</span><span>Cardiac surgery</span><span>Oncology / CAR-T</span><span>Neurosurgery</span><span>MVT intake</span>
+        </div>
+      </div>
+      <div class="kk-vc-arrow">⇅ referral &amp; step-down</div>
+      <div class="kk-vision-campus">
+        <div class="kk-vc-label" style="color:#1a7a40">VPS Kakkanad · SmartCity</div>
+        <div class="kk-vc-role">Multispecialty · volume · urban</div>
+        <div class="kk-vc-tags" style="--chip-bg:rgba(26,122,64,.08);--chip-c:#1a5a30">
+          <span>Emergency · 24×7</span><span>Obstetrics &amp; NICU</span><span>Cardiology</span><span>General surgery</span><span>Wellness &amp; TPA</span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- ③ PROJECTION TABLE -->
-  <div class="kk-section-label anim">5-year projection</div>
-  <div class="kk-proj-wrap anim d1">
-    <table class="kk-proj-tbl">
-      <thead>
-        <tr>
-          <th>Metric</th>
-          <th>Y1 · 200 beds</th>
-          <th>Y3 · 350 beds</th>
-          <th>Y5 · 400 beds</th>
-          <th>Y7 · expanded</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Kakkanad OPD / day</td><td>400–600</td><td>900–1,100</td><td>1,400–1,600</td><td>1,800–2,200</td></tr>
-        <tr><td>Bed occupancy</td><td>45–55%</td><td>65–72%</td><td>75–82%</td><td>82–88%</td></tr>
-        <tr><td>Kakkanad revenue</td><td>₹120–160 Cr</td><td>₹320–380 Cr</td><td>₹520–600 Cr</td><td>₹700–850 Cr</td></tr>
-        <tr><td>EBITDA margin</td><td class="kk-td-red">Negative</td><td>8–12%</td><td>14–18%</td><td>18–22%</td></tr>
-        <tr><td>Corporate TPA accounts</td><td>8–12</td><td>25–35</td><td>50–60</td><td>80+</td></tr>
-        <tr><td>Corridor patient leakage</td><td class="kk-td-red">40%</td><td class="kk-td-amber">25–30%</td><td class="kk-td-green">12–18%</td><td class="kk-td-green">8–12%</td></tr>
-        <tr><td>Nettoor revenue uplift</td><td>Neutral</td><td>+₹80–120 Cr</td><td>+₹150–200 Cr</td><td>+₹200–250 Cr</td></tr>
-        <tr><td>Combined VPS system revenue</td><td>₹700–800 Cr</td><td>₹1,100–1,200 Cr</td><td>₹1,500–1,700 Cr</td><td>₹1,900–2,200 Cr</td></tr>
-      </tbody>
-    </table>
+  <!-- ══ METRICS STRIP ══ -->
+  <div class="kk-strip anim d1">
+    <div class="kk-strip-item"><div class="kk-strip-v">400</div><div class="kk-strip-l">Target beds · Kakkanad</div></div>
+    <div class="kk-strip-item"><div class="kk-strip-v">6.17 Ac</div><div class="kk-strip-l">SmartCity land · Option 2</div></div>
+    <div class="kk-strip-item"><div class="kk-strip-v">140k+</div><div class="kk-strip-l">IT workforce within 2 km</div></div>
+    <div class="kk-strip-item kk-strip-item--warn"><div class="kk-strip-v">40%</div><div class="kk-strip-l">Current corridor leakage to Aster</div></div>
+    <div class="kk-strip-item"><div class="kk-strip-v">₹550 Cr</div><div class="kk-strip-l">Kakkanad revenue · Year 5</div></div>
+    <div class="kk-strip-item"><div class="kk-strip-v">&gt;20%</div><div class="kk-strip-l">Target IRR</div></div>
+    <div class="kk-strip-item"><div class="kk-strip-v">10–12 yr</div><div class="kk-strip-l">Payback · phased build</div></div>
   </div>
 
-  <!-- ④ LAND OPTIONS + PDF VIEWER -->
-  <div class="kk-section-label anim">Land options — SmartCity Kochi</div>
+  <!-- ══ LAND OPTIONS ══ -->
+  <div class="kk-section-label anim">① Land options — SmartCity Kochi</div>
   <div class="kk-land-row-top anim d1">
     <div class="kk-land-cards">
       <div class="kk-lo-card">
@@ -712,7 +757,7 @@ input[type=range]::-moz-range-thumb {
         <div class="kk-lo-rows">
           <div class="kk-lo-row"><span>Plots</span><span>3 (fragmented)</span></div>
           <div class="kk-lo-row"><span>Beds achievable</span><span>300–350</span></div>
-          <div class="kk-lo-row"><span>Built-up est. (5× FAR)</span><span>~1,18,000 sq ft</span></div>
+          <div class="kk-lo-row"><span>Built-up (5× FAR)</span><span>~1,18,000 sq ft</span></div>
           <div class="kk-lo-row"><span>Parking</span><span>~350 cars</span></div>
           <div class="kk-lo-row"><span>Capex range</span><span>₹800–950 Cr</span></div>
           <div class="kk-lo-row"><span>Verdict</span><span style="color:var(--accent)">Fallback</span></div>
@@ -726,7 +771,7 @@ input[type=range]::-moz-range-thumb {
         <div class="kk-lo-rows">
           <div class="kk-lo-row"><span>Plots</span><span>2 (contiguous)</span></div>
           <div class="kk-lo-row"><span>Beds achievable</span><span>380–420</span></div>
-          <div class="kk-lo-row"><span>Built-up est. (5× FAR)</span><span>~1,34,000 sq ft</span></div>
+          <div class="kk-lo-row"><span>Built-up (5× FAR)</span><span>~1,34,000 sq ft</span></div>
           <div class="kk-lo-row"><span>Parking</span><span>~400 cars</span></div>
           <div class="kk-lo-row"><span>Capex range</span><span>₹950–1,100 Cr</span></div>
           <div class="kk-lo-row"><span>Verdict</span><span style="color:#1a7a40;font-weight:700">Preferred ✓</span></div>
@@ -736,44 +781,119 @@ input[type=range]::-moz-range-thumb {
     </div>
     <div class="kk-pdf-panel" id="pdfPanel">
       <div class="kk-pdf-tabs">
-        <button class="kk-pdf-tab active" id="pdfTab1" onclick="showPDF(1)">Option 1 — 5.85 Ac</button>
-        <button class="kk-pdf-tab" id="pdfTab2" onclick="showPDF(2)">Option 2 — 6.17 Ac</button>
-        <a class="kk-pdf-dl" id="pdfDl" href="/mnt/user-data/uploads/SCK_Proposal_-_Option-2__6_17Acre_.pdf" download target="_blank">⬇ Download</a>
+        <button class="kk-pdf-tab" id="pdfTab1" onclick="showPDF(1)">Option 1 — 5.85 Ac</button>
+        <button class="kk-pdf-tab active" id="pdfTab2" onclick="showPDF(2)">Option 2 — 6.17 Ac</button>
+        <a class="kk-pdf-dl" id="pdfDl" href="SCK_Option2.pdf" target="_blank">⬇ Download</a>
       </div>
-      <iframe id="pdfFrame" class="kk-pdf-frame"
-        src="https://docs.google.com/viewer?url=https%3A%2F%2Fsameeraj89.github.io%2Fvpspatientflow%2Foutpost%2FSCK_Option2.pdf&embedded=true"
-        allowfullscreen></iframe>
+      <iframe id="pdfFrame" class="kk-pdf-frame" src="" allowfullscreen></iframe>
     </div>
   </div>
 
-  <!-- ⑤ MAP -->
-  <div class="kk-section-label anim">Location &amp; catchment</div>
-  <div class="map-wrap anim d1" style="margin-bottom:8px">
+  <!-- ══ MAP & CATCHMENT ══ -->
+  <div class="kk-section-label anim">② Location, catchment &amp; connectivity</div>
+  <div class="map-wrap anim d1" style="margin-bottom:10px">
     <div class="map-el" id="mapKK"></div>
     <div class="map-legend">
-      <span><i style="background:var(--vps-blue)"></i>VPS Nettoor (existing)</span>
+      <span><i style="background:var(--vps-blue)"></i>VPS Nettoor</span>
       <span><i style="background:#1a7a40"></i>Proposed Kakkanad</span>
       <span><i style="background:#e67e22"></i>IT parks</span>
       <span><i style="background:var(--vps-maroon)"></i>Competitor</span>
       <span><i style="background:#8e44ad"></i>Catchment</span>
     </div>
   </div>
-  <div class="kk-map-chips anim d2">
-    <span class="kk-map-chip">🛣 Seaport–Airport Road — 8 km to Nettoor · 18 min transfer</span>
-    <span class="kk-map-chip">🚇 Kochi Metro Pink Line — Infopark station by 2030</span>
-    <span class="kk-map-chip">⛵ Water Metro — Kakkanad jetty operational · 20 min to Vyttila</span>
-    <span class="kk-map-chip">✈ CIAL — 25 km · MVT patient intake corridor</span>
+  <div class="kk-conn-grid anim d2">
+    <div class="kk-conn"><span class="kk-conn-icon">🛣</span><div><strong>Seaport–Airport Road</strong><br>Direct 8 km link to Nettoor · 18–20 min transfer · primary ambulance route</div></div>
+    <div class="kk-conn"><span class="kk-conn-icon">🚇</span><div><strong>Metro Pink Line (2030)</strong><br>Infopark station planned · transforms non-motorised OPD access</div></div>
+    <div class="kk-conn"><span class="kk-conn-icon">⛵</span><div><strong>Water Metro</strong><br>Kakkanad jetty operational · 20 min to Vyttila Hub · island connectivity</div></div>
+    <div class="kk-conn"><span class="kk-conn-icon">✈</span><div><strong>CIAL — 25 km</strong><br>MVT patient intake · NRI arrivals · dedicated airport transfer tie-up</div></div>
   </div>
 
-  <!-- ⑥ TWO-CAMPUS MODEL -->
-  <div class="kk-section-label anim">Two-campus model — what goes where</div>
+  <!-- ══ PATIENT FLOWS & CATCHMENT ══ -->
+  <div class="kk-section-label anim">③ Patient flows &amp; catchment</div>
+  <div class="kk-flow-src-row anim d1">
+    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:rgba(230,126,34,.12);color:#c0670a">IT</div><div><div class="kk-fsrc-t">IT Workforce — 140k+</div><div class="kk-fsrc-s">Infopark (72k) + SmartCity (30k) + CSEZ/KINFRA · TPA insured · cardiac, MSK, mental health, emergency</div></div></div>
+    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:rgba(142,68,173,.1);color:#7d3c98">🏘</div><div><div class="kk-fsrc-t">Residential Belt — 320k+</div><div class="kk-fsrc-s">Kakkanad · Vazhakkala · Thrippunithura · Cheranallur · young families · OBG · paediatrics · GP visits</div></div></div>
+    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:var(--vps-blue-l);color:var(--vps-blue)">↩</div><div><div class="kk-fsrc-t">Nettoor Step-down</div><div class="kk-fsrc-s">Post-transplant · post-CABG recovery · MVT patients pre-departure · frees Nettoor ICU for next case</div></div></div>
+    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:var(--vps-maroon-l);color:var(--vps-maroon)">↑</div><div><div class="kk-fsrc-t">District Referrals</div><div class="kk-fsrc-s">Idukki · Muvattupuzha · Kothamangalam · CGHS / ECHS · Lakshadweep</div></div></div>
+  </div>
+  <div class="kk-referral-table anim d2">
+    <div class="kk-ref-row kk-ref-head"><div>Patient profile</div><div>Kakkanad handles</div><div>Escalates to Nettoor</div></div>
+    <div class="kk-ref-row"><div><strong>IT worker — cardiac event</strong></div><div class="kk-ref-primary">Stabilise · cath lab · stent · monitored care</div><div class="kk-ref-secondary">CABG · valve surgery · LVAD</div></div>
+    <div class="kk-ref-row"><div><strong>Cancer screening positive</strong></div><div class="kk-ref-primary">Biopsy · staging · day-care chemo · OPD follow-up</div><div class="kk-ref-secondary">Surgery · radiation · CAR-T · BMT</div></div>
+    <div class="kk-ref-row"><div><strong>Obstetrics / delivery</strong></div><div class="kk-ref-primary">Normal delivery · LSCS · NICU Level 2</div><div class="kk-ref-secondary">High-risk MFM · NICU Level 3</div></div>
+    <div class="kk-ref-row"><div><strong>Orthopaedic / sports</strong></div><div class="kk-ref-primary">Primary joint replacement · fractures · sports medicine</div><div class="kk-ref-secondary">Tumour ortho · robotic revision</div></div>
+    <div class="kk-ref-row"><div><strong>Post-Nettoor MVT recovery</strong></div><div class="kk-ref-primary">Step-down ward · rehab · physio · pre-departure</div><div class="kk-ref-secondary">All acute intervention</div></div>
+    <div class="kk-ref-row"><div><strong>District gen. surgery</strong></div><div class="kk-ref-primary">Laparoscopic · hernia · appendix · gallbladder</div><div class="kk-ref-secondary">HPB · complex oncosurgery</div></div>
+  </div>
+
+  <!-- ══ COMPETITION ══ -->
+  <div class="kk-section-label anim">④ Competition in the corridor</div>
+  <div class="kk-comp-grid anim d1" id="kkCompGrid"></div>
+
+  <!-- ══ FINANCIALS ══ -->
+  <div class="kk-section-label anim">⑤ Financial case</div>
+  <div class="kk-fin-grid anim d1">
+    <div class="kk-fin-card kk-fin-card--primary">
+      <div class="kk-fin-label">All-in capex · Option 2 · 400 beds</div>
+      <div class="kk-fin-val">₹950–1,100 Cr</div>
+      <div class="kk-fin-sub">Land ~₹175 Cr + construction + MEP + equipment. Phased build reduces Year 1 draw to ~₹400 Cr.</div>
+    </div>
+    <div class="kk-fin-card">
+      <div class="kk-fin-label">Year 5 EBITDA · Kakkanad</div>
+      <div class="kk-fin-val">₹85–105 Cr</div>
+      <div class="kk-fin-sub">16–18% EBITDA margin on ₹520–600 Cr revenue · 400 beds · 80% occupancy</div>
+    </div>
+    <div class="kk-fin-card">
+      <div class="kk-fin-label">Target IRR</div>
+      <div class="kk-fin-val">&gt; 20%</div>
+      <div class="kk-fin-sub">Based on phased build, TPA ramp-up, and Nettoor case-mix improvement. Consistent with top-quartile greenfield hospital returns.</div>
+    </div>
+    <div class="kk-fin-card">
+      <div class="kk-fin-label">Payback period</div>
+      <div class="kk-fin-val">10–12 years</div>
+      <div class="kk-fin-sub">Phased build (200 beds Y1 → 400 by Y4) compresses early capital and improves NPV.</div>
+    </div>
+    <div class="kk-fin-card">
+      <div class="kk-fin-label">Nettoor uplift · Year 5</div>
+      <div class="kk-fin-val">+₹150–200 Cr</div>
+      <div class="kk-fin-sub">Case mix shifts to complex procedures. Revenue per bed rises even if total volume falls.</div>
+    </div>
+    <div class="kk-fin-card">
+      <div class="kk-fin-label">Combined VPS system · Year 5</div>
+      <div class="kk-fin-val">₹1,500–1,700 Cr</div>
+      <div class="kk-fin-sub">vs ~₹800 Cr today (Nettoor alone) — near-doubling without cannibalisation</div>
+    </div>
+  </div>
+
+  <!-- ══ PROJECTION TABLE ══ -->
+  <div class="kk-proj-wrap anim d2">
+    <table class="kk-proj-tbl">
+      <thead>
+        <tr><th>Metric</th><th>Y1 · 200 beds</th><th>Y3 · 350 beds</th><th>Y5 · 400 beds</th><th>Y7 · expanded</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Kakkanad revenue</td><td>₹120–160 Cr</td><td>₹320–380 Cr</td><td>₹520–600 Cr</td><td>₹700–850 Cr</td></tr>
+        <tr><td>EBITDA margin</td><td class="kk-td-red">Negative</td><td>8–12%</td><td>16–18%</td><td>20–22%</td></tr>
+        <tr><td>EBITDA (₹ Cr)</td><td class="kk-td-red">—</td><td>₹26–46 Cr</td><td>₹85–105 Cr</td><td>₹140–187 Cr</td></tr>
+        <tr><td>Bed occupancy</td><td>45–55%</td><td>65–72%</td><td>75–82%</td><td>82–88%</td></tr>
+        <tr><td>OPD / day</td><td>400–600</td><td>900–1,100</td><td>1,400–1,600</td><td>1,800–2,200</td></tr>
+        <tr><td>Corporate TPA accounts</td><td>8–12</td><td>25–35</td><td>50–60</td><td>80+</td></tr>
+        <tr><td>Corridor leakage</td><td class="kk-td-red">40%</td><td class="kk-td-amber">25–30%</td><td class="kk-td-green">12–18%</td><td class="kk-td-green">8–12%</td></tr>
+        <tr><td>Nettoor revenue uplift</td><td>Neutral</td><td>+₹80–120 Cr</td><td>+₹150–200 Cr</td><td>+₹200–250 Cr</td></tr>
+        <tr><td>Combined VPS system revenue</td><td>₹700–800 Cr</td><td>₹1,100–1,200 Cr</td><td>₹1,500–1,700 Cr</td><td>₹1,900–2,200 Cr</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ══ TWO-CAMPUS MODEL ══ -->
+  <div class="kk-section-label anim">⑥ What goes where — clinical deployment</div>
   <div class="kk-two-col anim d1">
     <div class="kk-card kk-card--blue">
       <div class="kk-card-header">
         <div class="kk-card-icon">🏥</div>
         <div>
           <div class="kk-card-title">VPS Lakeshore — Nettoor</div>
-          <div class="kk-card-sub">Specialist &amp; quaternary hub · stays &amp; intensifies</div>
+          <div class="kk-card-sub">Specialist &amp; referral hub · stays &amp; intensifies</div>
         </div>
       </div>
       <div class="kk-card-body">
@@ -781,12 +901,11 @@ input[type=range]::-moz-range-thumb {
           <div class="kk-spec-item kk-spec-item--keep">Oncology — CAR-T · BMT · haematology · solid tumours · radiation</div>
           <div class="kk-spec-item kk-spec-item--keep">Multi-organ transplant — liver · kidney · heart · lung</div>
           <div class="kk-spec-item kk-spec-item--keep">Cardiac surgery — CABG · valve · LVAD · ECMO · TAVR</div>
-          <div class="kk-spec-item kk-spec-item--keep">Neurosurgery — brain tumour · epilepsy · DBS · neuro-interventional</div>
+          <div class="kk-spec-item kk-spec-item--keep">Neurosurgery — brain tumour · epilepsy · DBS · neuro-IR</div>
           <div class="kk-spec-item kk-spec-item--keep">Hepatobiliary — complex liver · bile duct · pancreas</div>
-          <div class="kk-spec-item kk-spec-item--keep">MVT intake — GCC · Maldives · Africa international hub</div>
-          <div class="kk-spec-item kk-spec-item--move">General medicine / surgery · OBG · Paediatrics · Routine ortho → Kakkanad</div>
+          <div class="kk-spec-item kk-spec-item--keep">MVT hub — GCC · Maldives · Africa international intake</div>
         </div>
-        <div class="kk-note">Migrating volume frees ~100–120 beds for ICU conversion and OT expansion. Revenue per bed rises as complex procedures dominate.</div>
+        <div class="kk-note">Migrating routine volume frees ~100–120 beds. ICU and OT capacity converts to complex cases. Revenue per bed rises materially as case mix improves.</div>
       </div>
     </div>
     <div class="kk-card kk-card--green">
@@ -794,91 +913,73 @@ input[type=range]::-moz-range-thumb {
         <div class="kk-card-icon">🏗</div>
         <div>
           <div class="kk-card-title">VPS Kakkanad — SmartCity</div>
-          <div class="kk-card-sub">New multispecialty · 400 beds · phased build</div>
+          <div class="kk-card-sub">400 beds · multispecialty · phased build</div>
         </div>
       </div>
       <div class="kk-card-body">
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#1a7a40;margin-bottom:6px">Phase 1 · Year 1–2 · ~200 beds</div>
+        <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#1a7a40;margin-bottom:5px">Phase 1 · Year 1–2 · ~200 beds</div>
         <div class="kk-spec-list">
-          <div class="kk-spec-item kk-spec-item--new">Emergency &amp; trauma · 24×7</div>
+          <div class="kk-spec-item kk-spec-item--new">Emergency &amp; trauma · 24×7 ATLS team</div>
           <div class="kk-spec-item kk-spec-item--new">General medicine · general surgery · laparoscopic</div>
-          <div class="kk-spec-item kk-spec-item--new">Cardiology — OPD · echo · cath lab · interventional</div>
+          <div class="kk-spec-item kk-spec-item--new">Cardiology — interventional · cath lab · echo</div>
           <div class="kk-spec-item kk-spec-item--new">Obstetrics &amp; gynaecology · full delivery suite · NICU L2</div>
           <div class="kk-spec-item kk-spec-item--new">Diagnostics — MRI · CT · PET-CT · pathology</div>
-          <div class="kk-spec-item kk-spec-item--new">Corporate wellness &amp; executive health centre</div>
+          <div class="kk-spec-item kk-spec-item--new">Corporate wellness &amp; executive health</div>
         </div>
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#1a7a40;margin-bottom:6px;margin-top:10px">Phase 2 · Year 3–4 · expand to 400</div>
+        <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#1a7a40;margin-bottom:5px;margin-top:10px">Phase 2 · Year 3–4 · expand to 400</div>
         <div class="kk-spec-list">
-          <div class="kk-spec-item kk-spec-item--new">Paediatrics · NICU L3 · Orthopaedics · Fertility &amp; IVF</div>
-          <div class="kk-spec-item kk-spec-item--new">Oncology OPD + day-care chemo</div>
-          <div class="kk-spec-item kk-spec-item--new">Psychiatry &amp; mental wellness (IT worker segment)</div>
+          <div class="kk-spec-item kk-spec-item--new">Paediatrics · NICU L3 · orthopaedics · fertility &amp; IVF</div>
+          <div class="kk-spec-item kk-spec-item--new">Oncology OPD + day-care chemo unit</div>
+          <div class="kk-spec-item kk-spec-item--new">Psychiatry &amp; mental wellness · IT worker segment</div>
           <div class="kk-spec-item kk-spec-item--new">Step-down &amp; rehab ward — post-Nettoor transfers</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- ⑦ PATIENT FLOWS — compact table -->
-  <div class="kk-section-label anim">Patient flows — sources &amp; inter-campus</div>
-  <div class="kk-flow-src-row anim d1">
-    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:rgba(230,126,34,.12);color:#c0670a">IT</div><div><div class="kk-fsrc-t">IT Workforce</div><div class="kk-fsrc-s">140k+ daytime · TPA insured · OPD + emergency · cardiac, mental health, MSK</div></div></div>
-    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:rgba(142,68,173,.1);color:#7d3c98">🏘</div><div><div class="kk-fsrc-t">Residential belt</div><div class="kk-fsrc-s">320k+ within 5 km · young families · OBG, paediatrics, general medicine</div></div></div>
-    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:var(--vps-blue-l);color:var(--vps-blue)">↩</div><div><div class="kk-fsrc-t">Nettoor step-down</div><div class="kk-fsrc-s">Post-transplant / post-CABG recovery · frees Nettoor ICU beds · MVT step-down</div></div></div>
-    <div class="kk-fsrc"><div class="kk-fsrc-icon" style="background:var(--vps-maroon-l);color:var(--vps-maroon)">↑</div><div><div class="kk-fsrc-t">District referrals</div><div class="kk-fsrc-s">Idukki · Muvattupuzha · Kothamangalam · CGHS / ECHS panels</div></div></div>
-  </div>
-  <div class="kk-referral-table anim d2">
-    <div class="kk-ref-row kk-ref-head"><div>Patient</div><div>Kakkanad handles</div><div>Escalates to Nettoor</div></div>
-    <div class="kk-ref-row"><div><strong>IT worker — cardiac</strong></div><div class="kk-ref-primary">Stabilise · cath lab · stent</div><div class="kk-ref-secondary">CABG · valve · LVAD</div></div>
-    <div class="kk-ref-row"><div><strong>Cancer screen +ve</strong></div><div class="kk-ref-primary">Staging · day-care chemo</div><div class="kk-ref-secondary">Surgery · RT · CAR-T · BMT</div></div>
-    <div class="kk-ref-row"><div><strong>Delivery / obstetrics</strong></div><div class="kk-ref-primary">Normal delivery · LSCS · NICU L2</div><div class="kk-ref-secondary">High-risk · NICU L3</div></div>
-    <div class="kk-ref-row"><div><strong>Orthopaedic injury</strong></div><div class="kk-ref-primary">Primary joint replacement · sports</div><div class="kk-ref-secondary">Complex revision · tumour ortho</div></div>
-    <div class="kk-ref-row"><div><strong>Post-transplant MVT</strong></div><div class="kk-ref-primary">Step-down · rehab · monitoring</div><div class="kk-ref-secondary">All acute intervention</div></div>
-    <div class="kk-ref-row"><div><strong>District gen. surgery</strong></div><div class="kk-ref-primary">Laparoscopic · hernia · appendix</div><div class="kk-ref-secondary">Hepatobiliary · complex onco</div></div>
-  </div>
-
-  <!-- ⑧ DOCTORS — compact grid -->
-  <div class="kk-section-label anim">Clinical deployment — who sits where</div>
+  <!-- ══ CLINICAL STAFF ══ -->
+  <div class="kk-section-label anim">⑦ Clinical staff — who sits where</div>
   <div class="kk-doc-grid anim d1">
     <div class="kk-dg-head"><div>Department</div><div>Nettoor anchors</div><div>Kakkanad team</div><div>Shared protocol</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">Cardiology</div><div>Cardiac surgeons · EP · LVAD</div><div class="kk-dg-kk">1 sr. cardiologist · cath lab · echo</div><div class="kk-dg-sh">Complex PCI → Nettoor specialist 2×/wk</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">Oncology</div><div>Surgical onco · RT · BMT · CAR-T</div><div class="kk-dg-kk">Medical onco · day-care chemo · OPD</div><div class="kk-dg-sh">Weekly joint tumour board (telemedicine)</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">Neurology</div><div>Neurosurgery · neuro-IR · DBS</div><div class="kk-dg-kk">Neurologist · stroke fast-track</div><div class="kk-dg-sh">Stabilise + thrombolyse → thrombectomy at Nettoor</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">OBG</div><div>MFM · foetal surgery · gynae onco</div><div class="kk-dg-kk">2–3 obstetricians · IVF specialist</div><div class="kk-dg-sh">High-risk 36 wk → Nettoor transfer</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">Orthopaedics</div><div>Tumour ortho · robotic revision</div><div class="kk-dg-kk">2 surgeons · sports medicine</div><div class="kk-dg-sh">Robotic / complex at Nettoor</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">Psychiatry</div><div>Inpatient unit</div><div class="kk-dg-kk">1–2 psychiatrists · psychologists · IT focus</div><div class="kk-dg-sh">New patient segment — high IT burnout demand</div></div>
-    <div class="kk-dg-row"><div class="kk-dg-dept">Emergency</div><div>ECMO · major trauma</div><div class="kk-dg-kk">Full 24×7 ED · ATLS team</div><div class="kk-dg-sh">Major trauma → Nettoor via dedicated ambulance</div></div>
+    <div class="kk-dg-row"><div class="kk-dg-dept">Cardiology</div><div>Cardiac surgeons · EP · LVAD</div><div class="kk-dg-kk">Sr. cardiologist · cath lab · echo</div><div class="kk-dg-sh">Complex PCI → Nettoor specialist 2×/wk</div></div>
+    <div class="kk-dg-row"><div class="kk-dg-dept">Oncology</div><div>Surgical onco · RT · BMT · CAR-T</div><div class="kk-dg-kk">Medical onco · day-care chemo · OPD</div><div class="kk-dg-sh">Weekly joint tumour board via telemedicine</div></div>
+    <div class="kk-dg-row"><div class="kk-dg-dept">Neurology</div><div>Neurosurgery · neuro-IR · DBS</div><div class="kk-dg-kk">Neurologist · stroke fast-track ED</div><div class="kk-dg-sh">Thrombolyse at KK → thrombectomy at Nettoor</div></div>
+    <div class="kk-dg-row"><div class="kk-dg-dept">OBG</div><div>MFM · foetal surgery · gynae onco</div><div class="kk-dg-kk">2–3 obstetricians · IVF specialist</div><div class="kk-dg-sh">High-risk → Nettoor transfer at 36 wk</div></div>
+    <div class="kk-dg-row"><div class="kk-dg-dept">Orthopaedics</div><div>Tumour ortho · robotic revision</div><div class="kk-dg-kk">2 surgeons · sports medicine</div><div class="kk-dg-sh">Robotic / complex revision at Nettoor</div></div>
+    <div class="kk-dg-row"><div class="kk-dg-dept">Psychiatry</div><div>Inpatient unit</div><div class="kk-dg-kk">2 psychiatrists · psychologists · IT burnout focus</div><div class="kk-dg-sh">New segment — significant unmet demand in IT clusters</div></div>
   </div>
-  <div class="insight anim d2" style="margin-top:14px">
-    <strong>Recruitment:</strong> Kakkanad recruits its own senior staff — targeting mid-career consultants (10–15 yr post-residency) from Aster Medcity, Sunrise, and Rajagiri. HOD positions at a brand-new VPS campus offer what Nettoor's established hierarchy cannot: first-mover department leadership.
+  <div class="insight anim d2" style="margin-top:12px">
+    <strong>Recruitment:</strong> Kakkanad builds its own independent senior team — targeting mid-career consultants (10–15 yr) from Aster Medcity, Sunrise, and Rajagiri. HOD titles at a brand-new premium VPS campus offer what Nettoor's established hierarchy cannot.
   </div>
 
-  <!-- ⑨ TARGET SEGMENTS — compact cards -->
-  <div class="kk-section-label anim">Target segments</div>
+  <!-- ══ TARGET SEGMENTS ══ -->
+  <div class="kk-section-label anim">⑧ Who we go after</div>
   <div class="kk-tgt-grid anim d1">
-    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">💼</span><span class="kk-tgt-nm">IT Corporate TPA</span><span class="kk-tp-high">Priority 1</span></div><div class="kk-tgt-bd">72k Infopark + 30k SmartCity employees. Sign 15–20 corporate TPA agreements before Day 1. Offer dedicated OPD slots, priority emergency, health camps inside IT campuses.</div></div>
-    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">👨‍👩‍👧</span><span class="kk-tgt-nm">Young IT Families</span><span class="kk-tp-high">Priority 1</span></div><div class="kk-tgt-bd">320k residential belt growing 8–10% pa. Partner with 10–15 apartment complexes. Maternity packages. Paediatric health camps. Community brand — "hospital built for Kochi's new generation."</div></div>
-    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">✈️</span><span class="kk-tgt-nm">NRI / GCC Diaspora</span><span class="kk-tp-high">Priority 1</span></div><div class="kk-tgt-bd">900k+ Keralites in UAE. Many NRI families live in the Kakkanad–Thrippunithura belt. Pre-consultation via WhatsApp. Airport transfer tie-up with CIAL. Coordinate with VPS UAE outreach.</div></div>
-    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">🏛</span><span class="kk-tgt-nm">CGHS / ECHS / PSU</span><span class="kk-tp-med">Priority 2</span></div><div class="kk-tgt-bd">Collectorate · CSEZ · Port Trust · FACT · BPCL employees. Apply for empanelment before opening. Guaranteed base volume of government-insured patients.</div></div>
-    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">🎓</span><span class="kk-tgt-nm">CUSAT &amp; Colleges</span><span class="kk-tp-med">Priority 2</span></div><div class="kk-tgt-bd">15,000 CUSAT students. MOU for preferred healthcare provider. Student mental health packages — high stress, high burnout in engineering and MBA programmes.</div></div>
-    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">🔄</span><span class="kk-tgt-nm">Aster / Sunrise Conversion</span><span class="kk-tp-med">Priority 2</span></div><div class="kk-tgt-bd">40% of the Kakkanad corridor currently leaks to Aster/Sunrise by default. Build GP referral network pre-opening. Price 10–15% below Aster rack rates on key procedures.</div></div>
+    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">💼</span><span class="kk-tgt-nm">IT Corporate TPA</span><span class="kk-tp-high">Priority 1</span></div><div class="kk-tgt-bd">72k Infopark + 30k SmartCity employees. Target 15–20 corporate TPA agreements pre-opening. Dedicated OPD slots, priority ED, annual health camps inside IT campuses. Single biggest volume driver in Y1–2.</div></div>
+    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">👨‍👩‍👧</span><span class="kk-tgt-nm">Young IT Families</span><span class="kk-tp-high">Priority 1</span></div><div class="kk-tgt-bd">320k residential belt, growing 8–10% pa. Young couples — high OBG and paediatric demand. Partner with apartment complexes. Maternity packages. Brand: "built for Kochi's new generation."</div></div>
+    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">✈️</span><span class="kk-tgt-nm">NRI / GCC Diaspora</span><span class="kk-tp-high">Priority 1</span></div><div class="kk-tgt-bd">900k+ Keralites in UAE. Many families in Kakkanad–Thrippunithura belt. WhatsApp pre-consultation before travel. CIAL airport transfer. Coordinate with VPS UAE / Maldives outreach network.</div></div>
+    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">🏛</span><span class="kk-tgt-nm">CGHS / ECHS / PSU</span><span class="kk-tp-med">Priority 2</span></div><div class="kk-tgt-bd">Collectorate · CSEZ · Port Trust · FACT · BPCL. Apply for CGHS empanelment pre-opening. Guaranteed base volume of government-insured patients with lower acquisition cost.</div></div>
+    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">🎓</span><span class="kk-tgt-nm">CUSAT &amp; Academia</span><span class="kk-tp-med">Priority 2</span></div><div class="kk-tgt-bd">15,000 CUSAT students adjacent to site. MOU for preferred healthcare provider status. Psychiatry and mental wellness — high unmet demand in engineering and MBA student populations.</div></div>
+    <div class="kk-tgt"><div class="kk-tgt-hd"><span class="kk-tgt-icon">🔄</span><span class="kk-tgt-nm">Aster / Sunrise Conversion</span><span class="kk-tp-med">Priority 2</span></div><div class="kk-tgt-bd">40% corridor leakage is default behaviour, not loyalty. Build GP referral network before opening. Target 10–15% below Aster rack rates on comparable procedures.</div></div>
   </div>
 
-  <!-- ⑩ COMPETITION -->
-  <div class="kk-section-label anim">Competitive context</div>
-  <div class="kk-comp-grid anim d1" id="kkCompGrid"></div>
-
-  <!-- ⑪ AREA GROWTH — just the key numbers -->
-  <div class="kk-section-label anim">Why Kakkanad · why now</div>
+  <!-- ══ GROWTH CONTEXT ══ -->
+  <div class="kk-section-label anim">⑨ Why Kakkanad · why now</div>
   <div class="kk-growth-grid anim d1">
-    <div class="kk-gw"><div class="kk-gw-v">100k+</div><div class="kk-gw-l">Additional jobs at Infopark Phase II alone — still under development</div></div>
-    <div class="kk-gw"><div class="kk-gw-v">8–10%</div><div class="kk-gw-l">Annual residential population growth in Kakkanad–Vazhakkala belt</div></div>
-    <div class="kk-gw"><div class="kk-gw-v">2030</div><div class="kk-gw-l">Metro Pink Line — station at Infopark, transforming access</div></div>
-    <div class="kk-gw"><div class="kk-gw-v">0</div><div class="kk-gw-l">Premium inpatient hospital inside the SmartCity / Infopark campus cluster today</div></div>
-    <div class="kk-gw"><div class="kk-gw-v">246 Ac</div><div class="kk-gw-l">SmartCity SEZ still far from built-out — more companies arriving every quarter</div></div>
-    <div class="kk-gw"><div class="kk-gw-v">Now</div><div class="kk-gw-l">SmartCity land parcel available. Waiting means Aster deepens corporate TPA lock-in</div></div>
+    <div class="kk-gw"><div class="kk-gw-v">100k+</div><div class="kk-gw-l">Additional jobs at Infopark Phase II — still under development</div></div>
+    <div class="kk-gw"><div class="kk-gw-v">8–10%</div><div class="kk-gw-l">Annual residential growth · Kakkanad–Vazhakkala belt</div></div>
+    <div class="kk-gw"><div class="kk-gw-v">2030</div><div class="kk-gw-l">Metro Pink Line · Infopark station · transforms access</div></div>
+    <div class="kk-gw"><div class="kk-gw-v">0</div><div class="kk-gw-l">Premium inpatient hospital inside SmartCity / Infopark cluster today</div></div>
+    <div class="kk-gw"><div class="kk-gw-v">246 Ac</div><div class="kk-gw-l">SmartCity SEZ still expanding — more companies every quarter</div></div>
+    <div class="kk-gw"><div class="kk-gw-v">Now</div><div class="kk-gw-l">SmartCity land available — delay means Aster deepens TPA lock-in</div></div>
   </div>
-  <div class="insight anim d2">
-    <strong>The decision:</strong> A Nettoor expansion cannot capture the Kakkanad IT corridor, resolve Nettoor's brand tension, or address the residential demand vacuum in Vazhakkala and Thrippunithura. Only a second campus does all three — adding ₹500–600 Cr in net new annual revenue by Year 5 that Nettoor alone cannot generate.
+
+  <!-- ══ RECOMMENDATION ══ -->
+  <div class="kk-recommendation anim d2">
+    <div class="kk-rec-head">Recommendation — go full steam</div>
+    <p>No hospital group in Kochi operates two large, purpose-differentiated campuses. Aster Medcity is a single quaternary centre trying to be everything. Amrita is anchored in Edappally. Rajagiri is tertiary, not quaternary. <strong>VPS has a rare and time-limited opportunity to build the only two-hospital system in Kerala</strong> — one that looks and functions like what Medeor has done in Abu Dhabi, but at a larger scale and with a stronger referral engine.</p>
+    <p style="margin-top:10px">Nettoor becomes Kerala's most focused specialist and referral hospital — the place serious cases come for transplant, cardiac surgery, CAR-T, and complex neurosurgery. Kakkanad becomes the premium multispecialty hospital for a young, growing, insured urban population that currently has no quality option in its backyard. Together, they create a system that generates ₹1,500–1,700 Cr in combined revenue by Year 5, achieves &gt;20% IRR, and builds a network moat that no competitor can replicate without land, capital, and a decade of time.</p>
+    <p style="margin-top:10px"><strong>The question is not whether to build VPS Kakkanad. The question is how fast.</strong></p>
   </div>
 
 </section>
@@ -995,7 +1096,7 @@ const maps = {};
 
 /* Hero/metrics content per tab group */
 var HERO_KK = {
-  badge: 'SmartCity Kochi \u00b7 Chairman\u2019s Strategic Brief \u00b7 April 2026',
+  badge: 'SmartCity Kochi · Two-Campus Strategy · April 2026',
   h: 'VPS Kakkanad \u2014 <em>second campus</em> at SmartCity',
   p: 'A 400-bed multispecialty hospital on the SmartCity land parcel frees Lakeshore Nettoor to operate as Kerala\u2019s premier specialist centre \u2014 while capturing \u20b9500\u2013600\u00a0Cr in new annual revenue by Year\u00a05.'
 };
@@ -1005,12 +1106,13 @@ var HERO_OUT = {
   p: 'Interactive site-selection analysis across 32 Ernakulam district towns \u2014 powered by patient flow corridors, healthcare gap mapping, and weighted multi-criteria scoring.'
 };
 var METRICS_KK = [
-  {l:'Target bed capacity',v:'400',cls:'good'},
-  {l:'Land parcel (Option 2)',v:'6.17 Ac',cls:''},
+  {l:'Target beds · Kakkanad',v:'400',cls:'good'},
+  {l:'Land · Option 2',v:'6.17 Ac',cls:''},
   {l:'IT workforce within 2 km',v:'140k+',cls:''},
-  {l:'Current corridor leakage',v:'40%',cls:'danger'},
-  {l:'Year 5 revenue (Kakkanad)',v:'\u20b9550 Cr',cls:'good'},
-  {l:'Payback horizon',v:'10\u201312 yr',cls:''}
+  {l:'Corridor leakage to Aster',v:'40%',cls:'danger'},
+  {l:'Year 5 revenue · Kakkanad',v:'₹550 Cr',cls:'good'},
+  {l:'Target IRR',v:'>20%',cls:'good'},
+  {l:'Payback period',v:'10–12 yr',cls:''}
 ];
 var METRICS_OUT = [
   {l:'Towns mapped',v:'32',cls:''},
@@ -1516,8 +1618,8 @@ var DEPTS = {
 
   /* ── PDF VIEWER ── */
   var PDF_URLS = {
-    1: 'https://sameeraj89.github.io/vpspatientflow/outpost/SCK_Option1.pdf',
-    2: 'https://sameeraj89.github.io/vpspatientflow/outpost/SCK_Option2.pdf'
+    1: 'SCK_Option1.pdf',
+    2: 'SCK_Option2.pdf'
   };
   window.showPDF = function(opt) {
     var frame = document.getElementById('pdfFrame');
@@ -1525,12 +1627,11 @@ var DEPTS = {
     var t2 = document.getElementById('pdfTab2');
     var dl = document.getElementById('pdfDl');
     if (!frame) return;
-    // Use Google Docs viewer as fallback for hosted PDFs
-    var url = PDF_URLS[opt];
-    frame.src = 'https://docs.google.com/viewer?url=' + encodeURIComponent(url) + '&embedded=true';
+    // Direct embed — same-origin PDF in outpost/ folder
+    frame.src = PDF_URLS[opt];
     if (t1) t1.classList.toggle('active', opt === 1);
     if (t2) t2.classList.toggle('active', opt === 2);
-    if (dl) dl.href = url;
+    if (dl) { dl.href = PDF_URLS[opt]; }
   };
 
   /* ── MAP + COMP CARDS ── */
