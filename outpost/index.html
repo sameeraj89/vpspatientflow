@@ -395,21 +395,14 @@ input[type=range]::-moz-range-thumb {
   padding:8px 0; letter-spacing:.3px;
 }
 
-/* Metrics strip */
-.kk-strip {
-  display:flex; flex-wrap:wrap; gap:0;
-  margin-bottom:0; border-top:1px solid var(--bd); border-bottom:1px solid var(--bd);
-  background:var(--bg);
+/* Metrics pull — breaks metrics-bar out of section padding, full width */
+.kk-metrics-pull {
+  margin: 0 calc(-1 * clamp(16px,4vw,48px)) 28px;
 }
-.kk-strip-item {
-  padding:14px 24px 14px 0; flex:0 0 auto;
-  border-right:1px solid var(--bd); margin-right:0; padding-right:24px;
+.kk-metrics-pull .metrics-bar {
+  border-left: none; border-right: none; border-radius: 0;
+  box-shadow: none; max-width: none; margin: 0;
 }
-.kk-strip-item:last-child { border-right:none; }
-.kk-strip-item--warn { background:none; }
-.kk-strip-v { font-size:20px; font-weight:800; color:var(--vps-blue); letter-spacing:-.5px; margin-bottom:2px; }
-.kk-strip-item--warn .kk-strip-v { color:var(--red); }
-.kk-strip-l { font-size:10.5px; color:var(--tx3); line-height:1.35; text-transform:uppercase; letter-spacing:.4px; font-weight:500; }
 
 /* Section label */
 .kk-section-label {
@@ -774,16 +767,17 @@ input[type=range]::-moz-range-thumb {
   </div>
 
   <!-- ══ METRICS STRIP ══ -->
-  <div class="kk-strip anim d1">
-    <div class="kk-strip-item"><div class="kk-strip-v">400</div><div class="kk-strip-l">Target beds · Kakkanad</div></div>
-    <div class="kk-strip-item"><div class="kk-strip-v">6.17 Ac</div><div class="kk-strip-l">SmartCity land · Option 2</div></div>
-    <div class="kk-strip-item"><div class="kk-strip-v">140k+</div><div class="kk-strip-l">IT workforce within 2 km</div></div>
-    <div class="kk-strip-item kk-strip-item--warn"><div class="kk-strip-v">40%</div><div class="kk-strip-l">Current corridor leakage to Aster</div></div>
-    <div class="kk-strip-item"><div class="kk-strip-v">₹550 Cr</div><div class="kk-strip-l">System revenue · Year 5</div></div>
-    <div class="kk-strip-item"><div class="kk-strip-v">&gt;20%</div><div class="kk-strip-l">Target IRR</div></div>
-    <div class="kk-strip-item"><div class="kk-strip-v">10–12 yr</div><div class="kk-strip-l">Payback · phased build</div></div>
+  <div class="kk-metrics-pull">
+    <div class="metrics-bar" style="border-radius:0;box-shadow:none;margin:0;">
+      <div class="metric"><div class="metric-lbl">Target beds · Kakkanad</div><div class="metric-val good">400</div></div>
+      <div class="metric"><div class="metric-lbl">SmartCity land · Option 2</div><div class="metric-val">6.17 Ac</div></div>
+      <div class="metric"><div class="metric-lbl">IT workforce within 2 km</div><div class="metric-val">140k+</div></div>
+      <div class="metric"><div class="metric-lbl">Corridor leakage to Aster</div><div class="metric-val danger">40%</div></div>
+      <div class="metric"><div class="metric-lbl">System revenue · Year 5</div><div class="metric-val good">₹1,500 Cr</div></div>
+      <div class="metric"><div class="metric-lbl">Target IRR</div><div class="metric-val good">&gt;20%</div></div>
+      <div class="metric"><div class="metric-lbl">Payback · phased build</div><div class="metric-val">10–12 yr</div></div>
+    </div>
   </div>
-
   <!-- ══ LAND OPTIONS ══ -->
   <div class="kk-section-label anim">① Land options — SmartCity Kochi</div>
   <div class="kk-land-row-top anim d1">
