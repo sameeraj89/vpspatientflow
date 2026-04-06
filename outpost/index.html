@@ -1185,13 +1185,20 @@ var METRICS_OUT = [
 ];
 
 function setHero(isKK) {
-  var hd = isKK ? HERO_KK : HERO_OUT;
-  var mt = isKK ? METRICS_KK : METRICS_OUT;
+  var hero = document.getElementById('heroBlock');
+  var mb = document.getElementById('metricsBlock');
+  if (isKK) {
+    if (hero) hero.style.display = 'none';
+    if (mb) mb.style.display = 'none';
+    return;
+  }
+  if (hero) hero.style.display = '';
+  if (mb) mb.style.display = '';
+  var hd = HERO_OUT;
+  var mt = METRICS_OUT;
   document.getElementById('heroBadge').textContent = hd.badge;
   document.getElementById('heroH').innerHTML = hd.h;
-  document.getElementById('heroP').textContent = hd.p.replace(/<[^>]+>/g,'');
   document.getElementById('heroP').innerHTML = hd.p;
-  var mb = document.getElementById('metricsBlock');
   mb.innerHTML = mt.map(function(m){
     return '<div class="metric"><div class="metric-lbl">'+m.l+'</div><div class="metric-val'+(m.cls?' '+m.cls:'')+'">'+m.v+'</div></div>';
   }).join('');
@@ -1823,6 +1830,11 @@ var DEPTS = {
 
   /* Auto-init on page load (tab 5 is default active) */
   window.addEventListener('DOMContentLoaded', function() {
+    /* Hide hero/metrics — Kakkanad tab has its own header */
+    var hero = document.getElementById('heroBlock');
+    var mb = document.getElementById('metricsBlock');
+    if (hero) hero.style.display = 'none';
+    if (mb) mb.style.display = 'none';
     setTimeout(function() { initKK(); showPDF(2); }, 300);
   });
 
