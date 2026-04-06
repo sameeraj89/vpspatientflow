@@ -802,7 +802,7 @@ input[type=range]::-moz-range-thumb {
     </div>
   </div>
   <div class="kk-conn-grid anim d2">
-    <div class="kk-conn"><span class="kk-conn-icon">🛣</span><div><strong>Seaport–Airport Road</strong><br>Direct 8 km link to Nettoor · 18–20 min transfer · primary ambulance route</div></div>
+    <div class="kk-conn"><span class="kk-conn-icon">🛣</span><div><strong>Seaport–Airport Road</strong><br>VPS Lakeshore is 15 km via NH-66 · 25–30 min · primary inter-campus ambulance route</div></div>
     <div class="kk-conn"><span class="kk-conn-icon">🚇</span><div><strong>Metro Pink Line (2030)</strong><br>Infopark station planned · transforms non-motorised OPD access</div></div>
     <div class="kk-conn"><span class="kk-conn-icon">⛵</span><div><strong>Water Metro</strong><br>Kakkanad jetty operational · 20 min to Vyttila Hub · island connectivity</div></div>
     <div class="kk-conn"><span class="kk-conn-icon">✈</span><div><strong>CIAL — 25 km</strong><br>MVT patient intake · NRI arrivals · dedicated airport transfer tie-up</div></div>
@@ -994,7 +994,7 @@ input[type=range]::-moz-range-thumb {
 /* ═══════════════════════════════════════
    DATA
    ═══════════════════════════════════════ */
-const VPS = { lat: 9.9378, lon: 76.3070 };
+const VPS = { lat: 9.9190, lon: 76.3189 };
 
 const TOWNS = [
   {n:'Kochi Corporation',p:633553,lat:9.972,lon:76.282,h:8,t:1},
@@ -1166,7 +1166,7 @@ function makeMap(id, zoom) {
 function addVPS(map) {
   L.circleMarker([VPS.lat, VPS.lon], {
     radius: 13, fillColor: '#2B7CBE', color: '#fff', weight: 2.5, fillOpacity: 1
-  }).addTo(map).bindPopup('<strong>VPS Lakeshore Hospital</strong><div class="sub">470+ beds \u00b7 NH-66, Nettoor, Maradu<br>Multi-organ transplant, cardiac, neuro, oncology</div>');
+  }).addTo(map).bindPopup('<strong>VPS Lakeshore</strong><div class="sub">470+ beds \u00b7 NH-66, Nettoor, Maradu<br>Multi-organ transplant, cardiac, neuro, oncology</div>');
   L.circleMarker([VPS.lat, VPS.lon], {
     radius: 32, fillColor: '#2B7CBE', color: '#2B7CBE', weight: 1, fillOpacity: 0.07, dashArray: '6 4'
   }).addTo(map);
@@ -1647,20 +1647,20 @@ var DEPTS = {
     // SmartCity campus: 10.0040, 76.3580
 
     var m = L.map('mapKK', { zoomControl: true, scrollWheelZoom: true })
-              .setView([9.995, 76.330], 13);
+              .setView([9.985, 76.330], 12);
     L.tileLayer(TILE_URL, { attribution: TILE_ATTR, maxZoom: 18 }).addTo(m);
     maps['mapKK'] = m;
 
     /* VPS Lakeshore (existing) */
-    L.circleMarker([9.9378, 76.3070], {
+    L.circleMarker([9.9190, 76.3189], {
       radius: 14, fillColor: '#2B7CBE', color: '#fff', weight: 2.5, fillOpacity: 1
     }).addTo(m).bindPopup('<strong>VPS Lakeshore</strong><div class="sub">470+ beds · NH-66, Nettoor, Maradu<br>Specialist &amp; quaternary hub<br>Transplant · Cardiac surgery · Oncology · Neuro · MVT</div>');
-    L.circleMarker([9.9378, 76.3070], {
+    L.circleMarker([9.9190, 76.3189], {
       radius: 40, fillColor: '#2B7CBE', color: '#2B7CBE', weight: 1, fillOpacity: 0.07, dashArray: '6 4'
     }).addTo(m);
 
     /* Proposed VPS Kakkanad */
-    var kkLat = 10.0006, kkLon = 76.3540;
+    var kkLat = 10.0012, kkLon = 76.3714;
     L.circleMarker([kkLat, kkLon], {
       radius: 16, fillColor: '#1a7a40', color: '#fff', weight: 3, fillOpacity: 1
     }).addTo(m).bindPopup('<strong style="color:#1a7a40">VPS Kakkanad — Proposed</strong><div class="sub">SmartCity Kochi · 6.17 Acres (Option 2)<br>Target: 380–420 beds · Multispecialty<br>IT corridor + residential catchment</div>').openPopup();
@@ -1669,15 +1669,15 @@ var DEPTS = {
     }).addTo(m);
 
     /* Inter-campus referral corridor */
-    L.polyline([[9.9378, 76.3070], [kkLat, kkLon]], {
+    L.polyline([[9.9190, 76.3189], [kkLat, kkLon]], {
       color: '#2B7CBE', weight: 3, dashArray: '8 6', opacity: 0.55
-    }).addTo(m).bindPopup('<strong>Inter-campus corridor</strong><div class="sub">~8 km via Seaport–Airport Road<br>18–22 min transfer<br>Complex cases up · step-down back</div>');
+    }).addTo(m).bindPopup('<strong>Inter-campus referral corridor</strong><div class="sub">~15 km via NH-66 / Seaport–Airport Rd<br>25–30 min transfer<br>Complex cases: Kakkanad → VPS Lakeshore<br>Step-down: VPS Lakeshore → Kakkanad</div>');
 
     /* IT parks */
     [
-      { n:'Infopark Kochi', lat:10.0219, lon:76.3711,
+      { n:'Infopark Kochi', lat:10.0225, lon:76.3725,
         sub:'72,000 professionals · TCS, Wipro, HCL, IBM, Cognizant, KPMG, EY, Nielsen<br>323 acres · Phase II still under development' },
-      { n:'SmartCity Kochi (VPS parcel)', lat:10.0040, lon:76.3580,
+      { n:'SmartCity Kochi (VPS parcel)', lat:10.0012, lon:76.3714,
         sub:'246 acres SEZ · 90,000+ target jobs<br>VPS proposed land parcel B3-3/B3-4 · adjacent to Infopark' },
       { n:'CSEZ / KINFRA', lat:10.0110, lon:76.3490,
         sub:'Cochin Special Economic Zone · Collectorate nearby · PSU offices' }
@@ -1693,8 +1693,8 @@ var DEPTS = {
         sub:'710 beds · Kuttisahib Rd, Cheranelloor · JCI accredited<br>Quaternary · waterfront campus · 40 acres' },
       { n:'Amrita Hospital (AIMS)', lat:10.0265, lon:76.3082,
         sub:'1450 beds · Ponekkara, Edappally · 125 acres<br>Tertiary + academic · transplant · cardiac' },
-      { n:'Sunrise Hospital', lat:9.9985, lon:76.3119,
-        sub:'500+ beds · Palarivattom Junction<br>General multispecialty · high OPD volume' },
+      { n:'Sunrise Hospital', lat:10.0253, lon:76.3390,
+        sub:'500+ beds · Kakkanad · general multispecialty · high OPD volume' },
       { n:'Rajagiri Hospital', lat:10.0877, lon:76.3882,
         sub:'570 beds · Chunangamvely, Aluva · JCI accredited<br>Quaternary · captures north Kochi corridor' }
     ].forEach(function(c) {
@@ -1726,7 +1726,7 @@ var DEPTS = {
         str:'Full quaternary · JCI · Aster@SmartCity OPD already on campus · strong corporate TPA base',
         weak:'Higher rack rates · no inpatient inside SmartCity · campus is west of IT cluster',
         opp:'A VPS hospital inside SmartCity with 400 beds and full ED directly displaces Aster\'s OPD-only foothold. Corporate TPA relationships become re-negotiable.' },
-      { name:'Sunrise Hospital', dist:'~5 km · Palarivattom Junction · 500+ beds', threat:55,
+      { name:'Sunrise Hospital', dist:'~2 km · Kakkanad · 500+ beds', threat:55,
         leakShare:'~25% of corridor',
         str:'High OPD volume · affordable · accessible · well-known for routine care',
         weak:'Not premium · no quaternary · older infrastructure · limited insured segment appeal',
