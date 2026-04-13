@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPS Lakeshore | TC AOP Card — FY27 Transformation Case</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230072BC'/><text x='16' y='22' font-size='18' fill='white' text-anchor='middle' font-weight='bold'>T</text></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+:root{
+  --blue:#0072BC;--blue-d:#005a96;--blue-l:#e8f4fb;
+  --crimson:#C8103E;--sky:#5BB8E8;
+  --navy:#0A1628;--text:#0d2535;--muted:#5a7a8a;
+  --bg:#f0f6fb;--surf:#ffffff;--border:#cddeed;
+  --green:#1a8a5a;--gold:#b87800;--purple:#7B4FC8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.45;font-size:11px;overflow-x:hidden}
+
+/* ── Header ── */
+.hdr{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border);padding:10px 16px 0;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.hdr-gradient{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#C8103E 0%,#5BB8E8 100%)}
+.hdr-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.vps-logo-wrap{background:#fff;border-radius:6px;padding:3px 8px;display:flex;align-items:center;border:1.5px solid var(--border);flex-shrink:0}
+.vps-logo-img{height:32px;width:auto}
+.hdr-divider{width:1px;height:36px;background:rgba(0,114,188,.2);flex-shrink:0}
+.hdr-txt h1{font-size:14px;font-weight:600;letter-spacing:-.3px;color:var(--blue)}
+.hdr-txt h1 span{font-weight:700}
+.hdr-txt .sub{font-size:9.5px;color:var(--muted);margin-top:1px}
+.tags{display:flex;gap:3px;margin-top:3px;flex-wrap:wrap}
+.tag{font-family:'JetBrains Mono',monospace;font-size:7px;padding:2px 5px;border-radius:2px;text-transform:uppercase;letter-spacing:.3px}
+.tag-blue{background:var(--blue-l);border:1px solid #c2dff0;color:var(--blue-d)}
+.tag-red{background:#fff5f7;border:1px solid #f0c0c8;color:var(--crimson)}
+.tag-green{background:#e8f8f0;border:1px solid #b0e0c8;color:var(--green)}
+.back-link{font-size:9px;color:var(--blue);text-decoration:none;padding:3px 8px;border:1px solid var(--border);border-radius:4px;margin-left:auto;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.back-link:hover{background:var(--blue-l);border-color:var(--blue)}
+
+/* ── KPI Strip ── */
+.kpi-row{display:flex;gap:4px;margin-top:7px;flex-wrap:nowrap;overflow-x:auto;padding-bottom:3px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.kpi-row::-webkit-scrollbar{height:3px}
+.kpi-row::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.kc{background:#fff;border:1px solid var(--border);border-radius:5px;padding:5px 9px;min-width:90px;box-shadow:0 1px 3px rgba(0,0,0,.04);flex-shrink:0}
+.kc.pos{border-color:#aad4ef;background:#f0f8ff}
+.kc.warn{border-color:#f5c842;background:#fffbee}
+.kv{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--blue);display:block}
+.kv.grn{color:var(--green)}.kv.red{color:var(--crimson)}.kv.amber{color:var(--gold)}
+.kl{font-size:7px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-top:1px}
+.ks{font-size:7px;color:#8aabb8;font-style:italic;display:block}
+
+/* ── Tab Navigation ── */
+.tab-bar{display:flex;gap:2px;padding:8px 0 0;overflow-x:auto;scrollbar-width:none}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab-btn{font-family:inherit;font-size:9px;font-weight:500;padding:6px 12px;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;letter-spacing:.2px;display:flex;align-items:center;gap:4px}
+.tab-btn:hover{color:var(--blue);background:rgba(0,114,188,.04)}
+.tab-btn.on{color:var(--blue);font-weight:600;border-bottom-color:var(--blue)}
+.tab-btn .tab-ico{font-size:11px}
+.tab-btn .tab-count{font-family:'JetBrains Mono',monospace;font-size:7px;padding:1px 4px;border-radius:2px;background:rgba(0,114,188,.08);color:var(--blue)}
+
+/* ── Content ── */
+.content{padding:10px 14px;max-width:1400px;margin:0 auto}
+.tab-page{display:none}
+.tab-page.active{display:block}
+
+/* ── Section Cards ── */
+.sec-card{background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 1px 8px rgba(0,60,120,.06);margin-bottom:10px;overflow:hidden}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;cursor:pointer;background:linear-gradient(90deg,#f8fbfe,#fff);border-bottom:1px solid var(--border);user-select:none;transition:background .15s}
+.sec-hdr:hover{background:linear-gradient(90deg,#f0f6fb,#f8fbfe)}
+.sec-title{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--blue)}
+.sec-ico{width:20px;height:20px;display:flex;align-items:center;justify-content:center;background:rgba(0,114,188,.1);border-radius:4px;font-size:10px}
+.sec-badge{font-family:'JetBrains Mono',monospace;font-size:7px;padding:2px 5px;border-radius:2px;background:rgba(0,114,188,.08);color:var(--blue)}
+.toggle{font-size:10px;color:var(--blue);transition:transform .2s;font-weight:bold}
+.sec-card.collapsed .toggle{transform:rotate(-90deg)}
+.sec-body{padding:10px 12px;display:block}
+.sec-card.collapsed .sec-body{display:none}
+
+/* ── Tables ── */
+table{width:100%;border-collapse:collapse;font-size:9.5px}
+th{background:var(--bg);border-bottom:2px solid var(--blue);padding:4px 6px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:7.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:600}
+th.r{text-align:right}
+td{padding:3px 6px;border-bottom:1px solid #e8f0f6}
+td.r{text-align:right;font-family:'JetBrains Mono',monospace}
+td.mono{font-family:'JetBrains Mono',monospace}
+tr.total{background:rgba(0,114,188,.05);font-weight:600}
+tr.total td{border-bottom:2px solid var(--blue)}
+tr.subtotal{background:var(--bg);font-weight:500}
+tr.highlight{background:rgba(26,138,90,.06)}
+tr:hover{background:rgba(0,114,188,.03)}
+.indent{padding-left:18px}
+
+/* ── Initiative Cards ── */
+.init-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:8px}
+.init-card{border:1px solid var(--border);border-radius:6px;padding:8px 10px;background:#fff;transition:all .15s;border-left:3px solid;cursor:pointer;position:relative}
+.init-card:hover{box-shadow:0 2px 8px rgba(0,60,120,.1);transform:translateY(-1px)}
+.init-card.rev{border-left-color:var(--blue)}
+.init-card.cost{border-left-color:var(--green)}
+.init-card.clin{border-left-color:var(--purple)}
+.init-card .click-hint{position:absolute;top:6px;right:8px;font-size:7px;color:var(--muted);opacity:.5;transition:opacity .15s}
+.init-card:hover .click-hint{opacity:1;color:var(--blue)}
+.init-num{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;display:inline-block;margin-right:4px}
+.init-num.rev{background:rgba(0,114,188,.1);color:var(--blue)}
+.init-num.cost{background:rgba(26,138,90,.1);color:var(--green)}
+.init-name{font-size:10px;font-weight:600;color:var(--text);display:inline}
+.init-meta{display:flex;gap:10px;margin-top:4px;font-size:8px;color:var(--muted);flex-wrap:wrap}
+.init-meta b{color:var(--text);font-weight:600}
+.init-kra{font-size:8px;color:#4a6070;margin-top:3px;line-height:1.4;border-top:1px solid #e8f0f6;padding-top:3px}
+
+/* ── Initiative Drill-Down Modal ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,.55);z-index:200;justify-content:center;align-items:flex-start;padding:40px 20px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:10px;width:100%;max-width:800px;box-shadow:0 12px 40px rgba(0,60,120,.25);border:1.5px solid var(--border);overflow:hidden;animation:modalIn .2s ease}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:linear-gradient(90deg,#f8fbfe,#fff)}
+.modal-hdr h3{font-size:13px;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:8px}
+.modal-close{background:none;border:1px solid var(--border);border-radius:4px;cursor:pointer;font-size:14px;color:var(--muted);padding:2px 8px;transition:all .1s}
+.modal-close:hover{background:#fff5f7;border-color:var(--crimson);color:var(--crimson)}
+.modal-body{padding:14px 16px}
+.modal-section{margin-bottom:14px}
+.modal-section-title{font-family:'JetBrains Mono',monospace;font-size:7.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.modal-section-title::before{content:'';width:3px;height:10px;border-radius:1px;display:inline-block;background:var(--blue)}
+
+/* ── Sankey Flow Diagram ── */
+.sankey-wrap{position:relative;height:180px;margin:8px 0;overflow:hidden}
+.sankey-node{position:absolute;border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:8px;font-weight:600;text-align:center;padding:4px 6px;border:1px solid;min-width:100px}
+.sankey-node .sn-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;line-height:1.2}
+.sankey-node .sn-label{font-size:7px;text-transform:uppercase;letter-spacing:.3px;margin-top:2px;opacity:.8}
+.sankey-node.source{background:rgba(0,114,188,.08);border-color:rgba(0,114,188,.3);color:var(--blue)}
+.sankey-node.cost-node{background:rgba(200,16,62,.08);border-color:rgba(200,16,62,.3);color:var(--crimson)}
+.sankey-node.net-node{background:rgba(26,138,90,.08);border-color:rgba(26,138,90,.3);color:var(--green)}
+.sankey-node.pl-node{background:rgba(184,120,0,.08);border-color:rgba(184,120,0,.3);color:var(--gold)}
+.sankey-node.ebitda-node{background:rgba(0,114,188,.12);border-color:rgba(0,114,188,.4);color:var(--blue)}
+
+/* ── Monthly Phasing Detail ── */
+.month-bars{display:flex;gap:2px;align-items:flex-end;height:60px;margin:6px 0}
+.month-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px}
+.month-bar{width:100%;border-radius:2px 2px 0 0;transition:height .3s}
+.month-bar-label{font-family:'JetBrains Mono',monospace;font-size:6.5px;color:var(--muted)}
+.month-bar-val{font-family:'JetBrains Mono',monospace;font-size:7px;font-weight:600;color:var(--text)}
+
+/* ── Role Cards ── */
+.role-card{border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px;background:#fff}
+.role-title{font-size:10.5px;font-weight:700;color:var(--blue);margin-bottom:2px}
+.role-reports{font-size:7.5px;color:var(--muted);margin-bottom:4px}
+.role-obj{font-size:9px;color:var(--text);line-height:1.45;margin-bottom:4px;padding:4px 6px;background:var(--bg);border-radius:4px}
+.role-krs{font-size:8px;color:#4a6070;line-height:1.5}
+.role-inits{font-size:8px;margin-top:3px}
+.role-inits b{color:var(--blue)}
+
+/* ── Bridge ── */
+.bridge-item{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:9.5px}
+.bridge-bar{height:6px;border-radius:3px;transition:width .3s}
+.bridge-label{min-width:180px;color:var(--text)}
+.bridge-val{font-family:'JetBrains Mono',monospace;font-weight:600;min-width:60px;text-align:right}
+.bridge-val.pos{color:var(--green)}.bridge-val.neg{color:var(--crimson)}.bridge-val.base{color:var(--blue)}
+
+/* ── Perf Pay ── */
+.tier-card{border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px}
+.tier-hdr{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.tier-badge{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;padding:2px 6px;border-radius:3px;color:#fff}
+.tier-1{background:var(--blue)}.tier-2{background:var(--gold)}.tier-3{background:var(--crimson)}
+.tier-pool{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--text)}
+.tier-desc{font-size:8.5px;color:#4a6070;line-height:1.5}
+
+/* ── Pillar Tabs ── */
+.pillar-tabs{display:flex;gap:3px;margin-bottom:8px}
+.ptab{font-size:8.5px;padding:4px 8px;border-radius:3px;border:1px solid var(--border);background:#f8fafb;color:var(--muted);cursor:pointer;font-family:inherit;transition:all .1s;font-weight:500}
+.ptab:hover{border-color:var(--blue);color:var(--blue)}
+.ptab.on{font-weight:600}
+.ptab.on[data-p="rev"]{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+.ptab.on[data-p="cost"]{border-color:var(--green);background:#e8f8f0;color:var(--green)}
+.ptab.on[data-p="all"]{border-color:var(--blue);background:var(--blue-l);color:var(--blue)}
+
+/* ── Monthly chart area ── */
+.chart-wrap{position:relative;height:200px;margin:8px 0}
+
+/* ── Phasing timeline ── */
+.phase-row{display:flex;align-items:center;gap:4px;padding:2px 0;font-size:8px}
+.phase-label{min-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.phase-bar-wrap{flex:1;display:flex;height:10px;gap:1px}
+.phase-cell{flex:1;border-radius:1px;position:relative}
+.phase-cell.active{opacity:1}.phase-cell.inactive{opacity:.15}
+.phase-months{display:flex;gap:1px;margin-bottom:3px}
+.phase-month{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:6.5px;color:var(--muted)}
+
+/* ── Deliverables ── */
+.del-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.del-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:10px 12px;border-left:3px solid var(--blue)}
+.del-card.q1{border-left-color:var(--crimson)}
+.del-card.q2{border-left-color:var(--gold)}
+.del-card.q3{border-left-color:var(--green)}
+.del-card.q4{border-left-color:var(--blue)}
+.del-q{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;padding:1px 5px;border-radius:2px;display:inline-block;margin-bottom:4px}
+.del-q.q1{background:rgba(200,16,62,.1);color:var(--crimson)}
+.del-q.q2{background:rgba(184,120,0,.1);color:var(--gold)}
+.del-q.q3{background:rgba(26,138,90,.1);color:var(--green)}
+.del-q.q4{background:rgba(0,114,188,.1);color:var(--blue)}
+.del-title{font-size:10px;font-weight:600;color:var(--text);margin-bottom:3px}
+.del-desc{font-size:8.5px;color:#4a6070;line-height:1.5}
+.del-owner{font-size:7.5px;color:var(--muted);margin-top:4px}
+.del-status{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:7px;padding:1px 5px;border-radius:2px;margin-top:3px}
+.del-status.pending{background:#fff5f7;color:var(--crimson)}
+.del-status.in-progress{background:#fffbee;color:var(--gold)}
+.del-status.done{background:#e8f8f0;color:var(--green)}
+
+/* ── Footer ── */
+.footer{padding:10px 14px;text-align:center;font-size:8px;color:var(--muted);border-top:1px solid var(--border);margin-top:10px}
+.footer b{color:var(--text)}
+
+/* ── Update Section ── */
+.update-note{background:#fffbee;border:1px solid #f5c842;border-radius:6px;padding:8px 10px;font-size:8.5px;color:#6a5000;line-height:1.5}
+.update-note code{background:#fff;padding:1px 4px;border-radius:2px;font-family:'JetBrains Mono',monospace;font-size:7.5px}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .hdr{padding:8px 10px 0}
+  .hdr-txt h1{font-size:12px}
+  .content{padding:8px 10px}
+  .init-grid{grid-template-columns:1fr}
+  .del-grid{grid-template-columns:1fr}
+  .bridge-label{min-width:120px;font-size:8px}
+  .tab-btn{font-size:8px;padding:5px 8px}
+  .modal{max-width:95vw}
+  .sankey-wrap{height:240px}
+}
+/* ── Print ── */
+@media print{
+  .hdr{position:static;box-shadow:none}
+  .tab-page{display:block!important}
+  .sec-card.collapsed .sec-body{display:block!important}
+  .toggle{display:none}
+  body{font-size:8px}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+<script>
+(function(){var p=prompt('Enter password:');if(p!=='Lakeshore2026'){document.body.innerHTML='<div style="padding:40px;text-align:center;color:#C8103E;font-size:14px">Access denied.</div>';throw new Error('auth');}})();
+</script>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<div class="hdr">
+  <div class="hdr-top">
+    <div class="vps-logo-wrap">
+      <img class="vps-logo-img" src="https://tukuz.com/wp-content/uploads/2020/09/vps-lakeshore-hospital-logo-vector.png" alt="VPS Lakeshore">
+    </div>
+    <div class="hdr-divider"></div>
+    <div class="hdr-txt">
+      <h1><span>VPS Lakeshore</span> — Revised TC AOP Card</h1>
+      <div class="sub">Transformation Case  |  FY 2026-27  |  Conservative Scenario  |  61 Initiatives across 3 Pillars</div>
+      <div class="tags">
+        <span class="tag tag-blue">FY27 TC V1</span>
+        <span class="tag tag-red">REVISED</span>
+        <span class="tag tag-green">LIVE TRACKING</span>
+        <span class="tag tag-blue">₹4,432L UPLIFT</span>
+        <span class="tag tag-blue">21 REV · 20 COST · 20 CLINICAL</span>
+      </div>
+    </div>
+    <a href="https://vpslakeshoretdx.in" class="back-link">← Main Dashboard</a>
+  </div>
+  <!-- KPI Strip -->
+  <div class="kpi-row">
+    <div class="kc pos"><span class="kv">₹59,731L</span><span class="kl">Total Income</span><span class="ks">TC Conservative</span></div>
+    <div class="kc pos"><span class="kv">₹14,283L</span><span class="kl">TC EBITDA</span><span class="ks">24.2% margin</span></div>
+    <div class="kc"><span class="kv">₹14,879L</span><span class="kl">UC EBITDA</span><span class="ks">25.9% margin</span></div>
+    <div class="kc pos"><span class="kv grn">+₹4,432L</span><span class="kl">Revenue Uplift</span><span class="ks">21 initiatives</span></div>
+    <div class="kc"><span class="kv grn">+₹1,135L</span><span class="kl">Cost Savings</span><span class="ks">20 initiatives</span></div>
+    <div class="kc"><span class="kv">58.5%</span><span class="kl">Contribution %</span><span class="ks">₹34,920L</span></div>
+    <div class="kc"><span class="kv">₹735L</span><span class="kl">Cost to Execute</span><span class="ks">Initiative investment</span></div>
+    <div class="kc"><span class="kv grn">12.1×</span><span class="kl">Perf Pay ROI</span><span class="ks">₹365L pool</span></div>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-bar">
+    <button class="tab-btn on" data-tab="overview" onclick="switchTab('overview')"><span class="tab-ico">📊</span> Overview</button>
+    <button class="tab-btn" data-tab="revenue" onclick="switchTab('revenue')"><span class="tab-ico">🚀</span> Revenue <span class="tab-count">21</span></button>
+    <button class="tab-btn" data-tab="cost" onclick="switchTab('cost')"><span class="tab-ico">✂️</span> Cost <span class="tab-count">20</span></button>
+    <button class="tab-btn" data-tab="governance" onclick="switchTab('governance')"><span class="tab-ico">👥</span> Governance</button>
+    <button class="tab-btn" data-tab="performance" onclick="switchTab('performance')"><span class="tab-ico">🏆</span> Performance</button>
+    <button class="tab-btn" data-tab="costdetail" onclick="switchTab('costdetail')"><span class="tab-ico">📑</span> Cost Detail <span class="tab-count">22</span></button>
+    <button class="tab-btn" data-tab="deliverables" onclick="switchTab('deliverables')"><span class="tab-ico">📋</span> Deliverables</button>
+  </div>
+
+  <div class="hdr-gradient"></div>
+</div>
+
+<!-- ═══════════════ DRILL-DOWN MODAL ═══════════════ -->
+<div class="modal-overlay" id="initModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3 id="modalTitle"></h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- ══════════ TAB: OVERVIEW ══════════ -->
+<div class="tab-page active" id="page-overview">
+
+  <!-- EBITDA Bridge -->
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">📊</div>EBITDA Bridge — UC AOP → Transformation Case<span class="sec-badge">₹14,879L → ₹14,283L</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>Category</th><th class="r">Amount (₹L)</th><th class="r">Direction</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr class="total"><td><b>UC AOP EBITDA</b></td><td class="r mono">14,879</td><td class="r">Base</td><td>Unchanged Case baseline</td></tr>
+          <tr class="highlight"><td class="indent">Revenue Initiatives (21)</td><td class="r mono" style="color:var(--green)">+4,432</td><td class="r" style="color:var(--green)">↑</td><td>IP ₹3,440L + OP ₹992L across 6 categories</td></tr>
+          <tr><td class="indent">Less: Cost to Execute</td><td class="r mono" style="color:var(--crimson)">−735</td><td class="r" style="color:var(--crimson)">↓</td><td>Hiring, marketing, IT, training for 21 initiatives</td></tr>
+          <tr class="subtotal"><td class="indent"><b>Net Revenue Contribution</b></td><td class="r mono"><b>+3,697</b></td><td class="r">Net</td><td></td></tr>
+          <tr class="highlight"><td class="indent">Cost Savings (v5)</td><td class="r mono" style="color:var(--green)">+1,135</td><td class="r" style="color:var(--green)">↑</td><td>20 cost rationalisation initiatives</td></tr>
+          <tr><td class="indent">Marketing Budget +₹40Cr</td><td class="r mono" style="color:var(--crimson)">−3,005</td><td class="r" style="color:var(--crimson)">↓</td><td>Strategic investment in brand & BD</td></tr>
+          <tr><td class="indent">Professional Fee + Big4</td><td class="r mono" style="color:var(--crimson)">−255</td><td class="r" style="color:var(--crimson)">↓</td><td>Advisory, audit, consulting</td></tr>
+          <tr><td class="indent">Employee Cost (DT HR)</td><td class="r mono" style="color:var(--crimson)">−727</td><td class="r" style="color:var(--crimson)">↓</td><td>Org structure + capability build</td></tr>
+          <tr><td class="indent">F&B Revenue removed</td><td class="r mono" style="color:var(--crimson)">−2,223</td><td class="r" style="color:var(--crimson)">↓</td><td>Calicut & F&B deconsolidation</td></tr>
+          <tr><td class="indent">Other DT adjustments</td><td class="r mono" style="color:var(--green)">+779</td><td class="r" style="color:var(--green)">↑</td><td>Net favorable adjustments</td></tr>
+          <tr class="total"><td><b>TC EBITDA (Conservative)</b></td><td class="r mono"><b>14,283</b></td><td class="r"><b>Total</b></td><td></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TC P&L Summary -->
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">💰</div>TC P&L Summary — Monthly Breakdown<span class="sec-badge">₹59,731L Revenue</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="chart-wrap"><canvas id="monthlyChart"></canvas></div>
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>P&L Line</th><th class="r">Annual ₹L</th><th class="r">%Rev</th><th class="r">Apr</th><th class="r">May</th><th class="r">Jun</th><th class="r">Jul</th><th class="r">Aug</th><th class="r">Sep</th><th class="r">Oct</th><th class="r">Nov</th><th class="r">Dec</th><th class="r">Jan</th><th class="r">Feb</th><th class="r">Mar</th></tr></thead>
+        <tbody>
+          <tr><td>IP Revenue</td><td class="r mono">43,785</td><td class="r mono">73.3%</td><td class="r mono">2,955</td><td class="r mono">3,252</td><td class="r mono">3,387</td><td class="r mono">3,784</td><td class="r mono">3,364</td><td class="r mono">3,766</td><td class="r mono">3,621</td><td class="r mono">3,796</td><td class="r mono">3,948</td><td class="r mono">3,971</td><td class="r mono">3,812</td><td class="r mono">4,130</td></tr>
+          <tr><td>OP Revenue</td><td class="r mono">15,021</td><td class="r mono">25.1%</td><td class="r mono">1,152</td><td class="r mono">1,202</td><td class="r mono">1,252</td><td class="r mono">1,352</td><td class="r mono">1,202</td><td class="r mono">1,302</td><td class="r mono">1,252</td><td class="r mono">1,252</td><td class="r mono">1,302</td><td class="r mono">1,252</td><td class="r mono">1,202</td><td class="r mono">1,302</td></tr>
+          <tr><td>Other Income</td><td class="r mono">925</td><td class="r mono">1.5%</td><td class="r mono">68</td><td class="r mono">76</td><td class="r mono">76</td><td class="r mono">77</td><td class="r mono">77</td><td class="r mono">78</td><td class="r mono">78</td><td class="r mono">79</td><td class="r mono">79</td><td class="r mono">78</td><td class="r mono">80</td><td class="r mono">79</td></tr>
+          <tr class="total"><td><b>Total Income</b></td><td class="r mono"><b>59,731</b></td><td class="r mono"><b>100%</b></td><td class="r mono"><b>4,175</b></td><td class="r mono"><b>4,530</b></td><td class="r mono"><b>4,715</b></td><td class="r mono"><b>5,213</b></td><td class="r mono"><b>4,643</b></td><td class="r mono"><b>5,146</b></td><td class="r mono"><b>4,951</b></td><td class="r mono"><b>5,127</b></td><td class="r mono"><b>5,329</b></td><td class="r mono"><b>5,301</b></td><td class="r mono"><b>5,094</b></td><td class="r mono"><b>5,511</b></td></tr>
+          <tr><td class="indent">Consumption</td><td class="r mono">14,946</td><td class="r mono">25.0%</td><td class="r mono">1,091</td><td class="r mono">1,165</td><td class="r mono">1,190</td><td class="r mono">1,317</td><td class="r mono">1,154</td><td class="r mono">1,285</td><td class="r mono">1,224</td><td class="r mono">1,267</td><td class="r mono">1,320</td><td class="r mono">1,311</td><td class="r mono">1,256</td><td class="r mono">1,366</td></tr>
+          <tr><td class="indent">Doctor Cost</td><td class="r mono">9,864</td><td class="r mono">16.5%</td><td class="r mono">795</td><td class="r mono">807</td><td class="r mono">813</td><td class="r mono">831</td><td class="r mono">810</td><td class="r mono">828</td><td class="r mono">821</td><td class="r mono">827</td><td class="r mono">834</td><td class="r mono">833</td><td class="r mono">826</td><td class="r mono">840</td></tr>
+          <tr class="subtotal"><td><b>Contribution</b></td><td class="r mono"><b>34,920</b></td><td class="r mono"><b>58.5%</b></td><td class="r mono"><b>2,289</b></td><td class="r mono"><b>2,558</b></td><td class="r mono"><b>2,712</b></td><td class="r mono"><b>3,065</b></td><td class="r mono"><b>2,679</b></td><td class="r mono"><b>3,033</b></td><td class="r mono"><b>2,906</b></td><td class="r mono"><b>3,033</b></td><td class="r mono"><b>3,175</b></td><td class="r mono"><b>3,157</b></td><td class="r mono"><b>3,012</b></td><td class="r mono"><b>3,305</b></td></tr>
+          <tr><td class="indent">Employee Cost</td><td class="r mono">9,610</td><td class="r mono">16.1%</td><td class="r mono" colspan="12" style="text-align:center;color:var(--muted)">₹800.8L/month flat</td></tr>
+          <tr><td class="indent">Perf Incentive Pool</td><td class="r mono">344</td><td class="r mono">0.6%</td><td class="r mono">16</td><td class="r mono">16</td><td class="r mono">16</td><td class="r mono">24</td><td class="r mono">16</td><td class="r mono">16</td><td class="r mono">37</td><td class="r mono">16</td><td class="r mono">16</td><td class="r mono">44</td><td class="r mono">16</td><td class="r mono">105</td></tr>
+          <tr><td class="indent">Marketing Cost</td><td class="r mono">4,025</td><td class="r mono">6.7%</td><td class="r mono">495</td><td class="r mono">471</td><td class="r mono">455</td><td class="r mono">396</td><td class="r mono">381</td><td class="r mono">365</td><td class="r mono">244</td><td class="r mono">244</td><td class="r mono">244</td><td class="r mono">244</td><td class="r mono">244</td><td class="r mono">244</td></tr>
+          <tr><td class="indent">Repair & Maint</td><td class="r mono">1,612</td><td class="r mono">2.7%</td><td class="r mono" colspan="12" style="text-align:center;color:var(--muted)">₹134-135L/month</td></tr>
+          <tr><td class="indent">Housekeeping</td><td class="r mono">1,040</td><td class="r mono">1.7%</td><td class="r mono" colspan="12" style="text-align:center;color:var(--muted)">₹86-88L/month</td></tr>
+          <tr><td class="indent">Bad Debts</td><td class="r mono">1,000</td><td class="r mono">1.7%</td><td class="r mono">167</td><td class="r mono">167</td><td class="r mono">167</td><td class="r mono">167</td><td class="r mono">167</td><td class="r mono">167</td><td class="r mono">0</td><td class="r mono">0</td><td class="r mono">0</td><td class="r mono">0</td><td class="r mono">0</td><td class="r mono">0</td></tr>
+          <tr><td class="indent">Other Fixed</td><td class="r mono">2,850</td><td class="r mono">4.8%</td><td class="r mono" colspan="12" style="text-align:center;color:var(--muted)">Utilities, Lab, Rent, Security, etc.</td></tr>
+          <tr class="subtotal"><td><b>Total Fixed Cost</b></td><td class="r mono"><b>20,481</b></td><td class="r mono"><b>34.3%</b></td><td class="r mono"><b>2,034</b></td><td class="r mono"><b>1,995</b></td><td class="r mono"><b>1,985</b></td><td class="r mono"><b>1,829</b></td><td class="r mono"><b>1,802</b></td><td class="r mono"><b>1,786</b></td><td class="r mono"><b>1,516</b></td><td class="r mono"><b>1,490</b></td><td class="r mono"><b>1,487</b></td><td class="r mono"><b>1,519</b></td><td class="r mono"><b>1,488</b></td><td class="r mono"><b>1,582</b></td></tr>
+          <tr class="total"><td><b>EBITDA</b></td><td class="r mono"><b>14,439</b></td><td class="r mono"><b>24.2%</b></td><td class="r mono"><b>255</b></td><td class="r mono"><b>563</b></td><td class="r mono"><b>727</b></td><td class="r mono"><b>1,236</b></td><td class="r mono"><b>877</b></td><td class="r mono"><b>1,247</b></td><td class="r mono"><b>1,390</b></td><td class="r mono"><b>1,543</b></td><td class="r mono"><b>1,688</b></td><td class="r mono"><b>1,638</b></td><td class="r mono"><b>1,524</b></td><td class="r mono"><b>1,723</b></td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q1 Operating Plan -->
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">📋</div>Q1 Operating Plan — Apr-Jun 2026<span class="sec-badge">₹13,420L Rev · ₹1,479L EBITDA · 13 initiatives live</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <table>
+        <thead><tr><th>P&L Line (₹L)</th><th class="r">UC Q1</th><th class="r">TC Q1</th><th class="r">Variance</th><th class="r">Var %</th></tr></thead>
+        <tbody>
+          <tr><td>IP Revenue</td><td class="r mono">8,733</td><td class="r mono">9,594</td><td class="r mono" style="color:var(--green)">+861</td><td class="r mono">+9.9%</td></tr>
+          <tr><td>OP Revenue</td><td class="r mono">3,485</td><td class="r mono">3,606</td><td class="r mono" style="color:var(--green)">+121</td><td class="r mono">+3.5%</td></tr>
+          <tr><td>Other Income</td><td class="r mono">220</td><td class="r mono">220</td><td class="r mono">0</td><td class="r mono">0%</td></tr>
+          <tr class="total"><td><b>Total Revenue</b></td><td class="r mono"><b>12,438</b></td><td class="r mono"><b>13,420</b></td><td class="r mono" style="color:var(--green)"><b>+982</b></td><td class="r mono"><b>+7.9%</b></td></tr>
+          <tr><td>Consumption</td><td class="r mono">3,444</td><td class="r mono">3,369</td><td class="r mono" style="color:var(--green)">−75</td><td class="r mono">−2.2%</td></tr>
+          <tr class="total"><td><b>EBITDA</b></td><td class="r mono"><b>614</b></td><td class="r mono"><b>1,479</b></td><td class="r mono" style="color:var(--green)"><b>+865</b></td><td class="r mono"><b>+141%</b></td></tr>
+          <tr><td>EBITDA Margin</td><td class="r mono">4.9%</td><td class="r mono">11.0%</td><td class="r mono" style="color:var(--green)">+6.1pp</td><td class="r mono"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /page-overview -->
+
+<!-- ══════════ TAB: REVENUE INITIATIVES ══════════ -->
+<div class="tab-page" id="page-revenue">
+
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">🚀</div>Revenue Growth Initiatives (21)<span class="sec-badge">₹4,432L uplift · ₹735L cost · ₹3,697L net</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="font-size:9px;color:#4a6070;padding:6px 8px;background:var(--bg);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        <span style="font-size:12px">💡</span> Click any initiative card to see its full financial flow, monthly phasing, and deliverables
+      </div>
+      <!-- Phasing Timeline -->
+      <div style="margin-bottom:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:7.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:5px">Initiative Phasing — Impact Start Month</div>
+        <div class="phase-months"><span class="phase-month">Apr</span><span class="phase-month">May</span><span class="phase-month">Jun</span><span class="phase-month">Jul</span><span class="phase-month">Aug</span><span class="phase-month">Sep</span><span class="phase-month">Oct</span><span class="phase-month">Nov</span><span class="phase-month">Dec</span><span class="phase-month">Jan</span><span class="phase-month">Feb</span><span class="phase-month">Mar</span></div>
+        <div id="revPhasing"></div>
+      </div>
+      <!-- Category Summary -->
+      <div style="margin-bottom:10px">
+        <div class="pillar-tabs" id="revCatTabs">
+          <button class="ptab on" data-p="all" onclick="filterRevCat('all',this)">All (21)</button>
+          <button class="ptab" data-p="rev" onclick="filterRevCat('Pricing & Yield',this)">Pricing & Yield</button>
+          <button class="ptab" data-p="rev" onclick="filterRevCat('Network Expansion',this)">Network</button>
+          <button class="ptab" data-p="rev" onclick="filterRevCat('Referral Dev',this)">Referral</button>
+          <button class="ptab" data-p="rev" onclick="filterRevCat('Specialty',this)">Specialty</button>
+          <button class="ptab" data-p="rev" onclick="filterRevCat('Community',this)">Community</button>
+          <button class="ptab" data-p="rev" onclick="filterRevCat('Financial',this)">Financial</button>
+        </div>
+      </div>
+      <div class="init-grid" id="revInitGrid"></div>
+    </div>
+  </div>
+
+</div><!-- /page-revenue -->
+
+<!-- ══════════ TAB: COST INITIATIVES ══════════ -->
+<div class="tab-page" id="page-cost">
+
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">✂️</div>Cost Rationalisation Initiatives (20)<span class="sec-badge">₹1,135L savings</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="font-size:9px;color:#4a6070;padding:6px 8px;background:var(--bg);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        <span style="font-size:12px">💡</span> Click any initiative card to see its savings flow, monthly phasing, and deliverables
+      </div>
+      <div style="margin-bottom:10px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:7.5px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:5px">Cost Saving Phasing — Impact Start Month</div>
+        <div class="phase-months"><span class="phase-month">Apr</span><span class="phase-month">May</span><span class="phase-month">Jun</span><span class="phase-month">Jul</span><span class="phase-month">Aug</span><span class="phase-month">Sep</span><span class="phase-month">Oct</span><span class="phase-month">Nov</span><span class="phase-month">Dec</span><span class="phase-month">Jan</span><span class="phase-month">Feb</span><span class="phase-month">Mar</span></div>
+        <div id="costPhasing"></div>
+      </div>
+      <div style="margin-bottom:10px">
+        <div class="pillar-tabs" id="costCatTabs">
+          <button class="ptab on" data-p="all" onclick="filterCostCat('all',this)">All (20)</button>
+          <button class="ptab" data-p="cost" onclick="filterCostCat('Consumption',this)">Consumption</button>
+          <button class="ptab" data-p="cost" onclick="filterCostCat('Employee Cost',this)">Employee</button>
+          <button class="ptab" data-p="cost" onclick="filterCostCat('HK & Security',this)">HK & Security</button>
+          <button class="ptab" data-p="cost" onclick="filterCostCat('R&M',this)">R&M</button>
+          <button class="ptab" data-p="cost" onclick="filterCostCat('Utilities',this)">Utilities</button>
+          <button class="ptab" data-p="cost" onclick="filterCostCat('Bad Debts',this)">Bad Debts</button>
+        </div>
+      </div>
+      <div class="init-grid" id="costInitGrid"></div>
+    </div>
+  </div>
+
+</div><!-- /page-cost -->
+
+<!-- ══════════ TAB: GOVERNANCE ══════════ -->
+<div class="tab-page" id="page-governance">
+
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">👥</div>Leadership Accountability & OKR Ownership<span class="sec-badge">7 Roles · Per-person cards</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body" id="rolesBody"></div>
+  </div>
+
+</div><!-- /page-governance -->
+
+<!-- ══════════ TAB: PERFORMANCE ══════════ -->
+<div class="tab-page" id="page-performance">
+
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">🏆</div>Performance Incentive Framework<span class="sec-badge">₹365L pool · 3 Tiers · 12.1× ROI</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="font-size:9px;color:#4a6070;margin-bottom:8px;line-height:1.5">The TC generates ₹4,432L in incremental revenue. This framework takes 8.2% of that uplift (₹365L) and returns it as staff incentives — only when the uplift is actually delivered. Nothing is paid on base revenue. Everything is paid on what the transformation adds.</div>
+      <div class="tier-card">
+        <div class="tier-hdr"><span class="tier-badge tier-1">TIER 1</span><span class="tier-pool">₹192L/yr</span><span style="font-size:8px;color:var(--muted);margin-left:8px">Monthly Spot Award · ₹16L/month</span></div>
+        <div class="tier-desc"><b>Who:</b> Any employee, any level (not doctors) · <b>Amount:</b> Up to ₹25,000 per award · <b>Trigger:</b> HOD nomination citing specific TC initiative · <b>Gate:</b> CEO/COO approval · ~356 awards/month across 1,779 staff</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-hdr"><span class="tier-badge tier-2">TIER 2</span><span class="tier-pool">₹84L/yr</span><span style="font-size:8px;color:var(--muted);margin-left:8px">Quarterly KPI Pool · 2% of revenue uplift</span></div>
+        <div class="tier-desc"><b>Who:</b> 7 HODs + functional heads · <b>Gate:</b> Scorecard ≥ 60% · <b>Weights:</b> Revenue 30% · Cost 15% · BD admissions 20% · Billing 15% · Execution 10% · NPS 10%</div>
+        <table style="margin-top:4px">
+          <thead><tr><th>Quarter</th><th class="r">Uplift Target</th><th class="r">2% Pool</th><th class="r"># Live</th></tr></thead>
+          <tbody>
+            <tr><td>Q1 (Apr-Jun)</td><td class="r mono">₹387L</td><td class="r mono">₹7.7L</td><td class="r mono">1→13</td></tr>
+            <tr><td>Q2 (Jul-Sep)</td><td class="r mono">₹1,062L</td><td class="r mono">₹21.2L</td><td class="r mono">16→19</td></tr>
+            <tr><td>Q3 (Oct-Dec)</td><td class="r mono">₹1,386L</td><td class="r mono">₹27.7L</td><td class="r mono">21</td></tr>
+            <tr><td>Q4 (Jan-Mar)</td><td class="r mono">₹1,386L</td><td class="r mono">₹27.7L</td><td class="r mono">21</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tier-card">
+        <div class="tier-hdr"><span class="tier-badge tier-3">TIER 3</span><span class="tier-pool">₹89L</span><span style="font-size:8px;color:var(--muted);margin-left:8px">Annual Award · EBITDA gate ≥ ₹13,000L</span></div>
+        <div class="tier-desc"><b>Who:</b> CEO, CFO, Medical Director, Head BD, Head Ops · <b>Max:</b> ₹12L/person · <b>Hard gate:</b> EBITDA ≥ ₹13,000L (90% of target). If missed, Tier 3 does NOT pay. No exceptions.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-performance -->
+
+<!-- ══════════ TAB: COST DETAIL (DT_ Sheets) ══════════ -->
+<div class="tab-page" id="page-costdetail">
+
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">📑</div>Cost Line Item Detail — All DT_ Sheets<span class="sec-badge">22 Sheets · UC vs TC Comparison</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="font-size:9px;color:#4a6070;padding:6px 8px;background:var(--bg);border-radius:4px;margin-bottom:8px;display:flex;align-items:center;gap:6px">
+        <span style="font-size:12px">💡</span> Click any cost line to expand its monthly UC vs TC breakdown with a chart
+      </div>
+
+      <!-- Summary Table -->
+      <div style="overflow-x:auto;margin-bottom:12px">
+        <table id="dtSummaryTable">
+          <thead>
+            <tr>
+              <th>Cost Line Item</th>
+              <th class="r">UC Annual (₹L)</th>
+              <th class="r">TC Annual (₹L)</th>
+              <th class="r">Variance (₹L)</th>
+              <th class="r">Var %</th>
+              <th>Linked Initiatives</th>
+            </tr>
+          </thead>
+          <tbody id="dtSummaryBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Expandable Detail Rows -->
+      <div id="dtDetailCards"></div>
+    </div>
+  </div>
+
+</div><!-- /page-costdetail -->
+
+<!-- ══════════ TAB: DELIVERABLES ══════════ -->
+<div class="tab-page" id="page-deliverables">
+
+  <div class="sec-card">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">📋</div>TC Deliverables & Milestones — Quarterly Roadmap<span class="sec-badge">4 Quarters · 61 Initiatives</span></div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div style="font-size:9px;color:#4a6070;padding:6px 8px;background:var(--bg);border-radius:4px;margin-bottom:10px">
+        Quarterly milestones for the Transformation Case. Each deliverable maps to specific initiatives and accountable owners. Status should be updated monthly during TC Steering Committee reviews.
+      </div>
+
+      <!-- Q1 -->
+      <div style="margin-bottom:14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--crimson);margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="width:3px;height:12px;border-radius:1px;background:var(--crimson);display:inline-block"></span>Q1 — Apr-Jun 2026 · Foundation & Launch · 13 Initiatives Live</div>
+        <div class="del-grid" id="delQ1"></div>
+      </div>
+
+      <!-- Q2 -->
+      <div style="margin-bottom:14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="width:3px;height:12px;border-radius:1px;background:var(--gold);display:inline-block"></span>Q2 — Jul-Sep 2026 · Scale & Accelerate · 19 Initiatives Live</div>
+        <div class="del-grid" id="delQ2"></div>
+      </div>
+
+      <!-- Q3 -->
+      <div style="margin-bottom:14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="width:3px;height:12px;border-radius:1px;background:var(--green);display:inline-block"></span>Q3 — Oct-Dec 2026 · Optimize & Deliver · All 21 Initiatives Live</div>
+        <div class="del-grid" id="delQ3"></div>
+      </div>
+
+      <!-- Q4 -->
+      <div style="margin-bottom:14px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="width:3px;height:12px;border-radius:1px;background:var(--blue);display:inline-block"></span>Q4 — Jan-Mar 2027 · Sustain & Close · Full Run-Rate</div>
+        <div class="del-grid" id="delQ4"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Update Guide -->
+  <div class="sec-card collapsed">
+    <div class="sec-hdr" onclick="toggle(this)">
+      <div class="sec-title"><div class="sec-ico">🔄</div>How to Update This Dashboard</div>
+      <span class="toggle">▼</span>
+    </div>
+    <div class="sec-body">
+      <div class="update-note">
+        <b>Monthly update workflow:</b> Open a Cowork session with the latest Excel actuals and say <code>"Update the TC AOP dashboard"</code>. Claude will extract new numbers and regenerate this page.<br><br>
+        <b>Manual edit:</b> All data is in the <code>DATA</code> object at the bottom of this HTML file. Update the arrays for <code>monthlyEBITDA</code>, <code>revInits</code>, <code>costInits</code>, etc. and redeploy to GitHub Pages.<br><br>
+        <b>Data source:</b> Budget_AOP_FY27_TC_v2_fixed.xlsx · Sheets: Overall Summary, TC Initiatives, Initiative Impact, TC Governance & OKR, TC Perf Pay Advisory
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-deliverables -->
+
+</div><!-- /content -->
+
+<div class="footer">
+  Last updated: <b>April 2026</b> · Data: Budget_AOP_FY27_TC_v1 · Generated by Strategic Intelligence Dashboard<br>
+  <b>VPS Lakeshore Hospital</b> — Global Lifecare · Kochi, Kerala
+</div>
+
+<script>
+// ════════════════════════════════════════
+// DATA — Edit these to update the dashboard
+// ════════════════════════════════════════
+const DATA = {
+  months: ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],
+  monthlyEBITDA: [255,563,727,1236,877,1247,1390,1543,1688,1638,1524,1723],
+  monthlyRevenue: [4175,4530,4715,5213,4643,5146,4951,5127,5329,5301,5094,5511],
+  revInits: [
+    {n:'R1',name:'Annual Rate Revision Policy',cat:'Pricing & Yield',uplift:517,cost:3,net:514,from:'May',owner:'CFO + Revenue Head',kra:'Constitute pricing committee; update IP/OP rate master with CPI+2% uplift by Q1Wk6',
+     monthlyUplift:[0,43,43,43,43,43,43,43,43,43,43,43],deliverables:['Pricing committee constituted','IP/OP rate master updated','CPI+2% uplift implemented']},
+    {n:'R2',name:'Procedure Contribution Audit',cat:'Pricing & Yield',uplift:128,cost:8,net:120,from:'Jun',owner:'CFO + Finance Team',kra:'Identify top 50 procedures; billing audit sprint; repricing +₹7,500/case target',
+     monthlyUplift:[0,0,13,13,13,13,13,13,13,13,13,13],deliverables:['Top 50 procedures identified','Billing audit completed','Repricing implemented']},
+    {n:'R3',name:'Insurance Charge Capture',cat:'Pricing & Yield',uplift:149,cost:3,net:146,from:'May',owner:'Billing + IT',kra:'ICU & ward billing audit 2-week sprint; charge master update; fix 60% of systematic undercharges',
+     monthlyUplift:[0,14,14,14,14,14,14,14,14,14,14,14],deliverables:['ICU billing audit complete','Charge master updated','60% undercharges fixed']},
+    {n:'R4',name:'Satellite Clinic Network',cat:'Network Expansion',uplift:169,cost:73,net:96,from:'Jul',owner:'CEO + COO',kra:'Site selection & lease signed by Month 2; 2 satellite clinics operational by Month 4',
+     monthlyUplift:[0,0,0,19,19,19,19,19,19,19,19,19],deliverables:['Site selection completed','Lease agreements signed','2 clinics operational']},
+    {n:'R5',name:'Corporate Health Programme',cat:'Network Expansion',uplift:90,cost:35,net:55,from:'Jun',owner:'BD Head',kra:'Design corporate health packages; sign 5 corporate accounts (target: TCS, Infopark cluster)',
+     monthlyUplift:[0,0,9,9,9,9,9,9,9,9,9,9],deliverables:['Corporate health packages designed','5 accounts signed','Monthly health camps running']},
+    {n:'R6',name:'Community Camps',cat:'Network Expansion',uplift:144,cost:28,net:116,from:'Apr',owner:'Marketing + BD',kra:'Map 24 residential colonies; 12 community health events/year; 400 attendees/event target',
+     monthlyUplift:[12,12,12,12,12,12,12,12,12,12,12,12],deliverables:['24 colonies mapped','Monthly events calendar','400 attendees/event target']},
+    {n:'R7',name:'International MVT',cat:'Network Expansion',uplift:280,cost:53,net:227,from:'Aug',owner:'BD Head + HR',kra:'Hire MVT Coordinator (Gulf experience); 3 Gulf hospital tie-ups signed; 35 cases/year target',
+     monthlyUplift:[0,0,0,0,35,35,35,35,35,35,35,35],deliverables:['MVT Coordinator hired','3 Gulf hospital tie-ups signed','35 cases/year pipeline']},
+    {n:'R8',name:'Referral Doctor Programme',cat:'Referral Dev',uplift:525,cost:47,net:478,from:'Jun',owner:'BD Head',kra:'Map 500 doctors within 50km; hire 3 Field Executives; deploy CRM; 50 A-tier doctors active Q2',
+     monthlyUplift:[0,0,53,53,53,53,53,53,53,53,53,53],deliverables:['500 doctor database mapped','3 Field Executives hired','CRM deployed','50 A-tier doctors active']},
+    {n:'R9',name:'CME & Clinical Connect',cat:'Referral Dev',uplift:135,cost:99,net:36,from:'Jun',owner:'CMO + BD Head',kra:'Doctor database 500+; run 12 CMEs/year; 200 GP referrals generated',
+     monthlyUplift:[0,0,14,14,14,14,14,14,14,14,14,14],deliverables:['Doctor database 500+','12 CMEs scheduled','200 GP referrals generated']},
+    {n:'R10',name:'Govt Scheme Empanelment',cat:'Referral Dev',uplift:75,cost:10,net:65,from:'May',owner:'CEO + CFO',kra:'Audit current PMJAY/KASP empanelment; file applications for 2 new scheme panels by Q1',
+     monthlyUplift:[0,7,7,7,7,7,7,7,7,7,7,7],deliverables:['PMJAY/KASP audit complete','2 new scheme applications filed','Empanelment confirmed']},
+    {n:'R11',name:'Transplant Centre Volume',cat:'Specialty',uplift:377,cost:43,net:334,from:'Aug',owner:'Medical Director',kra:'Hire 2 transplant coordinators Q1; MDT structure live; 15 transplants/year target',
+     monthlyUplift:[0,0,0,0,47,47,47,47,47,47,47,47],deliverables:['2 transplant coordinators hired','MDT structure live','15 transplants/year target']},
+    {n:'R12',name:'Cardiac Sciences Volume',cat:'Specialty',uplift:400,cost:25,net:375,from:'Jul',owner:'Medical Director',kra:'Negotiate device proctoring partnership; add 2 interventional cardiologists; cath lab +15%',
+     monthlyUplift:[0,0,0,44,44,44,44,44,44,44,44,44],deliverables:['Device proctoring partnership','2 interventional cardiologists added','Cath lab +15% volume']},
+    {n:'R13',name:'Oncology Satellites',cat:'Specialty',uplift:224,cost:75,net:149,from:'Aug',owner:'Medical Director + BD',kra:'MDT structure for surgical oncology; satellite oncology clinics; 30% volume uplift target',
+     monthlyUplift:[0,0,0,0,28,28,28,28,28,28,28,28],deliverables:['Oncology MDT structure live','Satellite clinics operational','30% volume uplift']},
+    {n:'R14',name:'Orthopaedics & JR',cat:'Specialty',uplift:174,cost:23,net:151,from:'Jun',owner:'Medical Director',kra:'Hire sports medicine physiotherapist; joint replacement volume drive; Ortho OPD +20%',
+     monthlyUplift:[0,0,17,17,17,17,17,17,17,17,17,17],deliverables:['Sports medicine PT hired','JR volume drive launched','Ortho OPD +20%']},
+    {n:'R15',name:'Lakeshore Heart Run',cat:'Community',uplift:57,cost:6,net:51,from:'Aug',owner:'Marketing',kra:'Finalise event date & concept; target 2,000 participants; ₹51L net from ₹6L investment',
+     monthlyUplift:[0,0,0,0,7,7,7,7,7,7,7,7],deliverables:['Event date & concept finalised','2,000 participant registrations','₹51L net revenue achieved']},
+    {n:'R16',name:'Digital Content Platform',cat:'Community',uplift:66,cost:23,net:43,from:'May',owner:'Marketing + IT',kra:'Hire 2 content creators; 8 videos/month; 500+ YouTube subscribers by Q2',
+     monthlyUplift:[0,6,6,6,6,6,6,6,6,6,6,6],deliverables:['2 content creators hired','8 videos/month pipeline','500+ YouTube subscribers']},
+    {n:'R17',name:'Community Health Camps',cat:'Community',uplift:144,cost:28,net:116,from:'Apr',owner:'BD + Marketing',kra:'Map schools, temples, residential colonies; monthly camps; 400 attendees/event target',
+     monthlyUplift:[12,12,12,12,12,12,12,12,12,12,12,12],deliverables:['Camp locations mapped','Monthly camps running','400 attendees/event target']},
+    {n:'R18',name:'Doctor Digital Reputation',cat:'Community',uplift:90,cost:12,net:78,from:'May',owner:'Marketing + IT',kra:'Audit 35 consultant profiles; claim Google listings; target 4.5 star avg rating',
+     monthlyUplift:[0,8,8,8,8,8,8,8,8,8,8,8],deliverables:['35 consultant profiles audited','Google listings claimed','4.5 star avg rating target']},
+    {n:'R19',name:'TPA Tariff Renegotiation',cat:'Financial',uplift:207,cost:19,net:188,from:'Jul',owner:'CFO',kra:'Compile insurer-wise tariff data; renegotiate 3 TPA tariffs by Month 4; target 5% uplift',
+     monthlyUplift:[0,0,0,23,23,23,23,23,23,23,23,23],deliverables:['Insurer-wise tariff data compiled','3 TPA tariffs renegotiated','5% uplift achieved']},
+    {n:'R20',name:'Financial Counselling & Pre-Auth',cat:'Financial',uplift:150,cost:20,net:130,from:'Jun',owner:'CFO + Billing Head',kra:'Analyse surgical cancellation data; financial counselling protocol live; reduce cancellations 30%',
+     monthlyUplift:[0,0,15,15,15,15,15,15,15,15,15,15],deliverables:['Cancellation data analysed','Financial counselling protocol live','30% cancellation reduction']},
+    {n:'R21',name:'Build Scaled BD Organisation',cat:'BD Org',uplift:331,cost:102,net:229,from:'Jun',owner:'CEO + HR',kra:'Hire 6 BD FTEs Q1; CRM deployment; monthly BD dashboard live; 50 A-tier doctor visits/FE/quarter',
+     monthlyUplift:[0,0,33,33,33,33,33,33,33,33,33,33],deliverables:['6 BD FTEs hired','CRM deployed & live','Monthly BD dashboard operational','50 A-tier visits/FE/quarter']}
+  ],
+  costInits: [
+    {n:'C1',name:'Generic & Formulary Substitution',pl:'Consumption',save:168,from:'May',owner:'Head, Operations + Pharmacy',kra:'Generic formulary list approved by CMO; 30% of high-cost branded drugs switched',
+     monthlySave:[0,15,15,15,15,15,15,15,15,15,15,15],deliverables:['Generic formulary list approved','30% branded drugs switched','Monthly savings tracked']},
+    {n:'C2',name:'Manufacturer Rate Renegotiation',pl:'Consumption',save:130,from:'Jun',owner:'CFO + Head, Operations',kra:'Identify top 20 drug manufacturers; renegotiate rates; target 5% reduction on ₹2,600L spend',
+     monthlySave:[0,0,13,13,13,13,13,13,13,13,13,13],deliverables:['Top 20 manufacturers identified','Rates renegotiated','5% reduction achieved']},
+    {n:'C3',name:'Distributor Consolidation',pl:'Consumption',save:37,from:'Jun',owner:'CFO + Head, Operations',kra:'Consolidate to 3 primary distributors; negotiate volume rebates',
+     monthlySave:[0,0,4,4,4,4,4,4,4,4,4,4],deliverables:['Consolidated to 3 distributors','Volume rebates negotiated']},
+    {n:'C4',name:'Competitive Tendering',pl:'Consumption',save:96,from:'Aug',owner:'CFO + Head, Operations',kra:'Issue tenders for high-spend categories; target 3-5% savings',
+     monthlySave:[0,0,0,0,12,12,12,12,12,12,12,12],deliverables:['Tenders issued','3-5% savings achieved']},
+    {n:'C5',name:'BOQ Standardisation',pl:'Consumption',save:58,from:'Oct',owner:'Head, Operations + Pharmacy',kra:'Standardise surgical packs for top 10 OT procedures',
+     monthlySave:[0,0,0,0,0,0,10,10,10,10,10,10],deliverables:['Top 10 OT procedures standardised','BOQ packs implemented']},
+    {n:'C6',name:'Pharmacy Inventory Mgmt',pl:'Consumption',save:70,from:'Jun',owner:'Head, Operations + CIO',kra:'Implement inventory expiry tracking; reduce expiry wastage target',
+     monthlySave:[0,0,7,7,7,7,7,7,7,7,7,7],deliverables:['Expiry tracking implemented','Wastage reduced']},
+    {n:'C7',name:'Linen & Laundry Optimisation',pl:'HK & Security',save:15,from:'Jun',owner:'Head, Operations',kra:'Linen & laundry contract rebid; in-house vs outsource analysis',
+     monthlySave:[0,0,2,2,2,2,2,2,2,2,2,2],deliverables:['Contract rebid complete','In-house vs outsource decision made']},
+    {n:'C8',name:'AMC Renegotiation',pl:'R&M',save:30,from:'Aug',owner:'Head, Operations + BME',kra:'AMC renegotiation for top 20 equipment; group deal with OEMs',
+     monthlySave:[0,0,0,0,4,4,4,4,4,4,4,4],deliverables:['Top 20 AMCs renegotiated','Group deal with OEMs']},
+    {n:'C9',name:'Nursing Rationalisation',pl:'Employee Cost',save:111,from:'Oct',owner:'Head, HR + CNO',kra:'Map agency nurses vs permanent; convert 40 agency to permanent rolls',
+     monthlySave:[0,0,0,0,0,0,19,19,19,19,19,19],deliverables:['Agency vs permanent mapping','40 nurses converted','Monthly cost tracking']},
+    {n:'C10',name:'Pharmacy Staff Post-Automation',pl:'Employee Cost',save:28,from:'Oct',owner:'Head, HR + CIO',kra:'Post pharmacy automation, redeploy 3-4 staff',
+     monthlySave:[0,0,0,0,0,0,5,5,5,5,5,5],deliverables:['Automation live','3-4 staff redeployed']},
+    {n:'C11',name:'Ward Secretary Post-EMR',pl:'Employee Cost',save:20,from:'Jan',owner:'Head, HR + CIO',kra:'Ward secretaries redeployed post-EMR rollout',
+     monthlySave:[0,0,0,0,0,0,0,0,0,7,7,7],deliverables:['EMR rollout complete','Ward secretaries redeployed']},
+    {n:'C12',name:'Lab Staffing Rationalisation',pl:'Employee Cost',save:55,from:'Oct',owner:'Head, HR + HOD Lab',kra:'Lab workflow redesign; rationalise 5-6 positions',
+     monthlySave:[0,0,0,0,0,0,9,9,9,9,9,9],deliverables:['Lab workflow redesigned','5-6 positions rationalised']},
+    {n:'C13',name:'OT & Agency Reduction',pl:'Employee Cost',save:25,from:'Jun',owner:'Head, HR + CNO',kra:'Reduce OT overtime + agency usage; shift optimisation',
+     monthlySave:[0,0,3,3,3,3,3,3,3,3,3,3],deliverables:['Shift optimisation complete','OT overtime reduced']},
+    {n:'C14',name:'HK & Security Contract Rebid',pl:'HK & Security',save:40,from:'Oct',owner:'Head, Operations + CFO',kra:'HK & security contract rebid; market test',
+     monthlySave:[0,0,0,0,0,0,7,7,7,7,7,7],deliverables:['Market test completed','Contracts rebid']},
+    {n:'C15',name:'Energy Management',pl:'Utilities',save:58,from:'May',owner:'Head, Operations + CIO',kra:'HVAC BMS audit; inverter HVAC for non-critical zones; solar proposal',
+     monthlySave:[0,5,5,5,5,5,5,5,5,5,5,5],deliverables:['BMS audit complete','Inverter HVAC installed','Solar proposal submitted']},
+    {n:'C16',name:'F&B Cost Rationalisation',pl:'Consumption',save:20,from:'Jul',owner:'Head, Operations (F&B)',kra:'F&B menu rationalisation; local supplier contracts',
+     monthlySave:[0,0,0,2,2,2,2,2,2,2,2,2],deliverables:['Menu rationalised','Local supplier contracts signed']},
+    {n:'C17',name:'TPA Claim Denial Reduction',pl:'Bad Debts',save:80,from:'Aug',owner:'CFO + Billing Head',kra:'TPA denial root-cause analysis; appeal process for top 5 deniers',
+     monthlySave:[0,0,0,0,10,10,10,10,10,10,10,10],deliverables:['Root-cause analysis complete','Appeal process for top 5 deniers','Monthly denial tracking']},
+    {n:'C18',name:'Billing Leakage Reduction',pl:'Bad Debts',save:30,from:'May',owner:'CFO + Billing Head',kra:'Billing audit; unbilled items SOP',
+     monthlySave:[0,3,3,3,3,3,3,3,3,3,3,3],deliverables:['Billing audit completed','Unbilled items SOP implemented']},
+    {n:'C19',name:'Working Capital Extension',pl:'Finance Cost',save:44,from:'Aug',owner:'CFO',kra:'Extend creditor days from 30 to 45 days with top 10 suppliers',
+     monthlySave:[0,0,0,0,6,6,6,6,6,6,6,6],deliverables:['Top 10 suppliers identified','Creditor days extended 30→45']},
+    {n:'C20',name:'Admin Cost Rationalisation',pl:'Professional Fee',save:20,from:'May',owner:'CFO + Head, HR',kra:'Admin cost review; consolidate vendor contracts',
+     monthlySave:[0,2,2,2,2,2,2,2,2,2,2,2],deliverables:['Admin cost review complete','Vendor contracts consolidated']}
+  ],
+  roles: [
+    {title:'CEO, VPS LHRC',reports:'Group CEO',obj:'Deliver ₹19,667L EBITDA at 31.8% margin by executing the Transformation Case across all 41 initiatives',krs:['Total revenue ₹61,932L (+7.7% vs UC)','EBITDA ₹19,667L (31.8%)','All 41 initiatives launched Q1 with named owners','Monthly TC vs AOP scorecard reviewed at Steering Ctte'],owns:'R1 Rate Revision · R6 Community Camps · R17 Community Health Camps · All 41 initiatives: CEO is accountable for every initiative',initCount:41},
+    {title:'Medical Director',reports:'CEO',obj:'Scale high-acuity clinical service lines (Transplant, Cardiac, Oncology, Orthopaedics) to deliver ₹1,175L+ conservative revenue uplift',krs:['Transplant — MDT live Q1, 15/yr by Q3','Cardiac — Cath lab +15%, 2 cardiologists','Oncology MDT + satellites by Q2','Ortho JR volume target met from Month 5'],owns:'R11 Transplant · R12 Cardiac · R13 Oncology · R14 Ortho',initCount:4},
+    {title:'Medical Superintendent',reports:'CEO (functional: Medical Director)',obj:'Ensure clinical operations deliver capacity and quality to absorb revenue growth while maintaining NABH compliance',krs:['Bed occupancy supports TC IP targets','NABH maintained through transition','Nursing ratios maintained post agency conversion','Surgical cancellation rate reduced 30%'],owns:'R20 Financial Counselling · Clinical capacity planning · NABH compliance',initCount:2},
+    {title:'CFO',reports:'CEO (functional: Group CFO)',obj:'Own the P&L: drive ₹1,135L cost savings across procurement, staffing & finance while managing revenue cycle to hold bad debt to ₹1,054L',krs:['Consumption % from 30.1% → ≤27% by Q4','Top 20 manufacturer rates renegotiated Month 2','Competitive tender complete Month 3','Bad debt ≤ ₹1,054L','Creditor days 30→45','3 TPA tariffs renegotiated Q2'],owns:'C1-C6 Procurement · C17-C20 Revenue cycle · R1 Rate Revision · R10 Govt Schemes · R19 TPA Tariffs',initCount:12},
+    {title:'Head, HR',reports:'CEO (functional: Group HR)',obj:'Staff the interim org for Day 1, execute nursing rationalisation without disruption, build the people infrastructure the TC depends on',krs:['All interim roles confirmed by May 2026','40 agency nurses converted Month 3','TC owner training complete April','OT premium reduced Q2','Head BD hired'],owns:'C9 Nursing · C13 OT & Agency · C20 Admin Cost · All X-1 hiring',initCount:5},
+    {title:'CIO',reports:'CEO',obj:'Deliver the technology infrastructure that enables revenue capture, cost savings, and operational intelligence for the TC',krs:['EMR/CIS go-live enabling staffing rationalisation Q3','CRM deployed for BD team Q1','BMS energy management audit complete Q1','Pharmacy automation enabling staff redeployment Q3'],owns:'P3 EMR Go-Live · C10 Pharmacy Staff · C11 Ward Secretary · C15 Energy (BMS)',initCount:4},
+    {title:'Head, Operations',reports:'CEO',obj:'Run hospital operations at the quality and cost levels the TC demands — procurement, facilities, catering, housekeeping, security',krs:['Generic formulary approved by CMO','Distributor consolidation complete','HK & security contracts rebid','Linen & laundry optimised','AMC renegotiated'],owns:'C1-C6 Procurement · C7 Linen · C8 AMC · C14 HK/Security · C15 Energy · C16 F&B',initCount:10},
+    {title:'Head, Business Development',reports:'CEO',obj:'Build and run the BD machine that delivers referral revenue, corporate accounts, international patients, and community engagement',krs:['500 doctor database mapped','50 A-tier doctors active Q2','5 corporate accounts signed','3 Gulf hospital tie-ups','6 BD FTEs hired Q1'],owns:'R5 Corporate Health · R7 International MVT · R8 Referral Doctor · R9 CME · R21 BD Org',initCount:5}
+  ],
+  dtCosts: [
+    {name:'Consumption',uc:15525,tc:14946,var:-579,tcM:[1050.1,1135.8,1182.9,1307.4,1162.6,1288.2,1238.8,1280.7,1331.7,1322.6,1269.9,1375.3],ucM:[1090.8,1179.8,1228.8,1358.0,1207.7,1338.1,1286.8,1330.3,1383.3,1373.8,1319.1,1428.6],inits:'C1-C6, C16',notes:'TC = UC minus ₹579L procurement savings from initiatives C1-C6 + C16, distributed proportionally to monthly profile'},
+    {name:'Doctor Cost',uc:9864,tc:9864,var:0,tcM:[822,822,822,822,822,822,822,822,822,822,822,822],ucM:[822,822,822,822,822,822,822,822,822,822,822,822],inits:'—',notes:'Flat ₹822L/month. Kochi doctors only. Professional fee component in separate line.'},
+    {name:'Employee Cost',uc:9610,tc:9610,var:0,tcM:[800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8],ucM:[800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8],inits:'C9, C10, C11, C12, C13',notes:'Flat ₹800.8L/month. Rationalisation savings from C9-C13 offset by new hires for TC initiatives.'},
+    {name:'Marketing',uc:4025,tc:4025,var:0,tcM:[494.9,470.9,455.4,396.4,380.9,365.3,243.5,243.5,243.5,243.5,243.5,243.5],ucM:[335.4,335.4,335.4,335.4,335.4,335.4,335.4,335.4,335.4,335.4,335.4,335.4],inits:'R6, R15-R18',notes:'TC front-loads initiative cost-to-execute (₹372L) in Apr-Aug; remaining brand budget H1:60%/H2:40%. UC is flat ₹335L/month.'},
+    {name:'Repair & Maint',uc:1621.7,tc:1611.7,var:-10,tcM:[135.1,135.1,135.1,135.1,133.9,133.9,133.9,133.9,133.9,133.9,133.9,133.9],ucM:[135.1,135.1,135.1,135.1,135.1,135.1,135.1,135.1,135.1,135.1,135.1,135.1],inits:'C8',notes:'AMC renegotiation saves ₹10L from Aug onwards'},
+    {name:'Housekeeping',uc:1054.8,tc:1039.8,var:-15,tcM:[87.9,87.9,87.1,87.1,87.1,87.1,85.9,85.9,85.9,85.9,85.9,85.9],ucM:[87.9,87.9,87.9,87.9,87.9,87.9,87.9,87.9,87.9,87.9,87.9,87.9],inits:'C7, C14',notes:'Linen/laundry optimisation + HK contract rebid from Oct'},
+    {name:'Bad Debts',uc:1000,tc:1000,var:0,tcM:[166.7,166.7,166.7,166.7,166.7,166.7,0,0,0,0,0,0],ucM:[166.7,166.7,166.7,166.7,166.7,166.7,0,0,0,0,0,0],inits:'C17, C18',notes:'₹1,000L provision front-loaded Apr-Sep (₹167L/month). TPA denial reduction + billing leakage initiatives improve recovery H2.'},
+    {name:'Utilities',uc:992.5,tc:967.5,var:-25,tcM:[82.7,80.4,80.4,80.4,80.4,80.4,80.4,80.4,80.4,80.4,80.4,80.4],ucM:[82.7,82.7,82.7,82.7,82.7,82.7,82.7,82.7,82.7,82.7,82.7,82.7],inits:'C15',notes:'Energy management BMS audit saves ₹25L from May onwards'},
+    {name:'Prof Fee',uc:500,tc:492,var:-8,tcM:[119.6,116.4,120.4,20.5,18.0,18.0,18.2,15.7,13.7,12.2,9.7,9.7],ucM:[41.7,41.7,41.7,41.7,41.7,41.7,41.7,41.7,41.7,41.7,41.7,41.7],inits:'C20',notes:'TC front-loads Big4 advisory fees Q1 (₹120L/month) then drops sharply. UC is flat ₹42L/month.'},
+    {name:'Lab Test',uc:325,tc:325,var:0,tcM:[25.3,25.7,26.5,27.0,27.6,27.6,27.6,27.6,27.6,27.6,27.6,27.6],ucM:[27.1,27.1,27.1,27.1,27.1,27.1,27.1,27.1,27.1,27.1,27.1,27.1],inits:'—',notes:'Lab test outsourcing costs. Ramp up in Q1 as volumes grow.'},
+    {name:'Security',uc:300,tc:295,var:-5,tcM:[25.0,25.0,25.0,25.0,25.0,25.0,24.2,24.2,24.2,24.2,24.2,24.2],ucM:[25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0,25.0],inits:'C14',notes:'Security contract rebid from Oct saves ₹5L'},
+    {name:'Rent Paid',uc:203,tc:203,var:0,tcM:[16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9],ucM:[16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9,16.9],inits:'—',notes:'Flat ₹16.9L/month. No variance between UC and TC.'},
+    {name:'Print & Stationery',uc:34.4,tc:30,var:-4.4,tcM:[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5],ucM:[2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9],inits:'—',notes:'EMR rollout reduces printing costs'},
+    {name:'CSR',uc:127.8,tc:127.8,var:0,tcM:[9.0,9.0,9.0,9.0,9.0,9.0,9.0,9.0,9.0,15.6,15.6,15.6],ucM:[10.7,10.7,10.7,10.7,10.7,10.7,10.7,10.7,10.7,10.7,10.7,10.7],inits:'—',notes:'CSR stepped up in Q4 (Jan-Mar). Flat in UC.'},
+    {name:'Travel Cost',uc:126,tc:126,var:0,tcM:[10.0,10.0,13.5,13.5,13.5,15.1,8.4,8.4,8.4,8.4,8.4,8.4],ucM:[12.6,12.6,12.6,12.6,12.6,12.6,8.4,8.4,8.4,8.4,8.4,8.4],inits:'—',notes:'TC front-loads travel for BD team ramp in Q1-Q2'},
+    {name:'Misc Exp',uc:100,tc:100,var:0,tcM:[9.2,9.2,9.2,9.2,9.2,9.2,7.5,7.5,7.5,7.5,7.5,7.5],ucM:[8.0,8.4,8.8,8.0,8.5,8.3,8.1,9.0,8.3,8.1,8.4,8.3],inits:'—',notes:'Miscellaneous expenses. TC slightly front-loaded then drops H2.'},
+    {name:'Insurance',uc:56.1,tc:56.1,var:0,tcM:[4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7],ucM:[4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7,4.7],inits:'—',notes:'Flat ₹4.7L/month. No variance.'},
+    {name:'Rates & Taxes',uc:55.4,tc:55.4,var:0,tcM:[3.5,3.5,3.5,3.5,3.5,10.0,3.5,3.5,3.5,3.5,3.5,10.0],ucM:[4.6,4.6,4.6,4.6,4.6,4.6,4.6,4.6,4.6,4.6,4.6,4.6],inits:'—',notes:'Semi-annual payment spikes in Sep and Mar (TC). UC is flat.'},
+    {name:'Quality',uc:40,tc:40,var:0,tcM:[13.8,5.8,7.2,1.9,0.9,0.9,3.9,0.9,0.9,1.9,0.9,0.9],ucM:[3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3,3.3],inits:'—',notes:'NABH accreditation front-loaded in Apr + Jun. UC is flat.'},
+    {name:'Commn Costs',uc:33.5,tc:33.5,var:0,tcM:[2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8],ucM:[2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8,2.8],inits:'—',notes:'Communication costs. Flat. No variance.'},
+    {name:'HR Budget (Detail)',uc:9610,tc:9610,var:0,tcM:[800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8],ucM:[800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8],inits:'—',notes:'Detailed HR budget breakdown — salary, allowances, new hires, DNB trainees. Maps to Employee Cost.'},
+    {name:'HR Reconciliation',uc:9610,tc:9610,var:0,tcM:[800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8],ucM:[800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8,800.8],inits:'—',notes:'Reconciliation between HR Budget file and DT workbook. ₹0.03L difference — immaterial.'}
+  ],
+  deliverables: {
+    q1: [
+      {title:'Pricing Committee & Rate Revision',desc:'Constitute pricing committee, update IP/OP rate master with CPI+2% uplift across all service lines',owner:'CFO + Revenue Head',inits:'R1, R2, R3',status:'pending'},
+      {title:'BD Organisation Stood Up',desc:'Hire 6 BD FTEs, deploy CRM, map 500 doctor database within 50km radius. Monthly BD dashboard live.',owner:'CEO + HR + BD Head',inits:'R8, R9, R21',status:'pending'},
+      {title:'Community & Corporate Launch',desc:'Map 24 residential colonies, launch monthly health camps (400 attendees target), sign 5 corporate accounts',owner:'Marketing + BD',inits:'R5, R6, R17',status:'pending'},
+      {title:'Procurement Quick Wins',desc:'Generic formulary approved, top 20 manufacturer rates renegotiated, distributor consolidation to 3 primary',owner:'CFO + Head Ops',inits:'C1, C2, C3, C6',status:'pending'},
+      {title:'Energy & Billing Audits',desc:'BMS HVAC audit complete, billing leakage SOP live, digital content creators hired (8 videos/month)',owner:'CIO + CFO',inits:'C15, C18, R16',status:'pending'},
+      {title:'Clinical Service Line Prep',desc:'Transplant coordinators hired, cardiac device proctoring negotiated, ortho physio hired, oncology MDT design',owner:'Medical Director',inits:'R11, R12, R13, R14',status:'pending'},
+      {title:'Govt & Insurance',desc:'PMJAY/KASP empanelment audit complete, 2 new scheme applications filed, insurer-wise tariff data compiled',owner:'CEO + CFO',inits:'R10, R19',status:'pending'},
+      {title:'TC Governance Structure',desc:'All 41 initiative owners named and trained, monthly TC Steering Committee cadence established',owner:'CEO',inits:'All',status:'pending'}
+    ],
+    q2: [
+      {title:'Satellite Clinics Operational',desc:'2 satellite clinics operational with referral pathway to main hospital. Monthly patient volume tracking.',owner:'CEO + COO',inits:'R4',status:'pending'},
+      {title:'International MVT Launch',desc:'MVT Coordinator hired (Gulf experience), 3 Gulf hospital tie-ups signed, 35 cases/year pipeline built',owner:'BD Head + HR',inits:'R7',status:'pending'},
+      {title:'TPA Tariff Renegotiation',desc:'3 TPA tariffs renegotiated with 5% uplift target. Financial counselling protocol reducing cancellations 30%.',owner:'CFO',inits:'R19, R20',status:'pending'},
+      {title:'Competitive Tendering',desc:'Tenders issued for all high-spend categories, 3-5% savings locked in. AMC renegotiation for top 20 equipment.',owner:'CFO + Head Ops',inits:'C4, C8',status:'pending'},
+      {title:'Cardiac & Transplant Go-Live',desc:'Cath lab +15% volume, 2 interventional cardiologists active. Transplant MDT operational, first cases.',owner:'Medical Director',inits:'R11, R12',status:'pending'},
+      {title:'TPA Denial Reduction',desc:'Root-cause analysis complete for top 5 deniers. Appeal process live. Working capital extended to 45 days.',owner:'CFO + Billing',inits:'C17, C19',status:'pending'},
+      {title:'Lakeshore Heart Run',desc:'Event executed with 2,000+ participants. Net revenue ₹51L from ₹6L investment.',owner:'Marketing',inits:'R15',status:'pending'}
+    ],
+    q3: [
+      {title:'Nursing Rationalisation',desc:'40 agency nurses converted to permanent rolls. OT overtime reduced. Shift optimisation complete.',owner:'Head HR + CNO',inits:'C9, C13',status:'pending'},
+      {title:'EMR Go-Live & Staff Redeployment',desc:'EMR/CIS live enabling pharmacy automation (3-4 staff redeployed), lab workflow redesign (5-6 positions).',owner:'CIO + HR',inits:'C10, C11, C12',status:'pending'},
+      {title:'BOQ Standardisation',desc:'Surgical packs standardised for top 10 OT procedures. HK & security contracts rebid.',owner:'Head Ops',inits:'C5, C14',status:'pending'},
+      {title:'Oncology Satellites Live',desc:'Satellite oncology clinics operational with 30% volume uplift. Surgical oncology MDT running.',owner:'Medical Director + BD',inits:'R13',status:'pending'},
+      {title:'All 21 Revenue Initiatives Live',desc:'All revenue initiatives at full run-rate. Monthly uplift tracking against ₹4,432L target.',owner:'CEO',inits:'R1-R21',status:'pending'}
+    ],
+    q4: [
+      {title:'Full Run-Rate Achievement',desc:'All 41 initiatives at steady state. Monthly EBITDA tracking against ₹14,283L target. Variance analysis.',owner:'CEO + CFO',inits:'All',status:'pending'},
+      {title:'Ward Secretary Redeployment',desc:'Post-EMR ward secretaries redeployed. Full cost savings from employee rationalisation realised.',owner:'HR + CIO',inits:'C11',status:'pending'},
+      {title:'Annual Performance Review',desc:'Tier 3 EBITDA gate assessment (≥₹13,000L). Annual awards if gate met. Full-year TC vs AOP scorecard.',owner:'CEO',inits:'All',status:'pending'},
+      {title:'FY28 AOP Preparation',desc:'TC learnings incorporated into FY28 AOP. Successful initiatives locked into base case. New initiatives identified.',owner:'CEO + CFO',inits:'N/A',status:'pending'}
+    ]
+  }
+};
+
+// ════════════════════════════════════════
+// TAB NAVIGATION
+// ════════════════════════════════════════
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('on'));
+  document.querySelector(`.tab-btn[data-tab="${tabId}"]`).classList.add('on');
+  document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tabId).classList.add('active');
+  // Re-render chart if switching to overview (Chart.js sizing)
+  if (tabId === 'overview' && window._monthlyChart) {
+    window._monthlyChart.resize();
+  }
+}
+
+// ════════════════════════════════════════
+// SECTION TOGGLE
+// ════════════════════════════════════════
+function toggle(el) { el.closest('.sec-card').classList.toggle('collapsed'); }
+
+// ════════════════════════════════════════
+// INITIATIVE DRILL-DOWN MODAL
+// ════════════════════════════════════════
+function openInitModal(item, type) {
+  const modal = document.getElementById('initModal');
+  const title = document.getElementById('modalTitle');
+  const body = document.getElementById('modalBody');
+
+  const isRev = type === 'rev';
+  const color = isRev ? 'var(--blue)' : 'var(--green)';
+  const grossVal = isRev ? item.uplift : item.save;
+  const costVal = isRev ? item.cost : 0;
+  const netVal = isRev ? item.net : item.save;
+  const monthly = isRev ? item.monthlyUplift : item.monthlySave;
+  const maxMonthly = Math.max(...monthly);
+  const startIdx = DATA.months.indexOf(item.from.substring(0, 3));
+  const activeMonths = 12 - startIdx;
+
+  title.innerHTML = `<span style="font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 6px;border-radius:3px;background:${isRev?'rgba(0,114,188,.1)':'rgba(26,138,90,.1)'};color:${color}">${item.n}</span> ${item.name}`;
+
+  let html = '';
+
+  // ── Sankey Flow Diagram (SVG) ──
+  html += `<div class="modal-section">
+    <div class="modal-section-title" style="--color:${color}">Financial Flow</div>
+    <svg viewBox="0 0 700 ${isRev ? 160 : 120}" style="width:100%;height:auto;font-family:'Inter',sans-serif" xmlns="http://www.w3.org/2000/svg">`;
+
+  if (isRev) {
+    // Revenue flow: Gross Uplift → split into Cost to Execute + Net Impact → P&L Line → EBITDA
+    const grossW = 120, costW = 100, netW = 110, plW = 110, ebitdaW = 90;
+    // Nodes
+    html += `
+      <rect x="0" y="30" width="${grossW}" height="60" rx="6" fill="rgba(0,114,188,.08)" stroke="rgba(0,114,188,.3)" stroke-width="1.5"/>
+      <text x="${grossW/2}" y="52" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">Gross Uplift</text>
+      <text x="${grossW/2}" y="72" text-anchor="middle" font-size="16" fill="#0072BC" font-weight="700" font-family="'JetBrains Mono',monospace">₹${item.uplift}L</text>
+
+      <rect x="170" y="0" width="${costW}" height="50" rx="6" fill="rgba(200,16,62,.08)" stroke="rgba(200,16,62,.3)" stroke-width="1.5"/>
+      <text x="${170+costW/2}" y="20" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">Cost to Execute</text>
+      <text x="${170+costW/2}" y="38" text-anchor="middle" font-size="14" fill="#C8103E" font-weight="700" font-family="'JetBrains Mono',monospace">−₹${item.cost}L</text>
+
+      <rect x="170" y="70" width="${costW}" height="50" rx="6" fill="rgba(26,138,90,.08)" stroke="rgba(26,138,90,.3)" stroke-width="1.5"/>
+      <text x="${170+costW/2}" y="90" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">Net Impact</text>
+      <text x="${170+costW/2}" y="108" text-anchor="middle" font-size="14" fill="#1a8a5a" font-weight="700" font-family="'JetBrains Mono',monospace">₹${item.net}L</text>
+
+      <rect x="330" y="55" width="${plW}" height="50" rx="6" fill="rgba(184,120,0,.08)" stroke="rgba(184,120,0,.3)" stroke-width="1.5"/>
+      <text x="${330+plW/2}" y="75" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">P&L: ${item.cat}</text>
+      <text x="${330+plW/2}" y="93" text-anchor="middle" font-size="12" fill="#b87800" font-weight="600" font-family="'JetBrains Mono',monospace">₹${item.net}L/yr</text>
+
+      <rect x="500" y="55" width="${ebitdaW}" height="50" rx="6" fill="rgba(0,114,188,.12)" stroke="rgba(0,114,188,.4)" stroke-width="1.5"/>
+      <text x="${500+ebitdaW/2}" y="72" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">EBITDA</text>
+      <text x="${500+ebitdaW/2}" y="92" text-anchor="middle" font-size="14" fill="#0072BC" font-weight="700" font-family="'JetBrains Mono',monospace">+₹${item.net}L</text>`;
+
+    // Arrows
+    const arrowColor = 'rgba(0,114,188,.25)';
+    const costColor = 'rgba(200,16,62,.2)';
+    const netColor = 'rgba(26,138,90,.25)';
+    html += `
+      <path d="M${grossW},45 Q${grossW+20},25 170,25" stroke="${costColor}" stroke-width="${Math.max(2,item.cost/grossVal*20)}" fill="none" marker-end="url(#arrowRed)"/>
+      <path d="M${grossW},75 Q${grossW+20},95 170,95" stroke="${netColor}" stroke-width="${Math.max(3,item.net/grossVal*20)}" fill="none" marker-end="url(#arrowGrn)"/>
+      <path d="M270,95 L330,80" stroke="${netColor}" stroke-width="${Math.max(3,item.net/grossVal*20)}" fill="none" marker-end="url(#arrowGrn)"/>
+      <path d="M440,80 L500,80" stroke="${arrowColor}" stroke-width="4" fill="none" marker-end="url(#arrowBlu)"/>
+
+      <defs>
+        <marker id="arrowRed" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(200,16,62,.5)"/></marker>
+        <marker id="arrowGrn" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(26,138,90,.5)"/></marker>
+        <marker id="arrowBlu" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(0,114,188,.5)"/></marker>
+      </defs>`;
+
+    // Percentage labels on arrows
+    html += `
+      <text x="${grossW+35}" y="18" font-size="7" fill="#C8103E" font-family="'JetBrains Mono',monospace">${Math.round(item.cost/item.uplift*100)}%</text>
+      <text x="${grossW+35}" y="108" font-size="7" fill="#1a8a5a" font-family="'JetBrains Mono',monospace">${Math.round(item.net/item.uplift*100)}%</text>`;
+  } else {
+    // Cost saving flow: Current Spend → Saving → Net P&L Line → EBITDA
+    html += `
+      <rect x="0" y="25" width="130" height="55" rx="6" fill="rgba(200,16,62,.06)" stroke="rgba(200,16,62,.2)" stroke-width="1.5"/>
+      <text x="65" y="45" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">P&L: ${item.pl}</text>
+      <text x="65" y="65" text-anchor="middle" font-size="12" fill="#C8103E" font-weight="600" font-family="'JetBrains Mono',monospace">Current Cost</text>
+
+      <rect x="190" y="25" width="130" height="55" rx="6" fill="rgba(26,138,90,.08)" stroke="rgba(26,138,90,.3)" stroke-width="1.5"/>
+      <text x="255" y="45" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">Annual Saving</text>
+      <text x="255" y="65" text-anchor="middle" font-size="16" fill="#1a8a5a" font-weight="700" font-family="'JetBrains Mono',monospace">₹${item.save}L</text>
+
+      <rect x="380" y="25" width="130" height="55" rx="6" fill="rgba(0,114,188,.12)" stroke="rgba(0,114,188,.4)" stroke-width="1.5"/>
+      <text x="445" y="45" text-anchor="middle" font-size="9" fill="#5a7a8a" font-weight="500">EBITDA Impact</text>
+      <text x="445" y="65" text-anchor="middle" font-size="14" fill="#0072BC" font-weight="700" font-family="'JetBrains Mono',monospace">+₹${item.save}L</text>
+
+      <defs><marker id="arrowGrn2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="rgba(26,138,90,.5)"/></marker></defs>
+      <path d="M130,52 L190,52" stroke="rgba(26,138,90,.3)" stroke-width="4" fill="none" marker-end="url(#arrowGrn2)"/>
+      <path d="M320,52 L380,52" stroke="rgba(0,114,188,.3)" stroke-width="4" fill="none" marker-end="url(#arrowGrn2)"/>
+      <text x="152" y="47" font-size="7" fill="#1a8a5a" font-family="'JetBrains Mono',monospace">−₹${item.save}L</text>`;
+  }
+  html += `</svg></div>`;
+
+  // ── Monthly Phasing Bars ──
+  html += `<div class="modal-section">
+    <div class="modal-section-title">Monthly Phasing — ${isRev?'Revenue Uplift':'Cost Saving'} (₹L)</div>
+    <div class="month-bars">`;
+  monthly.forEach((v, i) => {
+    const h = maxMonthly > 0 ? Math.max(2, (v / maxMonthly) * 50) : 2;
+    const bgColor = v > 0 ? (isRev ? 'rgba(0,114,188,.7)' : 'rgba(26,138,90,.7)') : 'rgba(205,222,237,.3)';
+    html += `<div class="month-bar-col">
+      <div class="month-bar-val">${v > 0 ? '₹'+v+'L' : '—'}</div>
+      <div style="width:100%;height:${h}px;border-radius:2px 2px 0 0;background:${bgColor}"></div>
+      <div class="month-bar-label">${DATA.months[i]}</div>
+    </div>`;
+  });
+  html += `</div>
+    <div style="display:flex;gap:12px;margin-top:4px;font-size:8px;color:var(--muted)">
+      <span><b>Impact from:</b> ${item.from}</span>
+      <span><b>Active months:</b> ${activeMonths}</span>
+      <span><b>Avg/month:</b> ₹${Math.round(grossVal/activeMonths)}L</span>
+    </div>
+  </div>`;
+
+  // ── Key Info ──
+  html += `<div class="modal-section">
+    <div class="modal-section-title">Key Information</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:9px">
+      <div style="padding:6px 8px;background:var(--bg);border-radius:4px"><b>Owner:</b> ${item.owner}</div>
+      <div style="padding:6px 8px;background:var(--bg);border-radius:4px"><b>Category:</b> ${item.cat || item.pl}</div>
+    </div>
+    <div style="padding:6px 8px;background:var(--bg);border-radius:4px;margin-top:4px;font-size:9px;line-height:1.5"><b>KRA:</b> ${item.kra}</div>
+  </div>`;
+
+  // ── Deliverables ──
+  if (item.deliverables && item.deliverables.length) {
+    html += `<div class="modal-section">
+      <div class="modal-section-title">Deliverables & Milestones</div>
+      <div style="display:flex;flex-direction:column;gap:4px">`;
+    item.deliverables.forEach((d, i) => {
+      html += `<div style="display:flex;align-items:center;gap:6px;font-size:9px;padding:4px 8px;background:${i%2===0?'var(--bg)':'#fff'};border-radius:4px;border-left:2px solid ${color}">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--muted);min-width:16px">${i+1}.</span>
+        <span>${d}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  }
+
+  body.innerHTML = html;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('initModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ════════════════════════════════════════
+// RENDER FUNCTIONS
+// ════════════════════════════════════════
+const monthIndex = m => DATA.months.indexOf(m.substring(0, 3));
+
+function renderPhasing(containerId, items, colorFn) {
+  const c = document.getElementById(containerId);
+  items.forEach(it => {
+    const start = monthIndex(it.from || 'Apr');
+    const row = document.createElement('div');
+    row.className = 'phase-row';
+    const label = it.n + ' ' + (it.name || '').substring(0, 22);
+    row.innerHTML = `<div class="phase-label" title="${it.name}">${label}</div><div class="phase-bar-wrap">${DATA.months.map((m, i) => `<div class="phase-cell ${i >= start ? 'active' : 'inactive'}" style="background:${colorFn}"></div>`).join('')}</div><div style="font-family:'JetBrains Mono',monospace;font-size:7px;min-width:40px;text-align:right;color:var(--text)">${it.uplift ? '₹' + it.uplift + 'L' : '₹' + it.save + 'L'}</div>`;
+    c.appendChild(row);
+  });
+}
+
+function renderInitCards(containerId, items, type) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  items.forEach(it => {
+    const card = document.createElement('div');
+    card.className = `init-card ${type}`;
+    card.setAttribute('data-cat', it.cat || it.pl || '');
+    const val = type === 'rev' ? `<b>Uplift:</b> ₹${it.uplift}L · <b>Cost:</b> ₹${it.cost}L · <b>Net:</b> ₹${it.net}L` : `<b>Saving:</b> ₹${it.save}L · <b>P&L:</b> ${it.pl}`;
+    card.innerHTML = `<span class="click-hint">Click for details →</span>
+      <div><span class="init-num ${type}">${it.n}</span><span class="init-name">${it.name}</span></div>
+      <div class="init-meta"><span>${val}</span></div>
+      <div class="init-meta"><span><b>Owner:</b> ${it.owner} · <b>Impact from:</b> ${it.from} · <b>Cat:</b> ${it.cat || it.pl || ''}</span></div>
+      <div class="init-kra">${it.kra}</div>`;
+    card.onclick = () => openInitModal(it, type);
+    c.appendChild(card);
+  });
+}
+
+function filterRevCat(cat, btn) {
+  document.querySelectorAll('#revCatTabs .ptab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#revInitGrid .init-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.getAttribute('data-cat') === cat) ? '' : 'none';
+  });
+}
+
+function filterCostCat(cat, btn) {
+  document.querySelectorAll('#costCatTabs .ptab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#costInitGrid .init-card').forEach(card => {
+    card.style.display = (cat === 'all' || card.getAttribute('data-cat') === cat) ? '' : 'none';
+  });
+}
+
+function renderRoles() {
+  const c = document.getElementById('rolesBody');
+  DATA.roles.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'role-card';
+    let krsHtml = '';
+    if (Array.isArray(r.krs)) {
+      krsHtml = r.krs.map((kr, i) => `<div style="display:flex;gap:4px;align-items:flex-start;margin-bottom:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:7px;color:var(--blue);min-width:26px;flex-shrink:0">KR${i+1}</span><span>${kr}</span></div>`).join('');
+    } else {
+      krsHtml = r.krs;
+    }
+    card.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="role-title">${r.title}</div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:7px;padding:2px 5px;border-radius:2px;background:rgba(0,114,188,.08);color:var(--blue)">${r.initCount} initiatives</span>
+      </div>
+      <div class="role-reports">Reports to: ${r.reports}</div>
+      <div class="role-obj"><b>Objective:</b> ${r.obj}</div>
+      <div class="role-krs" style="margin-top:4px">${krsHtml}</div>
+      <div class="role-inits"><b>Owns:</b> ${r.owns}</div>`;
+    c.appendChild(card);
+  });
+}
+
+function renderDeliverables() {
+  Object.keys(DATA.deliverables).forEach(q => {
+    const c = document.getElementById('del' + q.toUpperCase());
+    DATA.deliverables[q].forEach(d => {
+      const card = document.createElement('div');
+      card.className = `del-card ${q}`;
+      card.innerHTML = `<span class="del-q ${q}">${q.toUpperCase()}</span>
+        <div class="del-title">${d.title}</div>
+        <div class="del-desc">${d.desc}</div>
+        <div class="del-owner"><b>Owner:</b> ${d.owner} · <b>Initiatives:</b> ${d.inits}</div>
+        <span class="del-status ${d.status}">${d.status.toUpperCase().replace('-',' ')}</span>`;
+      c.appendChild(card);
+    });
+  });
+}
+
+function renderMonthlyChart() {
+  const ctx = document.getElementById('monthlyChart').getContext('2d');
+  window._monthlyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: DATA.months,
+      datasets: [
+        { label: 'EBITDA (₹L)', data: DATA.monthlyEBITDA, backgroundColor: 'rgba(0,114,188,.7)', borderRadius: 3, order: 2, yAxisID: 'y' },
+        { label: 'Revenue (₹L)', data: DATA.monthlyRevenue, type: 'line', borderColor: '#C8103E', borderWidth: 2, pointRadius: 3, pointBackgroundColor: '#C8103E', tension: .3, fill: false, order: 1, yAxisID: 'y1' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: true, position: 'top', labels: { font: { family: "'JetBrains Mono'", size: 8 }, color: '#5a7a8a', usePointStyle: true, padding: 10 } } },
+      scales: {
+        y: { beginAtZero: true, position: 'left', ticks: { font: { family: "'JetBrains Mono'", size: 8 }, callback: v => '₹' + v + 'L' }, grid: { color: 'rgba(205,222,237,.3)', drawBorder: false } },
+        y1: { beginAtZero: true, position: 'right', ticks: { font: { family: "'JetBrains Mono'", size: 8 }, callback: v => '₹' + v + 'L' }, grid: { display: false } },
+        x: { ticks: { font: { family: "'JetBrains Mono'", size: 8 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+// ════════════════════════════════════════
+// DT COST DETAIL RENDERING
+// ════════════════════════════════════════
+function renderDTCosts() {
+  const tbody = document.getElementById('dtSummaryBody');
+  const cards = document.getElementById('dtDetailCards');
+  let totalUC = 0, totalTC = 0;
+
+  DATA.dtCosts.forEach((dt, idx) => {
+    totalUC += dt.uc;
+    totalTC += dt.tc;
+    const varPct = dt.uc > 0 ? ((dt.var / dt.uc) * 100).toFixed(1) : '0.0';
+    const varColor = dt.var < 0 ? 'var(--green)' : dt.var > 0 ? 'var(--crimson)' : 'var(--muted)';
+    const varSign = dt.var < 0 ? '' : dt.var > 0 ? '+' : '';
+
+    // Summary table row
+    const tr = document.createElement('tr');
+    tr.style.cursor = 'pointer';
+    tr.onclick = () => {
+      const detail = document.getElementById('dtDetail' + idx);
+      detail.style.display = detail.style.display === 'none' ? 'block' : 'none';
+      // Render chart on first open
+      if (!detail.dataset.rendered) {
+        renderDTChart(idx, dt);
+        detail.dataset.rendered = '1';
+      }
+    };
+    tr.innerHTML = `<td style="font-weight:500"><span style="color:var(--blue);cursor:pointer">▸</span> ${dt.name}</td>
+      <td class="r mono">${dt.uc.toLocaleString()}</td>
+      <td class="r mono">${dt.tc.toLocaleString()}</td>
+      <td class="r mono" style="color:${varColor}">${varSign}${dt.var.toLocaleString()}</td>
+      <td class="r mono" style="color:${varColor}">${varSign}${varPct}%</td>
+      <td style="font-size:8px;color:var(--muted)">${dt.inits}</td>`;
+    tbody.appendChild(tr);
+
+    // Expandable detail card
+    const card = document.createElement('div');
+    card.id = 'dtDetail' + idx;
+    card.style.display = 'none';
+    card.style.marginBottom = '10px';
+    card.innerHTML = `<div class="sec-card">
+      <div style="padding:10px 12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="font-size:11px;font-weight:600;color:var(--blue)">${dt.name} — Monthly UC vs TC</div>
+          <button onclick="this.closest('.sec-card').parentElement.style.display='none'" style="background:none;border:1px solid var(--border);border-radius:3px;font-size:10px;color:var(--muted);cursor:pointer;padding:1px 6px">✕</button>
+        </div>
+        <div style="font-size:8.5px;color:#4a6070;margin-bottom:6px;line-height:1.5;padding:4px 6px;background:var(--bg);border-radius:4px">${dt.notes}</div>
+        <canvas id="dtChart${idx}" height="120"></canvas>
+        <div style="overflow-x:auto;margin-top:6px">
+          <table>
+            <thead><tr><th>Month</th>${DATA.months.map(m => '<th class="r">'+m+'</th>').join('')}<th class="r">Total</th></tr></thead>
+            <tbody>
+              <tr><td>UC (₹L)</td>${dt.ucM.map(v => '<td class="r mono">'+v.toFixed(1)+'</td>').join('')}<td class="r mono" style="font-weight:600">${dt.uc.toLocaleString()}</td></tr>
+              <tr style="background:rgba(0,114,188,.04)"><td><b>TC (₹L)</b></td>${dt.tcM.map(v => '<td class="r mono"><b>'+v.toFixed(1)+'</b></td>').join('')}<td class="r mono" style="font-weight:700">${dt.tc.toLocaleString()}</td></tr>
+              <tr><td>Var (₹L)</td>${dt.tcM.map((v,i) => {const d=v-dt.ucM[i];const c=d<-0.05?'var(--green)':d>0.05?'var(--crimson)':'var(--muted)';return '<td class="r mono" style="color:'+c+'">'+(d>0?'+':'')+d.toFixed(1)+'</td>';}).join('')}<td class="r mono" style="color:${varColor};font-weight:600">${varSign}${dt.var.toLocaleString()}</td></tr>
+            </tbody>
+          </table>
+        </div>
+        ${dt.inits !== '—' ? '<div style="font-size:8px;margin-top:4px;color:var(--muted)"><b>Linked initiatives:</b> '+dt.inits+'</div>' : ''}
+      </div>
+    </div>`;
+    cards.appendChild(card);
+  });
+
+  // Total row
+  const totalVar = totalTC - totalUC;
+  const totalVarPct = totalUC > 0 ? ((totalVar / totalUC) * 100).toFixed(1) : '0.0';
+  const tr = document.createElement('tr');
+  tr.className = 'total';
+  tr.innerHTML = `<td><b>TOTAL</b></td>
+    <td class="r mono"><b>${totalUC.toLocaleString()}</b></td>
+    <td class="r mono"><b>${totalTC.toLocaleString()}</b></td>
+    <td class="r mono" style="color:var(--green)"><b>${totalVar.toLocaleString()}</b></td>
+    <td class="r mono" style="color:var(--green)"><b>${totalVarPct}%</b></td>
+    <td></td>`;
+  tbody.appendChild(tr);
+}
+
+function renderDTChart(idx, dt) {
+  const ctx = document.getElementById('dtChart' + idx);
+  if (!ctx) return;
+  new Chart(ctx.getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: DATA.months,
+      datasets: [
+        {label:'UC (₹L)',data:dt.ucM,backgroundColor:'rgba(205,222,237,.5)',borderColor:'rgba(0,114,188,.3)',borderWidth:1,borderRadius:2,order:2},
+        {label:'TC (₹L)',data:dt.tcM,backgroundColor:'rgba(0,114,188,.6)',borderColor:'rgba(0,114,188,.8)',borderWidth:1,borderRadius:2,order:1}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:true,position:'top',labels:{font:{family:"'JetBrains Mono'",size:7},color:'#5a7a8a',usePointStyle:true,padding:8}}},
+      scales:{
+        y:{beginAtZero:true,ticks:{font:{family:"'JetBrains Mono'",size:7},callback:v=>'₹'+v+'L'},grid:{color:'rgba(205,222,237,.3)',drawBorder:false}},
+        x:{ticks:{font:{family:"'JetBrains Mono'",size:7}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+renderPhasing('revPhasing', DATA.revInits, 'rgba(0,114,188,.65)');
+renderPhasing('costPhasing', DATA.costInits, 'rgba(26,138,90,.65)');
+renderInitCards('revInitGrid', DATA.revInits, 'rev');
+renderInitCards('costInitGrid', DATA.costInits, 'cost');
+renderRoles();
+renderDeliverables();
+renderDTCosts();
+renderMonthlyChart();
+</script>
+</body>
+</html>
