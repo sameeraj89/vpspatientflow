@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRM Dashboard FY26 — VPS Lakeshore</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* ── Brand tokens ── */
+  :root {
+    --blue:    #2B7CBE;
+    --maroon:  #8B1A4A;
+    --gray:    #7F8C9B;
+    --blue-lt: rgba(43,124,190,0.08);
+    --mrn-lt:  rgba(139,26,74,0.08);
+    --bg:      #f5f7fa;
+    --card:    #ffffff;
+    --border:  #e2e8f0;
+    --text:    #1a202c;
+    --sub:     #4a5568;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: #fff;
+    border-bottom: 3px solid var(--blue);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  header img { height: 36px; }
+  header .title { font-size: 16px; font-weight: 700; color: var(--blue); }
+  header .subtitle { font-size: 11px; color: var(--gray); margin-top: 1px; }
+  header .spacer { flex: 1; }
+  header .badge {
+    background: var(--blue-lt);
+    color: var(--blue);
+    border: 1px solid rgba(43,124,190,0.25);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  #meta-updated {
+    font-size: 11px;
+    color: var(--gray);
+  }
+
+  /* ── Tab nav ── */
+  nav {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+  nav button {
+    padding: 12px 20px;
+    border: none;
+    background: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--sub);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+  }
+  nav button:hover { color: var(--blue); }
+  nav button.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+    font-weight: 700;
+  }
+
+  /* ── Page / Section ── */
+  .page { display: none; padding: 24px; max-width: 1400px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  /* ── KPI row ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .kpi {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 16px 18px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .kpi-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: .5px; }
+  .kpi-value { font-size: 22px; font-weight: 800; color: var(--blue); margin: 4px 0 2px; }
+  .kpi-value.maroon { color: var(--maroon); }
+  .kpi-sub { font-size: 11px; color: var(--gray); }
+
+  /* ── Chart grid ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .charts-grid.wide { grid-template-columns: 1fr; }
+  .charts-grid.thirds { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--card);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    padding: 20px;
+  }
+  .card h3 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--sub);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 span.dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    background: var(--blue);
+    flex-shrink: 0;
+  }
+  .card h3 span.dot.maroon { background: var(--maroon); }
+
+  .chart-wrap { position: relative; }
+  .chart-wrap.h260 { height: 260px; }
+  .chart-wrap.h300 { height: 300px; }
+  .chart-wrap.h340 { height: 340px; }
+  .chart-wrap.h400 { height: 400px; }
+
+  /* ── Table ── */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    background: var(--bg);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: var(--sub);
+    border-bottom: 2px solid var(--border);
+  }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--blue-lt); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar-cell { width: 120px; }
+  .bar-bg {
+    background: var(--border);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 6px;
+    border-radius: 4px;
+    background: var(--blue);
+  }
+  .bar-fill.maroon { background: var(--maroon); }
+
+  /* ── Loading / error ── */
+  #loading {
+    position: fixed; inset: 0;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    z-index: 999;
+  }
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #loading p { color: var(--sub); font-size: 13px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 700px) {
+    .charts-grid { grid-template-columns: 1fr; }
+    .charts-grid.thirds { grid-template-columns: 1fr; }
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    header .badge, #meta-updated { display: none; }
+    nav button { padding: 10px 14px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <p>Loading BRM data…</p>
+</div>
+
+<!-- Header -->
+<header>
+  <img src="../logo.png" alt="VPS Lakeshore" onerror="this.style.display='none'">
+  <div>
+    <div class="title">Business Review Meeting</div>
+    <div class="subtitle">VPS Lakeshore Hospital · FY 2025–26</div>
+  </div>
+  <div class="spacer"></div>
+  <span id="meta-updated"></span>
+  <span class="badge">FY26</span>
+</header>
+
+<!-- Tab nav -->
+<nav id="tab-nav">
+  <button class="active" onclick="showTab('revenue')">📊 Revenue</button>
+  <button onclick="showTab('departments')">🏥 Departments</button>
+  <button onclick="showTab('outpatient')">🚶 Outpatient</button>
+  <button onclick="showTab('inpatient')">🛏️ Inpatient</button>
+  <button onclick="showTab('payor')">💳 Payor Mix</button>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     TAB 1 — REVENUE
+══════════════════════════════════════════ -->
+<div id="tab-revenue" class="page active">
+
+  <div class="kpi-row" id="kpi-revenue"></div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>Monthly Net Revenue (₹ Cr)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-rev-monthly"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Revenue by Unit — Kochi vs Calicut</h3>
+      <div class="chart-wrap h300"><canvas id="chart-rev-unit"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>IP vs OP Revenue Split (₹ Cr)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-ip-op"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot maroon"></span>Discount Analysis (%)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-discount"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid wide">
+    <div class="card">
+      <h3><span class="dot"></span>Revenue by Module (₹ Cr)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-module"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 2 — DEPARTMENTS
+══════════════════════════════════════════ -->
+<div id="tab-departments" class="page">
+
+  <div class="kpi-row" id="kpi-dept"></div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>Top 15 Departments by Revenue (FY26)</h3>
+      <div class="chart-wrap h400"><canvas id="chart-dept-rev"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot maroon"></span>Top 15 Doctors by Revenue (FY26)</h3>
+      <div class="chart-wrap h400"><canvas id="chart-doc-rev"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid wide">
+    <div class="card">
+      <h3><span class="dot"></span>Department Revenue — Monthly Trend (Top 8)</h3>
+      <div class="chart-wrap h340"><canvas id="chart-dept-monthly"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 3 — OUTPATIENT
+══════════════════════════════════════════ -->
+<div id="tab-outpatient" class="page">
+
+  <div class="kpi-row" id="kpi-op"></div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>Monthly OP Visits — Total</h3>
+      <div class="chart-wrap h300"><canvas id="chart-op-total"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>OP Visits by Unit — Kochi vs Calicut</h3>
+      <div class="chart-wrap h300"><canvas id="chart-op-unit"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>Visit Type Split — New / Free / Renewal</h3>
+      <div class="chart-wrap h300"><canvas id="chart-op-type"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot maroon"></span>Top 15 Departments by OP Visits</h3>
+      <div class="chart-wrap h300"><canvas id="chart-op-dept"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 4 — INPATIENT
+══════════════════════════════════════════ -->
+<div id="tab-inpatient" class="page">
+
+  <div class="kpi-row" id="kpi-ip"></div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>Monthly Discharges</h3>
+      <div class="chart-wrap h300"><canvas id="chart-discharge"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot maroon"></span>Average Length of Stay (Days)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-los"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid thirds">
+    <div class="card">
+      <h3><span class="dot"></span>Top Schemes by Discharges</h3>
+      <div class="tbl-wrap" id="tbl-scheme"></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot maroon"></span>Top Departments by LOS</h3>
+      <div class="tbl-wrap" id="tbl-dept-los"></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Dept Avg LOS — All Months</h3>
+      <div class="chart-wrap h300"><canvas id="chart-dept-los"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════
+     TAB 5 — PAYOR MIX
+══════════════════════════════════════════ -->
+<div id="tab-payor" class="page">
+
+  <div class="kpi-row" id="kpi-payor"></div>
+
+  <div class="charts-grid">
+    <div class="card">
+      <h3><span class="dot"></span>Cash vs Credit — Monthly (₹ Cr)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-cashcredit"></canvas></div>
+    </div>
+    <div class="card">
+      <h3><span class="dot"></span>Patient Category Mix (FY26 Total)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-payor-pie"></canvas></div>
+    </div>
+  </div>
+
+  <div class="charts-grid wide">
+    <div class="card">
+      <h3><span class="dot"></span>Patient Category — Monthly Revenue (₹ Cr)</h3>
+      <div class="chart-wrap h300"><canvas id="chart-payor-trend"></canvas></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// Helpers
+// ══════════════════════════════════════════
+const MONTHS = ["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
+const BLUE   = '#2B7CBE';
+const MAROON = '#8B1A4A';
+const GRAY   = '#7F8C9B';
+
+const PALETTE = [
+  '#2B7CBE','#8B1A4A','#F59E0B','#10B981','#7C3AED',
+  '#EF4444','#0EA5E9','#F97316','#84CC16','#EC4899',
+  '#06B6D4','#8B5CF6','#14B8A6','#FB923C','#A3E635',
+  '#F43F5E','#6366F1','#22D3EE','#4ADE80','#FACC15'
+];
+
+const cr   = v => (v / 1e7).toFixed(2);
+const crN  = v => (v / 1e7);
+const fmt  = v => Number(v).toLocaleString('en-IN');
+const fmtC = v => '₹ ' + crN(v).toFixed(2) + ' Cr';
+
+function groupBy(arr, key) {
+  return arr.reduce((acc, r) => {
+    acc[r[key]] = acc[r[key]] || [];
+    acc[r[key]].push(r);
+    return acc;
+  }, {});
+}
+
+function sumBy(arr, key) {
+  return arr.reduce((s, r) => s + (Number(r[key]) || 0), 0);
+}
+
+function monthSeries(arr, valueKey, months) {
+  const byMonth = {};
+  arr.forEach(r => { byMonth[r.Month] = (byMonth[r.Month] || 0) + (Number(r[valueKey]) || 0); });
+  return months.map(m => byMonth[m] || 0);
+}
+
+function makeDoughnut(id, labels, values, colors) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data: values, backgroundColor: colors || PALETTE, borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'right', labels: { font: { size: 11 }, boxWidth: 12 } },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` ${ctx.label}: ₹${crN(ctx.raw).toFixed(2)} Cr`
+          }
+        }
+      }
+    }
+  });
+}
+
+function makeBar(id, labels, datasets, opts = {}) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      indexAxis: opts.horizontal ? 'y' : 'x',
+      plugins: {
+        legend: { display: opts.legend !== false, labels: { font: { size: 11 }, boxWidth: 12 } },
+        tooltip: { callbacks: opts.tooltipCb ? { label: opts.tooltipCb } : {} }
+      },
+      scales: {
+        x: {
+          stacked: !!opts.stacked,
+          grid: { color: '#f0f0f0' },
+          ticks: { font: { size: 11 }, color: '#64748b' }
+        },
+        y: {
+          stacked: !!opts.stacked,
+          grid: { color: '#f0f0f0' },
+          ticks: { font: { size: 11 }, color: '#64748b', ...(opts.yTicks || {}) }
+        }
+      }
+    }
+  });
+}
+
+function makeLine(id, labels, datasets, opts = {}) {
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: opts.legend !== false, labels: { font: { size: 11 }, boxWidth: 12 } },
+        tooltip: { callbacks: opts.tooltipCb ? { label: opts.tooltipCb } : {} }
+      },
+      scales: {
+        x: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 }, color: '#64748b' } },
+        y: { grid: { color: '#f0f0f0' }, ticks: { font: { size: 11 }, color: '#64748b' } }
+      }
+    }
+  });
+}
+
+function kpis(containerId, items) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = items.map(k => `
+    <div class="kpi">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value${k.maroon ? ' maroon' : ''}">${k.value}</div>
+      <div class="kpi-sub">${k.sub || ''}</div>
+    </div>`).join('');
+}
+
+function tableHTML(rows, cols) {
+  const ths = cols.map(c => `<th class="${c.num ? 'num' : ''}">${c.label}</th>`).join('');
+  const trs = rows.map((r, i) => {
+    const tds = cols.map(c => {
+      if (c.bar) {
+        return `<td class="bar-cell"><div class="bar-bg"><div class="bar-fill${c.maroon?' maroon':''}" style="width:${r._pct||0}%"></div></div></td>`;
+      }
+      return `<td class="${c.num ? 'num' : ''}">${c.fmt ? c.fmt(r[c.key]) : r[c.key]}</td>`;
+    }).join('');
+    return `<tr>${tds}</tr>`;
+  }).join('');
+  return `<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+}
+
+// Tab navigation
+function showTab(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// Main: load JSON and render
+// ══════════════════════════════════════════
+async function init() {
+  let data;
+  try {
+    const r = await fetch('brm_summary.json');
+    if (!r.ok) throw new Error(r.statusText);
+    data = await r.json();
+  } catch(e) {
+    document.getElementById('loading').innerHTML =
+      `<p style="color:#EF4444;font-size:14px;">⚠️ Could not load brm_summary.json<br>${e.message}</p>`;
+    return;
+  }
+
+  document.getElementById('loading').style.display = 'none';
+
+  const S = data.summary;
+  const months = data.meta.months_available;
+  const genDate = new Date(data.meta.generated_at).toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+  document.getElementById('meta-updated').textContent = `Updated ${genDate}`;
+
+  // ── Revenue Tab ──────────────────────────────────────────────────────────
+  const revTotal   = sumBy(S.monthly_revenue_total, 'Net Amt');
+  const revKochi   = sumBy(S.monthly_revenue_by_unit.filter(r=>r.Unit==='Kochi'), 'Net Amt');
+  const revCalicut = sumBy(S.monthly_revenue_by_unit.filter(r=>r.Unit==='Calicut'), 'Net Amt');
+  const revIP      = sumBy(S.monthly_revenue_by_bill_type.filter(r=>r['Bill type']==='IP'), 'Net Amt');
+  const revOP      = sumBy(S.monthly_revenue_by_bill_type.filter(r=>r['Bill type']==='OP'), 'Net Amt');
+  const totalDisc  = sumBy(S.monthly_discount_analysis, 'Discount');
+  const totalBill  = sumBy(S.monthly_discount_analysis, 'Bill_Amt');
+  const discPct    = (totalDisc / totalBill * 100).toFixed(2);
+
+  kpis('kpi-revenue', [
+    { label: 'FY26 Net Revenue',   value: '₹ ' + crN(revTotal).toFixed(1) + ' Cr', sub: 'April 2025 – March 2026' },
+    { label: 'Kochi',              value: '₹ ' + crN(revKochi).toFixed(1) + ' Cr',   sub: (revKochi/revTotal*100).toFixed(1) + '% of total' },
+    { label: 'Calicut',            value: '₹ ' + crN(revCalicut).toFixed(1) + ' Cr', sub: (revCalicut/revTotal*100).toFixed(1) + '% of total', maroon: true },
+    { label: 'IP Revenue',         value: '₹ ' + crN(revIP).toFixed(1) + ' Cr',      sub: (revIP/revTotal*100).toFixed(1) + '% of net' },
+    { label: 'OP Revenue',         value: '₹ ' + crN(revOP).toFixed(1) + ' Cr',      sub: (revOP/revTotal*100).toFixed(1) + '% of net' },
+    { label: 'FY Discount',        value: discPct + '%',                              sub: '₹ ' + crN(totalDisc).toFixed(1) + ' Cr', maroon: true },
+  ]);
+
+  // Monthly total revenue
+  makeLine('chart-rev-monthly', months,
+    [{ label: 'Net Revenue (₹ Cr)', data: monthSeries(S.monthly_revenue_total, 'Net Amt', months).map(crN),
+       borderColor: BLUE, backgroundColor: 'rgba(43,124,190,0.1)', fill: true,
+       tension: .35, pointBackgroundColor: BLUE, pointRadius: 4 }],
+    { legend: false, tooltipCb: ctx => ` ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+
+  // Revenue by unit (stacked bar)
+  const unitGrp = groupBy(S.monthly_revenue_by_unit, 'Unit');
+  makeBar('chart-rev-unit', months,
+    Object.keys(unitGrp).map((unit, i) => ({
+      label: unit,
+      data: monthSeries(unitGrp[unit], 'Net Amt', months).map(crN),
+      backgroundColor: i === 0 ? BLUE : MAROON,
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+
+  // IP vs OP
+  const btGrp = groupBy(S.monthly_revenue_by_bill_type, 'Bill type');
+  makeBar('chart-ip-op', months,
+    ['IP','OP'].filter(k=>btGrp[k]).map((bt,i) => ({
+      label: bt + ' Revenue',
+      data: monthSeries(btGrp[bt], 'Net Amt', months).map(crN),
+      backgroundColor: i===0 ? BLUE : MAROON,
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+
+  // Discount %
+  const discData = months.map(m => {
+    const r = S.monthly_discount_analysis.find(x=>x.Month===m);
+    return r ? r.Discount_Pct : 0;
+  });
+  makeLine('chart-discount', months,
+    [{ label: 'Discount %', data: discData, borderColor: MAROON,
+       backgroundColor: 'rgba(139,26,74,0.08)', fill: true,
+       tension: .3, pointBackgroundColor: MAROON, pointRadius: 4 }],
+    { legend: false, tooltipCb: ctx => ` ${ctx.raw.toFixed(2)}%` }
+  );
+
+  // Revenue by module (stacked)
+  const modGrp = groupBy(S.monthly_revenue_by_module, 'Module');
+  const modKeys = Object.keys(modGrp).sort((a,b) =>
+    sumBy(modGrp[b], 'Net Amt') - sumBy(modGrp[a], 'Net Amt'));
+  makeBar('chart-module', months,
+    modKeys.map((mod, i) => ({
+      label: mod,
+      data: monthSeries(modGrp[mod], 'Net Amt', months).map(crN),
+      backgroundColor: PALETTE[i % PALETTE.length],
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+
+  // ── Departments Tab ──────────────────────────────────────────────────────
+  const topDepts = [...S.top_departments_by_revenue]
+    .sort((a,b) => b['Net Amt'] - a['Net Amt']).slice(0,15);
+  const maxDeptRev = topDepts[0]['Net Amt'];
+
+  kpis('kpi-dept', [
+    { label: 'Top Department',   value: topDepts[0].Department.split(' ').slice(0,2).join(' '), sub: fmtC(topDepts[0]['Net Amt']) },
+    { label: '#1 Doctor Revenue',value: S.top_doctors_by_revenue[0].Doctor.split(' ')[0], sub: fmtC(S.top_doctors_by_revenue[0]['Net Amt']) },
+    { label: 'Departments',      value: String(topDepts.length + '+'), sub: 'generating revenue' },
+    { label: 'Avg Dept Revenue', value: '₹ ' + crN(revTotal / topDepts.length).toFixed(1) + ' Cr', sub: 'top 15 average' },
+  ]);
+
+  makeBar('chart-dept-rev', topDepts.map(r=>r.Department),
+    [{ label: 'Net Revenue', data: topDepts.map(r => crN(r['Net Amt'])),
+       backgroundColor: PALETTE.slice(0, topDepts.length) }],
+    { horizontal: true, legend: false,
+      tooltipCb: ctx => ` ₹ ${ctx.raw.toFixed(2)} Cr`,
+      yTicks: { font: { size: 10 } } }
+  );
+
+  const topDocs = S.top_doctors_by_revenue.slice(0,15);
+  makeBar('chart-doc-rev', topDocs.map(r=>r.Doctor.split(' ').slice(0,2).join(' ')),
+    [{ label: 'Net Revenue', data: topDocs.map(r => crN(r['Net Amt'])),
+       backgroundColor: PALETTE.map((c,i) => i%2===0 ? MAROON : '#c94d7a').slice(0,topDocs.length) }],
+    { horizontal: true, legend: false,
+      tooltipCb: ctx => ` ₹ ${ctx.raw.toFixed(2)} Cr`,
+      yTicks: { font: { size: 10 } } }
+  );
+
+  // Monthly dept revenue trend — top 8
+  const deptRevGrp = groupBy(S.monthly_dept_revenue, 'Department');
+  const topDeptKeys = Object.keys(deptRevGrp)
+    .sort((a,b) => sumBy(deptRevGrp[b], 'Net Amt') - sumBy(deptRevGrp[a], 'Net Amt'))
+    .slice(0,8);
+  makeLine('chart-dept-monthly', months,
+    topDeptKeys.map((dept, i) => ({
+      label: dept.length > 22 ? dept.slice(0,22)+'…' : dept,
+      data: monthSeries(deptRevGrp[dept], 'Net Amt', months).map(crN),
+      borderColor: PALETTE[i % PALETTE.length],
+      backgroundColor: 'transparent',
+      tension: .3, pointRadius: 3,
+    })),
+    { tooltipCb: ctx => ` ${ctx.dataset.label}: ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+
+  // ── Outpatient Tab ───────────────────────────────────────────────────────
+  const totalOP  = sumBy(S.monthly_op_visits_total, 'TOTAL VISIT');
+  const kochiOP  = sumBy(S.monthly_op_visits_by_unit.filter(r=>r.Unit==='Kochi'), 'TOTAL_VISIT');
+  const calOP    = sumBy(S.monthly_op_visits_by_unit.filter(r=>r.Unit==='Calicut'), 'TOTAL_VISIT');
+  const newPts   = sumBy(S.monthly_op_visits_by_unit, 'NEW');
+  const avgOPMo  = Math.round(totalOP / months.length);
+
+  kpis('kpi-op', [
+    { label: 'FY26 OP Visits',    value: fmt(totalOP), sub: 'April 2025 – March 2026' },
+    { label: 'Kochi OP Visits',   value: fmt(kochiOP), sub: (kochiOP/totalOP*100).toFixed(1) + '% of total' },
+    { label: 'Calicut OP Visits', value: fmt(calOP),   sub: (calOP/totalOP*100).toFixed(1) + '% of total', maroon: true },
+    { label: 'New Patients',      value: fmt(newPts),  sub: (newPts/totalOP*100).toFixed(1) + '% are new' },
+    { label: 'Monthly Average',   value: fmt(avgOPMo), sub: 'visits per month' },
+  ]);
+
+  makeLine('chart-op-total', months,
+    [{ label: 'Total OP Visits', data: monthSeries(S.monthly_op_visits_total, 'TOTAL VISIT', months),
+       borderColor: BLUE, backgroundColor: 'rgba(43,124,190,0.1)', fill: true,
+       tension: .35, pointBackgroundColor: BLUE, pointRadius: 4 }],
+    { legend: false, tooltipCb: ctx => ` ${fmt(ctx.raw)} visits` }
+  );
+
+  const opUnitGrp = groupBy(S.monthly_op_visits_by_unit, 'Unit');
+  makeBar('chart-op-unit', months,
+    Object.keys(opUnitGrp).map((unit,i)=>({
+      label: unit,
+      data: monthSeries(opUnitGrp[unit], 'TOTAL_VISIT', months),
+      backgroundColor: i===0 ? BLUE : MAROON,
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)}` }
+  );
+
+  // Visit type split (New / Free / Renew)
+  const opTypeKeys = ['NEW','FREE','RENEW'];
+  const opTypeLabels = ['New','Free','Renewal'];
+  makeBar('chart-op-type', months,
+    opTypeKeys.map((k,i)=>({
+      label: opTypeLabels[i],
+      data: months.map(m => {
+        const rows = S.monthly_op_visits_by_unit.filter(r=>r.Month===m);
+        return rows.reduce((s,r)=>s+(Number(r[k])||0),0);
+      }),
+      backgroundColor: PALETTE[i],
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ${fmt(ctx.raw)}` }
+  );
+
+  const topOPDept = [...S.top_departments_op_visits].slice(0,15);
+  makeBar('chart-op-dept', topOPDept.map(r=>r.Department),
+    [{ label: 'Total Visits', data: topOPDept.map(r=>r['TOTAL VISIT']),
+       backgroundColor: PALETTE.slice(0,topOPDept.length) }],
+    { horizontal: true, legend: false,
+      tooltipCb: ctx => ` ${fmt(ctx.raw)} visits`,
+      yTicks: { font: { size: 10 } } }
+  );
+
+  // ── Inpatient Tab ────────────────────────────────────────────────────────
+  const totalDisch = sumBy(S.monthly_discharge_summary, 'Patient_Count');
+  const totalLOS   = sumBy(S.monthly_discharge_summary, 'Total_LOS');
+  const avgLOS     = (totalLOS / totalDisch).toFixed(2);
+  const maxDisch   = Math.max(...S.monthly_discharge_summary.map(r=>r.Patient_Count));
+
+  kpis('kpi-ip', [
+    { label: 'FY26 Discharges',   value: fmt(totalDisch), sub: 'inpatients discharged' },
+    { label: 'Avg Monthly',       value: fmt(Math.round(totalDisch/months.length)), sub: 'discharges per month' },
+    { label: 'Avg Length of Stay',value: avgLOS + ' days', sub: 'across all patients', maroon: true },
+    { label: 'Total Bed Days',    value: fmt(totalLOS), sub: 'patient-days consumed' },
+    { label: 'Peak Month',        value: S.monthly_discharge_summary.find(r=>r.Patient_Count===maxDisch)?.Month || '',
+      sub: fmt(maxDisch) + ' discharges' },
+  ]);
+
+  makeBar('chart-discharge', months,
+    [{ label: 'Discharges',
+       data: months.map(m => { const r = S.monthly_discharge_summary.find(x=>x.Month===m); return r?.Patient_Count||0; }),
+       backgroundColor: BLUE }],
+    { legend: false, tooltipCb: ctx => ` ${fmt(ctx.raw)} patients` }
+  );
+
+  makeLine('chart-los', months,
+    [{ label: 'Avg LOS (days)',
+       data: months.map(m => { const r = S.monthly_discharge_summary.find(x=>x.Month===m); return r?.Avg_LOS||0; }),
+       borderColor: MAROON, backgroundColor: 'rgba(139,26,74,0.08)', fill: true,
+       tension: .3, pointBackgroundColor: MAROON, pointRadius: 4 }],
+    { legend: false, tooltipCb: ctx => ` ${ctx.raw.toFixed(2)} days` }
+  );
+
+  // Top schemes table
+  const topSchemes = [...S.scheme_mix].sort((a,b)=>b.Patient_Count-a.Patient_Count).slice(0,12);
+  const maxSch = topSchemes[0].Patient_Count;
+  topSchemes.forEach(r => r._pct = (r.Patient_Count/maxSch*100));
+  document.getElementById('tbl-scheme').innerHTML = tableHTML(topSchemes, [
+    { key: 'Scheme', label: 'Scheme', fmt: v => v.length>28?v.slice(0,28)+'…':v },
+    { key: 'Patient_Count', label: 'Pts', num: true, fmt: fmt },
+    { bar: true, label: '' },
+  ]);
+
+  // Top dept by LOS
+  const deptLOS = S.monthly_dept_discharge
+    ? Object.entries(
+        S.monthly_dept_discharge.reduce((acc,r)=>{
+          acc[r.Department] = acc[r.Department] || {tot:0,cnt:0};
+          acc[r.Department].tot += r.LOS; acc[r.Department].cnt += r.Patient_Count;
+          return acc;
+        }, {})
+      ).map(([d,v])=>({ Department:d, Avg_LOS:(v.tot/v.cnt).toFixed(1), Patients:v.cnt }))
+       .filter(r=>r.Patients>50)
+       .sort((a,b)=>b.Avg_LOS-a.Avg_LOS).slice(0,12)
+    : [];
+  const maxLOS = deptLOS.length ? Math.max(...deptLOS.map(r=>Number(r.Avg_LOS))) : 1;
+  deptLOS.forEach(r => r._pct = (r.Avg_LOS/maxLOS*100));
+  document.getElementById('tbl-dept-los').innerHTML = tableHTML(deptLOS, [
+    { key: 'Department', label: 'Department', fmt: v => v.length>22?v.slice(0,22)+'…':v },
+    { key: 'Avg_LOS', label: 'Avg LOS', num: true },
+    { bar: true, label: '', maroon: true },
+  ]);
+
+  // Dept avg LOS chart (top 12)
+  const deptLOSChart = deptLOS.slice(0,10);
+  makeBar('chart-dept-los', deptLOSChart.map(r=>r.Department.length>18?r.Department.slice(0,18)+'…':r.Department),
+    [{ label: 'Avg LOS', data: deptLOSChart.map(r=>Number(r.Avg_LOS)), backgroundColor: MAROON }],
+    { horizontal: true, legend: false,
+      tooltipCb: ctx => ` ${ctx.raw} days`, yTicks: { font: { size: 10 } } }
+  );
+
+  // ── Payor Mix Tab ────────────────────────────────────────────────────────
+  const cashTotal   = sumBy(S.monthly_cash_credit.filter(r=>r['Cash-Credit']==='Cash'), 'Net Amt');
+  const creditTotal = sumBy(S.monthly_cash_credit.filter(r=>r['Cash-Credit']==='Credit'), 'Net Amt');
+  const payorTotals = S.monthly_payor_mix.reduce((acc,r)=>{
+    acc[r['Patient Category']] = (acc[r['Patient Category']]||0) + r['Net Amt'];
+    return acc;
+  }, {});
+  const topPayor = Object.entries(payorTotals).sort((a,b)=>b[1]-a[1])[0];
+
+  kpis('kpi-payor', [
+    { label: 'Cash Revenue',   value: '₹ ' + crN(cashTotal).toFixed(1) + ' Cr',   sub: (cashTotal/(cashTotal+creditTotal)*100).toFixed(1) + '% of revenue' },
+    { label: 'Credit Revenue', value: '₹ ' + crN(creditTotal).toFixed(1) + ' Cr', sub: (creditTotal/(cashTotal+creditTotal)*100).toFixed(1) + '% of revenue', maroon: true },
+    { label: 'Top Category',   value: topPayor ? topPayor[0] : '—', sub: topPayor ? fmtC(topPayor[1]) : '' },
+    { label: 'Patient Categories', value: String(Object.keys(payorTotals).length), sub: 'distinct segments' },
+  ]);
+
+  // Cash vs Credit
+  const ccGrp = groupBy(S.monthly_cash_credit, 'Cash-Credit');
+  makeBar('chart-cashcredit', months,
+    ['Cash','Credit'].filter(k=>ccGrp[k]).map((k,i)=>({
+      label: k,
+      data: monthSeries(ccGrp[k], 'Net Amt', months).map(crN),
+      backgroundColor: i===0 ? BLUE : MAROON,
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+
+  // Patient category donut
+  const payorSorted = Object.entries(payorTotals).sort((a,b)=>b[1]-a[1]);
+  makeDoughnut('chart-payor-pie',
+    payorSorted.map(([k])=>k),
+    payorSorted.map(([,v])=>v),
+    PALETTE
+  );
+
+  // Monthly payor trend
+  const payorGrp = groupBy(S.monthly_payor_mix, 'Patient Category');
+  const topPayorKeys = Object.keys(payorGrp)
+    .sort((a,b)=>sumBy(payorGrp[b],'Net Amt')-sumBy(payorGrp[a],'Net Amt')).slice(0,6);
+  makeBar('chart-payor-trend', months,
+    topPayorKeys.map((cat,i)=>({
+      label: cat,
+      data: monthSeries(payorGrp[cat], 'Net Amt', months).map(crN),
+      backgroundColor: PALETTE[i],
+    })),
+    { stacked: true, tooltipCb: ctx => ` ${ctx.dataset.label}: ₹ ${ctx.raw.toFixed(2)} Cr` }
+  );
+}
+
+init();
+</script>
+</body>
+</html>
