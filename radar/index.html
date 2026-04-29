@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPS Lakeshore — Transformation Radar</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
+    background: #f7f7f5;
+    color: #1b1b26;
+    min-height: 100vh;
+  }
+  .header {
+    background: #20213A;
+    color: #fff;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .header .badge {
+    background: rgba(255,255,255,0.12);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+  }
+  .container {
+    max-width: 1360px;
+    margin: 0 auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 24px;
+  }
+  @media (max-width: 1024px) {
+    .container { grid-template-columns: 1fr; }
+  }
+  .chart-panel {
+    background: #fff;
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .chart-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1b1b26;
+    margin-bottom: 4px;
+  }
+  .chart-subtitle {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 16px;
+  }
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .controls-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .controls-header {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .controls-header h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #20213A;
+    margin-bottom: 4px;
+  }
+  .controls-header p {
+    font-size: 11.5px;
+    color: #888;
+    line-height: 1.5;
+  }
+  .tab-row {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .tab-btn.theo {
+    background: rgba(58,120,176,0.1);
+    color: #3A78B0;
+  }
+  .tab-btn.theo.active {
+    background: #3A78B0;
+    color: #fff;
+  }
+  .tab-btn.actual {
+    background: rgba(192,64,64,0.1);
+    color: #C04040;
+  }
+  .tab-btn.actual.active {
+    background: #C04040;
+    color: #fff;
+  }
+  .sliders-wrap {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    overflow-y: auto;
+    max-height: calc(100vh - 320px);
+  }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid #f2f2f0;
+  }
+  .slider-row:last-child { border-bottom: none; }
+  .slider-label {
+    width: 130px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #333;
+    flex-shrink: 0;
+  }
+  .slider-input {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    border-radius: 4px;
+    outline: none;
+    transition: background 0.15s;
+  }
+  .slider-input.theo-slider {
+    background: linear-gradient(to right, #3A78B0, #8BBEE8);
+  }
+  .slider-input.actual-slider {
+    background: linear-gradient(to right, #C04040, #E8A0A0);
+  }
+  .slider-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+  }
+  .slider-input.theo-slider::-webkit-slider-thumb { background: #3A78B0; }
+  .slider-input.actual-slider::-webkit-slider-thumb { background: #C04040; }
+  .slider-val {
+    width: 42px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .slider-val.theo-val { color: #3A78B0; }
+  .slider-val.actual-val { color: #C04040; }
+  .gap-indicator {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-left: 4px;
+  }
+  .summary-bar {
+    background: #fff;
+    border-radius: 12px;
+    padding: 16px 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .stat { text-align: center; }
+  .stat-value { font-size: 22px; font-weight: 800; }
+  .stat-label { font-size: 10.5px; color: #888; margin-top: 2px; }
+  .reset-btn {
+    padding: 8px 20px;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .reset-btn:hover { background: #f5f5f5; border-color: #bbb; }
+  .source-note {
+    font-size: 10px;
+    color: #aaa;
+    margin-top: 8px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>VPS Lakeshore — Transformation Radar</h1>
+  <span class="badge">Interactive · April 2026</span>
+</div>
+
+<div class="container">
+  <!-- LEFT: Chart -->
+  <div class="chart-panel">
+    <div class="chart-title">Theoretical transformation potential vs. observed progress</div>
+    <div class="chart-subtitle">Drag sliders on the right to adjust scores for each workstream</div>
+    <div class="chart-wrap">
+      <canvas id="radarChart"></canvas>
+    </div>
+    <div class="source-note">Source: VPS Lakeshore Chairman Updates LHRC/BU/2026/001–003 (Mar–Apr 2026)</div>
+  </div>
+
+  <!-- RIGHT: Controls -->
+  <div class="controls-panel">
+    <div class="controls-header">
+      <h2>Adjust workstream scores</h2>
+      <p>Toggle between Theoretical and Observed, then drag sliders to model scenarios.</p>
+      <div class="tab-row">
+        <button class="tab-btn theo active" onclick="switchTab('theo')">Theoretical</button>
+        <button class="tab-btn actual" onclick="switchTab('actual')">Observed</button>
+      </div>
+    </div>
+
+    <div class="sliders-wrap" id="slidersWrap"></div>
+
+    <div class="summary-bar">
+      <div class="stat">
+        <div class="stat-value" id="avgTheo" style="color:#3A78B0">—</div>
+        <div class="stat-label">Avg. theoretical</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="avgActual" style="color:#C04040">—</div>
+        <div class="stat-label">Avg. observed</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="avgGap" style="color:#E67700">—</div>
+        <div class="stat-label">Avg. gap</div>
+      </div>
+      <button class="reset-btn" onclick="resetAll()">Reset defaults</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LABELS = [
+  "Cost rationalisation",
+  "Revenue & BD",
+  "Digital & IT systems",
+  "Compliance & audit",
+  "Governance & org design",
+  "Strategic expansion",
+  "Clinical excellence",
+  "Procurement & supply chain",
+  "Brand & digital marketing",
+  "Workforce & HR",
+  "Infrastructure & campus",
+  "Patient access network"
+];
+
+const DEFAULT_THEO  = [0.85, 0.92, 0.82, 0.72, 0.68, 0.95, 0.78, 0.80, 0.85, 0.72, 0.75, 0.82];
+const DEFAULT_ACTUAL = [0.25, 0.22, 0.24, 0.26, 0.48, 0.15, 0.14, 0.24, 0.18, 0.35, 0.24, 0.12];
+
+let theo  = [...DEFAULT_THEO];
+let actual = [...DEFAULT_ACTUAL];
+let activeTab = 'theo';
+
+// Chart.js setup
+const ctx = document.getElementById('radarChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'radar',
+  data: {
+    labels: LABELS,
+    datasets: [
+      {
+        label: 'Theoretical transformation potential',
+        data: theo,
+        backgroundColor: 'rgba(58, 120, 176, 0.22)',
+        borderColor: '#3A78B0',
+        borderWidth: 2.2,
+        pointBackgroundColor: '#3A78B0',
+        pointBorderColor: '#3A78B0',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        order: 2
+      },
+      {
+        label: 'Observed progress to date',
+        data: actual,
+        backgroundColor: 'rgba(192, 64, 64, 0.25)',
+        borderColor: '#C04040',
+        borderWidth: 2.2,
+        pointBackgroundColor: '#C04040',
+        pointBorderColor: '#C04040',
+        pointStyle: 'rectRot',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        order: 1
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: true,
+    scales: {
+      r: {
+        min: 0,
+        max: 1,
+        ticks: {
+          stepSize: 0.2,
+          color: '#3A3A3A',
+          font: { size: 11, weight: 'bold' },
+          backdropColor: 'transparent'
+        },
+        grid: {
+          color: '#B5B3AA',
+          lineWidth: 0.9
+        },
+        angleLines: {
+          color: '#B5B3AA',
+          lineWidth: 0.5
+        },
+        pointLabels: {
+          color: '#2B2B28',
+          font: { size: 12.5, weight: '700' }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: {
+          color: '#1B1B1B',
+          font: { size: 12.5, weight: '600' },
+          padding: 20,
+          usePointStyle: true,
+          pointStyleWidth: 18
+        }
+      },
+      tooltip: {
+        backgroundColor: '#20213A',
+        titleFont: { size: 12, weight: '700' },
+        bodyFont: { size: 12 },
+        padding: 12,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(ctx) {
+            return ctx.dataset.label + ': ' + (ctx.raw * 100).toFixed(0) + '%';
+          }
+        }
+      }
+    }
+  }
+});
+
+// Slider rendering
+function buildSliders() {
+  const wrap = document.getElementById('slidersWrap');
+  wrap.innerHTML = '';
+  const isTheo = activeTab === 'theo';
+  const arr = isTheo ? theo : actual;
+  const cls = isTheo ? 'theo' : 'actual';
+
+  LABELS.forEach((label, i) => {
+    const gap = theo[i] - actual[i];
+    const gapPct = (gap * 100).toFixed(0);
+    let gapColor, gapBg;
+    if (gap > 0.5) { gapColor = '#C00000'; gapBg = 'rgba(192,0,0,0.08)'; }
+    else if (gap > 0.3) { gapColor = '#E67700'; gapBg = 'rgba(230,119,0,0.08)'; }
+    else { gapColor = '#2E7D32'; gapBg = 'rgba(46,125,50,0.08)'; }
+
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+    row.innerHTML = `
+      <span class="slider-label">${label}
+        <span class="gap-indicator" style="color:${gapColor};background:${gapBg}">
+          ${gapPct}pp gap
+        </span>
+      </span>
+      <input type="range" min="0" max="100" value="${Math.round(arr[i]*100)}"
+             class="slider-input ${cls}-slider"
+             oninput="onSlide(${i}, this.value)">
+      <span class="slider-val ${cls}-val" id="val_${i}">${Math.round(arr[i]*100)}%</span>
+    `;
+    wrap.appendChild(row);
+  });
+}
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab-btn.theo').forEach(b => b.classList.toggle('active', tab === 'theo'));
+  document.querySelectorAll('.tab-btn.actual').forEach(b => b.classList.toggle('active', tab === 'actual'));
+  buildSliders();
+}
+
+function onSlide(idx, val) {
+  const v = parseInt(val) / 100;
+  if (activeTab === 'theo') { theo[idx] = v; }
+  else { actual[idx] = v; }
+  document.getElementById('val_' + idx).textContent = val + '%';
+  chart.data.datasets[0].data = [...theo];
+  chart.data.datasets[1].data = [...actual];
+  chart.update('none');
+  updateSummary();
+  // Update gap indicators
+  buildSliders();
+  // Re-focus the slider that was being dragged
+  const sliders = document.querySelectorAll('.slider-input');
+  if (sliders[idx]) sliders[idx].value = val;
+}
+
+function updateSummary() {
+  const avgT = theo.reduce((a,b) => a+b, 0) / theo.length;
+  const avgA = actual.reduce((a,b) => a+b, 0) / actual.length;
+  const avgG = avgT - avgA;
+  document.getElementById('avgTheo').textContent = (avgT * 100).toFixed(0) + '%';
+  document.getElementById('avgActual').textContent = (avgA * 100).toFixed(0) + '%';
+  document.getElementById('avgGap').textContent = (avgG * 100).toFixed(0) + 'pp';
+}
+
+function resetAll() {
+  theo.splice(0, theo.length, ...DEFAULT_THEO);
+  actual.splice(0, actual.length, ...DEFAULT_ACTUAL);
+  chart.data.datasets[0].data = [...theo];
+  chart.data.datasets[1].data = [...actual];
+  chart.update();
+  buildSliders();
+  updateSummary();
+}
+
+// Init
+buildSliders();
+updateSummary();
+</script>
+
+</body>
+</html>
